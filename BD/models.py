@@ -16,6 +16,9 @@ Base = mapper_registry.generate_base()
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+def get_base():
+    return Base
+
 # Classe Offre
 class Offre(Base):
     __tablename__ = 'OFFRE'
@@ -135,7 +138,7 @@ class PlageDate(Base):
 
 # Classe ContenirGenre (table d'association entre Offre et Genre)
 class ContenirGenre(Base):
-    __tablename__ = 'CONTENIRGENRE'
+    __tablename__ = 'CONTENIR_GENRE'
 
     id_genre = Column(Integer, ForeignKey('GENRE.id_genre'), primary_key=True)
     id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
@@ -145,7 +148,7 @@ class ContenirGenre(Base):
 
 # Classe ContenirLien (table d'association entre Offre et Lien)
 class ContenirLien(Base):
-    __tablename__ = 'CONTENIRLIEN'
+    __tablename__ = 'CONTENIR_LIEN'
 
     id_lien = Column(Integer, ForeignKey('LIEN.id_lien'), primary_key=True)
     id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
@@ -166,7 +169,7 @@ class Repondre(Base):
 
 # Classe AppartenirOrga (table d'association entre Organisateur et Reseau)
 class AppartenirOrga(Base):
-    __tablename__ = 'APPARTENIRORGA'
+    __tablename__ = 'APPARTENIR_ORGA'
 
     id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
     id_reseau = Column(Integer, ForeignKey('RESEAU.id_reseau'), primary_key=True)
@@ -176,7 +179,7 @@ class AppartenirOrga(Base):
 
 # Classe PartagerOffre (table d'association entre Offre et Reseau)
 class PartagerOffre(Base):
-    __tablename__ = 'PARTAGEROFFRE'
+    __tablename__ = 'PARTAGER_OFFRE'
 
     id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
     id_reseau = Column(Integer, ForeignKey('RESEAU.id_reseau'), primary_key=True)
@@ -188,9 +191,6 @@ if __name__ == '__main__':
 
     # Pour une connexion MySQL, utilisez le code ci-dessous (décommentez et remplissez les informations)
     engine = connexion.ouvrir_connexion('raignault', 'raignault', 'servinfo-maria', 'DBraignault')
-
-    # Création de la connexion qui fait le lien entre notre script et la BD
-    cnx = engine.connect()
 
     # Création d'un objet MetaData pour introspecter les tables
     metadata = MetaData()
@@ -204,3 +204,6 @@ if __name__ == '__main__':
 
     # Afficher les noms des tables
     print("Tables dans la base de données :", metadata.tables.keys())
+
+    #Insertion de data de test
+    
