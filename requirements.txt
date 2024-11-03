@@ -1,2 +1,1 @@
-"package_name1"==version1
-"package_name2"==version2
+flask
