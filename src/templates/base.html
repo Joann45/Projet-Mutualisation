@@ -12,28 +12,28 @@
         <header>
             <nav>
                 <ul>
-                    <li><img src="../img/logo.svg" alt="logo de StageFlow"/></li>
+                    <li><img src="{{ url_for('static', filename='img/logo.svg') }}" title="logo de StageFlow"/></li>
                     <li>StageFlow</li>
                     <li>
                         <ul> 
                             <li>Mes réseaux</li>
-                            <li><img src="../img/icon_reseau.svg" alt="mes réseaux"/></li>
+                            <li><img src="{{ url_for('static', filename='img/icon_reseau.svg') }}" alt="mes réseaux"/></li>
                         </ul>
                     </li>
                     <li>
                         <ul> 
                             <li>Mes offres</li>
-                            <li><img src="../img/icon_dossier.svg" alt="mes offres"/></li>
+                            <li><img src="{{ url_for('static', filename='img/icon_dossier.svg') }}" alt="mes offres"/></li>
                         </ul>
                     </li>
                     <li>
                         <ul> 
                             <li>Créer une offre</li>
-                            <li><img src="../img/icon_plus.svg" alt="créer une offre"/></li>
+                            <li><img src="{{ url_for('static', filename='img/icon_plus.svg') }}" alt="créer une offre"/></li>
                         </ul>
                     </li>
-                    <li><img src="../img/boite_reception.svg" alt="boite de réception"></li>
-                    <li><img src="../img/photo_profile_tom.svg" alt="profile"></li>
+                    <li><img src="{{ url_for('static', filename='img/icon_reception.svg') }}" alt="boite de réception"></li>
+                    <li><img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profile"></li>
                     <li>Tom Cook</li>
                 </ul>
             </nav>
