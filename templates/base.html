@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>StageFlow</title>
+        {% endblock %}
+    </head> 
+
+    <body>
+        <header>
+            <nav>
+                <ul>
+                    <li><img src="../img/logo.svg" alt="logo de StageFlow"/></li>
+                    <li>StageFlow</li>
+                    <li>
+                        <ul> 
+                            <li>Mes réseaux</li>
+                            <li><img src="../img/icon_reseau.svg" alt="mes réseaux"/></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul> 
+                            <li>Mes offres</li>
+                            <li><img src="../img/icon_dossier.svg" alt="mes offres"/></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul> 
+                            <li>Créer une offre</li>
+                            <li><img src="../img/icon_plus.svg" alt="créer une offre"/></li>
+                        </ul>
+                    </li>
+                    <li><img src="../img/boite_reception.svg" alt="boite de réception"></li>
+                    <li><img src="../img/photo_profile_tom.svg" alt="profile"></li>
+                    <li>Tom Cook</li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>
