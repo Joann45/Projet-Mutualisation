@@ -18,3 +18,7 @@ def voir_mes_reseaux():
 def gerer_mes_reseaux():
     return render_template('gerer_mes_reseaux.html')
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
