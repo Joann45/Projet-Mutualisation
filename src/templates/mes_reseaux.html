@@ -1,0 +1,38 @@
+{%extends 'base.html'%}
+{%block content%}
+    <h1>Voir mes réseaux</h1>
+    <div>
+        <div>
+            <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social">
+
+        </div>
+
+        <div>
+            <form>
+
+
+                <input type="radio" id="reseau1" name="reseau1 "value="reseau1">
+                <label for="reseau1">Reseau 1</label>
+
+
+                <input type="radio" id="reseau2" name="reseau2 "value="reseau2">
+                <label for="reseau2">Reseau 2</label>
+
+                <input type="radio" id="reseau3" name="reseau3 "value="reseau3">
+                <label for="reseau3">Reseau 3</label>
+
+            </form>
+
+            <button>Voir les membres</button>
+           
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social">
+        </div>
+
+
+
+    </div>
+
+    {% endblock %}
