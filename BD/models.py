@@ -1,0 +1,239 @@
+#!/usr/bin/python3
+
+import connexion
+from sqlalchemy import Column, Integer, Text, Date, Numeric, MetaData
+from sqlalchemy.orm import relationship, registry
+from sqlalchemy.sql.schema import ForeignKey
+import time
+
+mapper_registry = registry()
+Base = mapper_registry.generate_base()
+
+def get_base():
+    return Base
+
+# Classe Offre
+class Offre(Base):
+    __tablename__ = 'OFFRE'
+
+    id_offre = Column(Integer, primary_key=True)
+    nom_offre = Column(Text)
+    description = Column(Text)
+    date_limite = Column(Date)
+    budget = Column(Numeric)
+    capacite_min = Column(Integer)
+    capacite_max = Column(Integer)
+    etat = Column(Text)
+
+    id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'))
+    id_loc = Column(Integer, ForeignKey('LOCALISATION.id_loc'))
+    id_plage = Column(Integer, ForeignKey('PLAGE_DATE.id_plage'))
+
+    # Relations
+    orga = relationship('Organisateur', back_populates='les_offres')
+    loc = relationship('Localisation', back_populates='les_offres')
+    date = relationship('PlageDate', back_populates='les_offres')
+
+    les_documents = relationship('Document', back_populates='offre')
+
+    les_genres = relationship('ContenirGenre', back_populates='offre')
+    les_liens = relationship('ContenirLien', back_populates='offre')
+    les_reponses_orgas = relationship('Repondre', back_populates='offre_orga')
+    les_reseaux = relationship('PartagerOffre', back_populates='offre')
+
+# Classe Genre
+class Genre(Base):
+    __tablename__ = 'GENRE'
+
+    id_genre = Column(Integer, primary_key=True)
+    nom_genre = Column(Text)
+
+    les_offres = relationship('ContenirGenre', back_populates='genre')
+
+# Classe Lien
+class Lien(Base):
+    __tablename__ = 'LIEN'
+
+    id_lien = Column(Integer, primary_key=True)
+    nom_lien = Column(Text)
+
+    les_offres = relationship('ContenirLien', back_populates='lien')
+
+# Classe Reseau
+class Reseau(Base):
+    __tablename__ = 'RESEAU'
+
+    id_reseau = Column(Integer, primary_key=True)
+    nom_reseau = Column(Text)
+    id_admin = Column(Integer, ForeignKey('ADMINISTRATEUR.id_admin'))
+
+    les_offres = relationship('PartagerOffre', back_populates='reseau')
+    reseaux_orga = relationship('AppartenirOrga', back_populates='reseau')
+
+    administrateur = relationship('Administrateur', back_populates='les_reseaux')
+
+# Classe Administrateur
+class Administrateur(Base):
+    __tablename__ = 'ADMINISTRATEUR'
+
+    id_admin = Column(Integer, primary_key=True)
+    nom_admin = Column(Text)
+    prenom_admin = Column(Text)
+    mdp_admin = Column(Text)
+    email_admin = Column(Text)
+    img_admin = Column(Text)
+
+    les_reseaux = relationship('Reseau', back_populates='administrateur')
+    les_notifs = relationship('NotifierAdmin', back_populates='admin')
+
+# Classe Document
+class Document(Base):
+    __tablename__ = 'DOCUMENT'
+
+    id_doc = Column(Integer, primary_key=True)
+    nom_doc = Column(Text)
+    details_doc = Column(Text)
+
+    id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'))
+
+    offre = relationship('Offre', back_populates='les_documents')
+
+# Classe Organisateur
+class Organisateur(Base):
+    __tablename__ = 'ORGANISATEUR'
+
+    id_orga = Column(Integer, primary_key=True)
+    nom_orga = Column(Text)
+    prenom_orga = Column(Text)
+    mdp_orga = Column(Text)
+    email_orga = Column(Text)
+    img_orga = Column(Text)
+
+    les_offres = relationship('Offre', back_populates='orga')
+    les_notifs = relationship('NotifierOrga', back_populates='orga')
+    orgas_offre = relationship('Repondre', back_populates='orga')
+    orgas_reseau = relationship('AppartenirOrga', back_populates='orga')
+
+# Classe Localisation
+class Localisation(Base):
+    __tablename__ = 'LOCALISATION'
+
+    id_loc = Column(Integer, primary_key=True)
+    nom_loc = Column(Text)
+
+    les_offres = relationship('Offre', back_populates='loc')
+
+# Classe PlageDate
+class PlageDate(Base):
+    __tablename__ = 'PLAGE_DATE'
+
+    id_plage = Column(Integer, primary_key=True)
+    date_deb = Column(Date)
+    date_fin = Column(Date)
+
+    les_offres = relationship('Offre', back_populates='date')
+
+# Classe Notification
+class Notification(Base):
+    __tablename__ = 'NOTIFICATION'
+
+    id_notif = Column(Integer, primary_key=True)
+    type_operation = Column(Text)
+    date_notification = Column(Date)
+
+    les_notifs_admin = relationship('NotifierAdmin', back_populates='notif')
+    les_notifs_orga = relationship('NotifierOrga', back_populates='notif')
+
+# Classe ContenirGenre (table d'association entre Offre et Genre)
+class ContenirGenre(Base):
+    __tablename__ = 'CONTENIR_GENRE'
+
+    id_genre = Column(Integer, ForeignKey('GENRE.id_genre'), primary_key=True)
+    id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
+
+    genre = relationship("Genre", back_populates="les_offres")
+    offre = relationship("Offre", back_populates="les_genres")
+
+# Classe ContenirLien (table d'association entre Offre et Lien)
+class ContenirLien(Base):
+    __tablename__ = 'CONTENIR_LIEN'
+
+    id_lien = Column(Integer, ForeignKey('LIEN.id_lien'), primary_key=True)
+    id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
+
+    lien = relationship("Lien", back_populates="les_offres")
+    offre = relationship("Offre", back_populates="les_liens")
+
+# Classe Repondre (table d'association entre Organisateur et Offre)
+class Repondre(Base):
+    __tablename__ = 'REPONDRE'
+
+    id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
+    id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
+    desc_rep = Column(Text)
+
+    orga = relationship("Organisateur", back_populates="orgas_offre")
+    offre_orga = relationship("Offre", back_populates="les_reponses_orgas")
+
+# Classe AppartenirOrga (table d'association entre Organisateur et Reseau)
+class AppartenirOrga(Base):
+    __tablename__ = 'APPARTENIR_ORGA'
+
+    id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
+    id_reseau = Column(Integer, ForeignKey('RESEAU.id_reseau'), primary_key=True)
+
+    orga = relationship("Organisateur", back_populates="orgas_reseau")
+    reseau = relationship("Reseau", back_populates="reseaux_orga")
+
+# Classe PartagerOffre (table d'association entre Offre et Reseau)
+class PartagerOffre(Base):
+    __tablename__ = 'PARTAGER_OFFRE'
+
+    id_offre = Column(Integer, ForeignKey('OFFRE.id_offre'), primary_key=True)
+    id_reseau = Column(Integer, ForeignKey('RESEAU.id_reseau'), primary_key=True)
+
+    offre = relationship("Offre", back_populates="les_reseaux")
+    reseau = relationship("Reseau", back_populates="les_offres")
+
+# Classe NotifierAdmin (table d'association entre Notification et Administrateur)
+class NotifierAdmin(Base):
+    __tablename__ = 'NOTIFIER_ADMIN'
+
+    id_admin = Column(Integer, ForeignKey('ADMINISTRATEUR.id_admin'), primary_key=True)
+    id_notif = Column(Integer, ForeignKey('NOTIFICATION.id_notif'), primary_key=True)
+
+    admin = relationship("Administrateur", back_populates="les_notifs")
+    notif = relationship("Notification", back_populates="les_notifs_admin")
+
+# Classe NotifierOrga (table d'association entre Notification et Organisateur)
+class NotifierOrga(Base):
+    __tablename__ = 'NOTIFIER_ORGA'
+
+    id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
+    id_notif = Column(Integer, ForeignKey('NOTIFICATION.id_notif'), primary_key=True)
+
+    orga = relationship("Organisateur", back_populates="les_notifs")
+    notif = relationship("Notification", back_populates="les_notifs_orga")
+
+if __name__ == '__main__':
+
+    # Pour une connexion MySQL, utilisez le code ci-dessous (décommentez et remplissez les informations)
+    engine = connexion.ouvrir_connexion('raignault', 'raignault', 'servinfo-maria', 'DBraignault')
+
+    # Création d'un objet MetaData pour introspecter les tables
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+
+    print("--- Suppression de toutes les tables de la BD ---")
+    Base.metadata.drop_all(bind=engine)
+
+    print("--- Construction des tables de la BD ---")
+    Base.metadata.create_all(bind=engine)
+
+    time.sleep(5)
+
+    # Afficher les noms des tables
+    print("Tables dans la base de données :", metadata.tables.keys())
+
+    #Insertion de data de test
+    
