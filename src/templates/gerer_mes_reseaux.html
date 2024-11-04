@@ -37,4 +37,69 @@
 
     </div>
 
-    {% endblock %}
+    <div>
+
+        <h1>Membres du réseau</h1>
+        
+        <input type="search" id="zone-search" name="zone-search" />
+        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <h3>Suggestions</h3>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Ajouter</button>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Ajouter</button>
+        </div>
+    </div>
+
+    <div>
+        <h1>Créer un réseau</h1>
+        <form>
+            <label for="nom">Nom du réseau</label>
+            <input type="text" id="nom" name="nom" required>
+
+            <input type="search" id="zone-search" name="zone-search" />
+            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+
+            <div>
+                <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+                <p>Tom Cook</p>
+                <button>Ajouter</button>
+            </div>
+
+            <div>
+                <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+                <p>Tom Cook</p>
+                <button>Ajouter</button>
+
+
+            <button>Créer</button>
+        </form>
+    </div>
+
+{% endblock %}
+
