@@ -1,0 +1,23 @@
+.btn-base{
+    background-color: #F7B11E !important;
+    color: #FFFFFF !important ;
+}
+
+.btn-dark{
+    background-color: #050B25 !important;
+    color: #FFFFFF !important ;
+    border-color: #FFFFFF !important;
+}
+
+.btn-envoyer{
+    color: #F7B11E !important;
+    background-color: #FFFFFF !important ;
+    border-color: #F7B11E !important;
+}
+
+body {
+    background-color: #FFFFFF;
+}
+div {
+    background-color: #050B25;
+}
