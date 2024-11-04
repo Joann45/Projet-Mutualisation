@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>StageFlow</title>
+        {% endblock %}
+    </head> 
+
+    <body>
+        <header>
+            <img src="{{url_for('static', filename='img/logo.svg')}}" alt="logo de StageFlow">
+            <h1>StageFlow</h1>
+            <h2>Ressentez la simplicité de la collaboration musicale</h2>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>
