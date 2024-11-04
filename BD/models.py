@@ -1,20 +1,13 @@
-#!/ usr / bin / python3
+#!/usr/bin/python3
 
 import connexion
-from sqlalchemy import MetaData
-from sqlalchemy import Column, Integer, Text, Date, Numeric
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, Text, Date, Numeric, MetaData
+from sqlalchemy.orm import relationship, registry
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy import func
 import time
-from datetime import date
 
-from sqlalchemy.orm import registry
 mapper_registry = registry()
 Base = mapper_registry.generate_base()
-
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
 def get_base():
     return Base
@@ -88,8 +81,10 @@ class Administrateur(Base):
     prenom_admin = Column(Text)
     mdp_admin = Column(Text)
     email_admin = Column(Text)
+    img_admin = Column(Text)
 
     les_reseaux = relationship('Reseau', back_populates='administrateur')
+    les_notifs = relationship('NotifierAdmin', back_populates='admin')
 
 # Classe Document
 class Document(Base):
@@ -112,8 +107,10 @@ class Organisateur(Base):
     prenom_orga = Column(Text)
     mdp_orga = Column(Text)
     email_orga = Column(Text)
+    img_orga = Column(Text)
 
     les_offres = relationship('Offre', back_populates='orga')
+    les_notifs = relationship('NotifierOrga', back_populates='orga')
     orgas_offre = relationship('Repondre', back_populates='orga')
     orgas_reseau = relationship('AppartenirOrga', back_populates='orga')
 
@@ -135,6 +132,17 @@ class PlageDate(Base):
     date_fin = Column(Date)
 
     les_offres = relationship('Offre', back_populates='date')
+
+# Classe Notification
+class Notification(Base):
+    __tablename__ = 'NOTIFICATION'
+
+    id_notif = Column(Integer, primary_key=True)
+    type_operation = Column(Text)
+    date_notification = Column(Date)
+
+    les_notifs_admin = relationship('NotifierAdmin', back_populates='notif')
+    les_notifs_orga = relationship('NotifierOrga', back_populates='notif')
 
 # Classe ContenirGenre (table d'association entre Offre et Genre)
 class ContenirGenre(Base):
@@ -187,6 +195,26 @@ class PartagerOffre(Base):
     offre = relationship("Offre", back_populates="les_reseaux")
     reseau = relationship("Reseau", back_populates="les_offres")
 
+# Classe NotifierAdmin (table d'association entre Notification et Administrateur)
+class NotifierAdmin(Base):
+    __tablename__ = 'NOTIFIER_ADMIN'
+
+    id_admin = Column(Integer, ForeignKey('ADMINISTRATEUR.id_admin'), primary_key=True)
+    id_notif = Column(Integer, ForeignKey('NOTIFICATION.id_notif'), primary_key=True)
+
+    admin = relationship("Administrateur", back_populates="les_notifs")
+    notif = relationship("Notification", back_populates="les_notifs_admin")
+
+# Classe NotifierOrga (table d'association entre Notification et Organisateur)
+class NotifierOrga(Base):
+    __tablename__ = 'NOTIFIER_ORGA'
+
+    id_orga = Column(Integer, ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
+    id_notif = Column(Integer, ForeignKey('NOTIFICATION.id_notif'), primary_key=True)
+
+    orga = relationship("Organisateur", back_populates="les_notifs")
+    notif = relationship("Notification", back_populates="les_notifs_orga")
+
 if __name__ == '__main__':
 
     # Pour une connexion MySQL, utilisez le code ci-dessous (décommentez et remplissez les informations)
@@ -201,6 +229,8 @@ if __name__ == '__main__':
 
     print("--- Construction des tables de la BD ---")
     Base.metadata.create_all(bind=engine)
+
+    time.sleep(5)
 
     # Afficher les noms des tables
     print("Tables dans la base de données :", metadata.tables.keys())

@@ -7,11 +7,9 @@ sys.path.append(os.path.join(ROOT, 'BD'))
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
-import BD.insertions_data_test as insertions_data_test
+import BD.insertions_data_test as data
 import models
-from datetime import date
 import connexion
-from sqlalchemy.orm import sessionmaker
 
 # Ouverture de la connexion à la base de données
 ENGINE = connexion.ouvrir_connexion('raignault', 'raignault', 'servinfo-maria', 'DBraignault')
@@ -20,71 +18,91 @@ SESSION = Session()
 
 Base = models.get_base()
 
-Base.metadata.drop_all(bind=ENGINE)
-Base.metadata.create_all(bind=ENGINE)
+# Désactivation des contraintes de clé étrangère
+SESSION.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
+
+tables = [table for table in Base.metadata.tables]
+
+# Boucle de suppression des données table par table
+for table in tables:
+    print(table)
+    SESSION.execute(text(f"DELETE FROM {table}"))
+
+# Réactivation des contraintes de clé étrangère
+SESSION.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
 
 # Valider les changements
 SESSION.commit()
 
 # Insertion initiale pour les tests
-insertions_data_test.insertions()
+data.insertions(data.ORGA, data.NOTIF, data.LOC, data.PLAGE_DATE, data.GENRE, data.LIEN, data.OFFRE, data.DOC, data.ADMIN, data.RESEAU, data.APPARTENIR_ORGA, data.PARTAGER_OFFRE, data.NOTIF_ADMIN, data.NOTIF_ORGA)
 
 class TestDatabaseOperations(unittest.TestCase):
 
     def test_insert_organisateur(self):
-        organisateurs = list(SESSION.query(models.Organisateur).filter_by(nom_orga="Dupont"))
-        self.assertEqual(len(organisateurs), 1)
-        self.assertEqual(organisateurs[0].prenom_orga, "Jean")
-        self.assertEqual(organisateurs[0].email_orga, "jean.dupont@gmail.com")
+        organisateur = SESSION.query(models.Organisateur).get(data.ORGA.id_orga)
+        self.assertIsNotNone(organisateur)
+        self.assertEqual(organisateur.prenom_orga, data.ORGA.prenom_orga)
+        self.assertEqual(organisateur.email_orga, data.ORGA.email_orga)
 
     def test_insert_localisation(self):
-        localisations = list(SESSION.query(models.Localisation).filter_by(nom_loc="Paris"))
-        self.assertEqual(len(localisations), 1)
-        self.assertEqual(localisations[0].nom_loc, "Paris")
+        localisation = SESSION.query(models.Localisation).get(data.LOC.id_loc)
+        self.assertIsNotNone(localisation)
+        self.assertEqual(localisation.nom_loc, data.LOC.nom_loc)
 
     def test_insert_plage_date(self):
-        plages = list(SESSION.query(models.PlageDate).filter_by(date_deb=date(2024, 10, 20)))
-        self.assertEqual(len(plages), 1)
-        self.assertEqual(plages[0].date_fin, date(2024, 10, 25))
+        plage = SESSION.query(models.PlageDate).get(data.PLAGE_DATE.id_plage)
+        self.assertIsNotNone(plage)
+        self.assertEqual(plage.date_fin, data.PLAGE_DATE.date_fin)
 
     def test_insert_genre(self):
-        genres = list(SESSION.query(models.Genre).filter_by(nom_genre="Rock"))
-        self.assertEqual(len(genres), 1)
-        self.assertEqual(genres[0].nom_genre, "Rock")
+        genre = SESSION.query(models.Genre).get(data.GENRE.id_genre)
+        self.assertIsNotNone(genre)
+        self.assertEqual(genre.nom_genre, data.GENRE.nom_genre)
 
     def test_insert_lien(self):
-        liens = list(SESSION.query(models.Lien).filter_by(nom_lien="YouTube.com"))
-        self.assertEqual(len(liens), 1)
-        self.assertEqual(liens[0].nom_lien, "YouTube.com")
+        lien = SESSION.query(models.Lien).get(data.LIEN.id_lien)
+        self.assertIsNotNone(lien)
+        self.assertEqual(lien.nom_lien, data.LIEN.nom_lien)
 
     def test_insert_offre(self):
-        offres = list(SESSION.query(models.Offre).filter_by(nom_offre="Concert de Rock"))
-        self.assertEqual(len(offres), 1)
-        self.assertEqual(offres[0].description, "Un concert de rock en plein air.")
-        self.assertEqual(offres[0].etat, "En attente")
+        offre = SESSION.query(models.Offre).get(data.OFFRE.id_offre)
+        self.assertIsNotNone(offre)
+        self.assertEqual(offre.description, data.OFFRE.description)
+        self.assertEqual(offre.etat, data.OFFRE.etat)
 
     def test_insert_document(self):
-        documents = list(SESSION.query(models.Document).filter_by(nom_doc="Plan du Concert"))
-        self.assertEqual(len(documents), 1)
-        self.assertEqual(documents[0].details_doc, "Plan détaillé des emplacements et des accès.")
+        document = SESSION.query(models.Document).get(data.DOC.id_doc)
+        self.assertIsNotNone(document)
+        self.assertEqual(document.details_doc, data.DOC.details_doc)
 
     def test_insert_administrateur(self):
-        admins = list(SESSION.query(models.Administrateur).filter_by(nom_admin="Martin"))
-        self.assertEqual(len(admins), 1)
-        self.assertEqual(admins[0].prenom_admin, "Paul")
+        admin = SESSION.query(models.Administrateur).get(data.ADMIN.id_admin)
+        self.assertIsNotNone(admin)
+        self.assertEqual(admin.prenom_admin, data.ADMIN.prenom_admin)
 
     def test_insert_reseau(self):
-        reseaux = list(SESSION.query(models.Reseau).filter_by(nom_reseau="Centre-Val de Loire"))
-        self.assertEqual(len(reseaux), 1)
-        self.assertEqual(reseaux[0].administrateur.nom_admin, "Martin")  # Assurez-vous que vous comparez avec un attribut correct
+        reseau = SESSION.query(models.Reseau).get(data.RESEAU.id_reseau)
+        self.assertIsNotNone(reseau)
+        self.assertEqual(reseau.administrateur.nom_admin, data.ADMIN.nom_admin)
 
     def test_insert_appartenir_orga(self):
-        relations = list(SESSION.query(models.AppartenirOrga).filter_by(orga=SESSION.query(models.Organisateur).filter_by(nom_orga="Dupont")[0]))
-        self.assertEqual(len(relations), 1)
+        relation = SESSION.query(models.AppartenirOrga).filter_by(id_orga=data.ORGA.id_orga, id_reseau=data.RESEAU.id_reseau).first()
+        self.assertIsNotNone(relation)
 
     def test_insert_partager_offre(self):
-        relations = list(SESSION.query(models.PartagerOffre).filter_by(offre=SESSION.query(models.Offre).filter_by(nom_offre="Concert de Rock")[0]))
-        self.assertEqual(len(relations), 1)
+        relation = SESSION.query(models.PartagerOffre).filter_by(id_offre=data.OFFRE.id_offre, id_reseau=data.RESEAU.id_reseau).first()
+        self.assertIsNotNone(relation)
+
+    def test_notifier_admin_insertion(self):
+        notif_admin = SESSION.query(models.NotifierAdmin).filter_by(id_admin=data.ADMIN.id_admin, id_notif=data.NOTIF.id_notif).first()
+        self.assertIsNotNone(notif_admin)
+        self.assertEqual(notif_admin.notif.type_operation, data.NOTIF.type_operation)
+
+    def test_notifier_orga_insertion(self):
+        notif_orga = SESSION.query(models.NotifierOrga).filter_by(id_orga=data.ORGA.id_orga, id_notif=data.NOTIF.id_notif).first()
+        self.assertIsNotNone(notif_orga)
+        self.assertEqual(notif_orga.notif.type_operation, data.NOTIF.type_operation)
 
     def tearDown(self):
         # Nettoyer la base de données après chaque test
