@@ -1,0 +1,9 @@
+from src.app import db  # Assurez-vous que `db` est importé correctement depuis votre application
+
+# Classe Lien
+class Lien(db.Model):
+    __tablename__ = 'LIEN'
+
+    id_lien = db.Column(db.Integer, primary_key=True)
+    nom_lien = db.Column(db.Text)
+    les_offres = db.relationship('ContenirLien', back_populates='lien', lazy=True)
