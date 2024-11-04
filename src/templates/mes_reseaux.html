@@ -3,14 +3,13 @@
     <h1>Voir mes réseaux</h1>
     <div>
         <div>
-            <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social">
+            <img src="{{ url_for('static', filename='img/humaaan1.svg')}}" alt="social">
 
         </div>
 
         <div>
             <form>
-
-
+     
                 <input type="radio" id="reseau1" name="reseau1 "value="reseau1">
                 <label for="reseau1">Reseau 1</label>
 
@@ -35,4 +34,42 @@
 
     </div>
 
-    {% endblock %}
+    <div>
+
+        <h1>Membres du réseau</h1>
+        
+        <input type="search" id="zone-search" name="zone-search" />
+        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Supprimer</button>
+        </div>
+
+        <h3>Suggestions</h3>
+
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Ajouter</button>
+        </div>
+        <div>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Tom Cook</p>
+            <button>Ajouter</button>
+        </div>
+    </div>
+{% endblock %}
