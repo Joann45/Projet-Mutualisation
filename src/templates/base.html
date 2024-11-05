@@ -9,52 +9,66 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% endblock %}
+        {% block style %}
+            <!-- Bootstrap CSS -->
+             {{ bootstrap.load_css() }}
+        {% endblock %}
     </head> 
 
     <body>
         <header>
             <nav>
-
                 <div>
                     <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>StageFlow</a>
                 </div>
                     
                 <div>
-                    <input type="search" id="zone-search" name="zone-search" />
-                    <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+                    <input type="search" id="zone-search" name="zone-search"/>
+                    <button>
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+                    </button>
+                </div>
+                
+                <div>
+                    <!-- modifier pour prendre en compte la connexion -->
+                    <a href="{{url_for('mes_reseaux')}}">
+                        Mes réseaux
+                        <img src="{{url_for('static', filename='img/icon_reseau.svg')}}" alt="icone réseaux">
+                    </a>
                 </div>
 
-                    <li> 
-
-                    </li>          
-                
-                    <li>
-                        <ul> 
-                            <li>Mes réseaux</li>
-                            <li><img src="{{ url_for('static', filename='img/icon_reseau.svg') }}" alt="mes réseaux"/></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul> 
-                            <li>Mes offres</li>
-                            <li><img src="{{ url_for('static', filename='img/icon_dossier.svg') }}" alt="mes offres"/></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul> 
-                            <li>Créer une offre</li>
-                            <li><img src="{{ url_for('static', filename='img/icon_plus.svg') }}" alt="créer une offre"/></li>
-                        </ul>
-                    </li>
-                    <li><img src="{{ url_for('static', filename='img/boite_reception.svg') }}" alt="boite de réception"></li>
-
-                    <a href="{{url_for('modifier_profil')}}">
-                    <li><img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil"></li>
-                    <li>Tom Cook</li>
+                <div>
+                    <!-- créer route vers mes offres -->
+                    <a href="">
+                        Mes offres
+                        <img src="{{url_for('static', filename='img/icon_dossier.svg')}}" alt="icone dossier">
                     </a>
-                </ul>
+                </div>
+                
+                <div>
+                    <a href="{{url_for('creation_offre')}}">
+                        Créer une offre
+                        <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus">
+                    </a>
+                </div>
+
+                <div>
+                    <!-- créer la route vers notification -->
+                    <a href="">
+                        <img src="{{ url_for('static', filename='img/boite_reception.svg') }}" alt="boite de réception">
+                    </a>
+                </div>
+
+                <div>
+                    <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
+                    <a href="{{url_for('modifier_profil')}}">
+                        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+                        Tom Cook
+                    </a>
+                </div>
             </nav>
         </header>
+        
         <main>
             {% block content %}
             {% endblock %}
