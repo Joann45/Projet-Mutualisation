@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {% extends 'base.html' %}
 
 {% block content %}
@@ -5,28 +6,33 @@
     <h1>Modifier le profil</h1>
     <div>
         <div>
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
-        <p>Modifier la photo</p>
+            <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+            <p>Modifier la photo</p>
         </div>
 
     
-        <form action="/profil" method="post">
+        <form action="/home/profil" method="post">
 
-            <label for="name">Nom</label>
-            <input type="text" name="name" id="name" value="name">
-
-            <label for="name">Prénom</label>
-            <input type="text" name="name" id="surname" value="surname">   
-
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" value="email">
-
-            <label for="password">Mot de passe</label>
-            <input type="password" name="password" id="password">
-
-            <button type="submit">Enregistrer</button>
+            <div>
+                <label for="name">Nom</label>
+                <input type="text" name="name" id="name" value="name">
+            </div>
+            <div>
+                <label for="firstname">Prénom</label>
+                <input type="text" name="name" id="firstname" value="firstname">   
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" value="email">
+            </div>
+            <div>
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <div>
+                <button type="submit">Enregistrer</button>
+            </div>
         </form>
-
     </div>
 
 {% endblock %}

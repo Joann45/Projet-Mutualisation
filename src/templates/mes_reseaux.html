@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
     <h1>Voir mes réseaux</h1>
@@ -8,18 +9,20 @@
         </div>
 
         <div>
-            <form>
-     
-                <input type="radio" id="reseau1" name="reseau1 "value="reseau1">
-                <label for="reseau1">Reseau 1</label>
+            <form action="/home/" method="post">
+                <div> 
+                    <label for="reseau1">Reseau 1</label>
+                    <input type="radio" id="reseau1" name="reseau1 "value="reseau1">
+                </div>
 
-
-                <input type="radio" id="reseau2" name="reseau2 "value="reseau2">
-                <label for="reseau2">Reseau 2</label>
-
-                <input type="radio" id="reseau3" name="reseau3 "value="reseau3">
-                <label for="reseau3">Reseau 3</label>
-
+                <div>
+                    <label for="reseau2">Reseau 2</label>
+                    <input type="radio" id="reseau2" name="reseau2 "value="reseau2"> 
+                </div>
+                <div> 
+                    <label for="reseau3">Reseau 3</label>
+                    <input type="radio" id="reseau3" name="reseau3 "value="reseau3">
+                </div>
             </form>
 
             <button>Voir les membres</button>
@@ -35,7 +38,6 @@
     </div>
 
     <div>
-
         <h1>Membres du réseau</h1>
         
         <input type="search" id="zone-search" name="zone-search" />

@@ -28,3 +28,7 @@ def voir_mes_reseaux():
 @app.route('/home/mes_reseaux_admin')
 def gerer_mes_reseaux():
     return render_template('gerer_mes_reseaux.html')
+
+@app.route('/home/creation_offre')
+def creation_offre():
+    return render_template('creation_offre.html')
