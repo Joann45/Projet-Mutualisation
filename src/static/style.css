@@ -18,6 +18,9 @@
 body {
     background-color: #FFFFFF;
 }
-div {
+.div_dark {
     background-color: #050B25;
+}
+.nav {
+    flex-direction: row !important;
 }

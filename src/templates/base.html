@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>StageFlow</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+        {% endblock %}
+    </head> 
+
+    <body>
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>
+                        <a class="navbar-brand" href="#">StageFlow</a>
+                    </div>
+                    <div class = "nav navbar-nav" >
+                      <ul class="nav navbar-nav">
+                        <input type="search" id="zone-search" name="zone-search" />
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+                        <li class="nav-item">Mes réseaux</li>
+                        <li class="nav-item"><img src="{{ url_for('static', filename='img/icon_reseau.svg') }}" alt="mes réseaux"/></li>
+                        <li class="nav-item">Mes offres</li>
+                        <li class="nav-item"><img src="{{ url_for('static', filename='img/icon_dossier.svg') }}" alt="mes offres"/></li>
+                        <li class="nav-item">Créer une offre</li>
+                        <li class="nav-item"><img src="{{ url_for('static', filename='img/icon_plus.svg') }}" alt="créer une offre"/></li>
+                        <li class="nav-item"><img src="{{ url_for('static', filename='img/icon_reception.svg') }}" alt="boite de réception"></li>
+                        <li class="nav-item"><img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil"></li>
+                        <li class="nav-item">Tom Cook</li>
+                        </ul>  
+                    </div> 
+                    
+                </div>
+                
+            </nav>
+        </header>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>
