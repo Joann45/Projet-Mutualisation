@@ -25,17 +25,17 @@ def les_offres():
 def modifier_profil():
     return render_template('profil.html')
 
-@app.route('/home/mes_reseaux')
+@app.route('/home/mes-reseaux')
 def voir_mes_reseaux():
-    return render_template('voir_mes_reseaux.html')
+    return render_template('mes-reseaux.html')
 
-@app.route('/home/mes_reseaux_admin')
+@app.route('/home/mes-reseaux-admin')
 def gerer_mes_reseaux():
-    return render_template('gerer_mes_reseaux.html')
+    return render_template('mes-reseaux-admin.html')
 
-@app.route('/home/creation_offre')
+@app.route('/home/creation-offre')
 def creation_offre():
-    return render_template('creation_offre.html')
+    return render_template('creation-offre.html')
 
 @app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():

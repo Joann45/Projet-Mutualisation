@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>StageFlow</title>
-        <link rel="icon" type="image/png" sizes="16x16"  href="../static/img/icon_logo.png">
+        <link rel="icon" type="image/png" sizes="16x16"  href="../static/img/logo.svg">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% endblock %}
@@ -14,13 +14,18 @@
     <body>
         <header>
             <nav>
-                <ul>
-                    <li><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/></li>
-                    <li>StageFlow</li>
+
+                <div>
+                    <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>StageFlow</a>
+                </div>
+                    
+                <div>
+                    <input type="search" id="zone-search" name="zone-search" />
+                    <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+                </div>
 
                     <li> 
-                        <input type="search" id="zone-search" name="zone-search" />
-                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+
                     </li>          
                 
                     <li>
@@ -42,8 +47,11 @@
                         </ul>
                     </li>
                     <li><img src="{{ url_for('static', filename='img/boite_reception.svg') }}" alt="boite de réception"></li>
+
+                    <a href="{{url_for('modifier_profil')}}">
                     <li><img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil"></li>
                     <li>Tom Cook</li>
+                    </a>
                 </ul>
             </nav>
         </header>

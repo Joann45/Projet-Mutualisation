@@ -14,7 +14,7 @@
         <h2> Les offres les plus populaires </h2>
 
         <div>
-
+            <a href="{{url_for('les_offres')}}">
             <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="fetes">
             <div>
                 <h4>Titre de l'offre</h4>
@@ -35,10 +35,11 @@
                     <p>XXX XXX jours </p>
                 </div>
             </div>
+            </a>
         </div>
 
         <div>
-
+            <a href="{{url_for('les_offres')}}">
             <img src="{{ url_for('static', filename='img/fetes.svg') }}" alt="fetes">
             <div>
                 <h4>Titre de l'offre</h4>
@@ -59,6 +60,7 @@
                     <p>XXX XXX jours </p>
                 </div>
             </div>
+            </a>
         </div>
                 
     </div>
