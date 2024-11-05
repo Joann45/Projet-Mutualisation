@@ -17,6 +17,10 @@ def mdp_reset():
 def home():
     return render_template('home.html')
 
+@app.route('/home/les-offres')
+def les_offres():
+    return render_template('les-offres.html')
+
 @app.route('/home/profil')
 def modifier_profil():
     return render_template('profil.html')
