@@ -11,7 +11,7 @@ def mkpath(p):
             os.path.dirname(__file__),
             p))
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'sqlite:///' + mkpath('../cacapipi.db'))
+    'sqlite:///' + mkpath('../testdb.db'))
 app.url_map.strict_slashes = False
 
 db = SQLAlchemy()

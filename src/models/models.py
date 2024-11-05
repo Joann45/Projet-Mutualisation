@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from src.app import db  # Assurez-vous que `db` est importé correctement depuis votre application
+from src.app import db
 
 
 # Tables d'association

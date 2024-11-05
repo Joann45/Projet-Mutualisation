@@ -1,4 +1,4 @@
-from src.app import db  # Assurez-vous que `db` est importé correctement depuis votre application
+from src.app import db
 
 # Classe Organisateur
 class Organisateur(db.Model):

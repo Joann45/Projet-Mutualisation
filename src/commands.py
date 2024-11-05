@@ -196,4 +196,3 @@ def loaddb(filename):
             db.session.add(notifier_orga)
 
     db.session.commit()
-    click.echo("Database populated successfully.")
