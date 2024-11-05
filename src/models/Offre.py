@@ -12,6 +12,9 @@ class Offre(db.Model):
     capacite_min = db.Column(db.Integer)
     capacite_max = db.Column(db.Integer)
     etat = db.Column(db.Text)
+    nom_loc = db.Column(db.Text)
+    date_deb = db.Column(db.Date)
+    date_fin = db.Column(db.Date)
 
     id_orga = db.Column(db.Integer, db.ForeignKey('ORGANISATEUR.id_orga'))
     id_loc = db.Column(db.Integer, db.ForeignKey('LOCALISATION.id_loc'))
