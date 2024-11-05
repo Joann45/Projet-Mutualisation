@@ -9,11 +9,15 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         {% endblock %}
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
     </head> 
 
     <body>
         <header>
-            <nav>
+            <nav class="nav navbar">
 
                 <div>
                     <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>StageFlow</a>
