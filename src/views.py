@@ -32,3 +32,7 @@ def gerer_mes_reseaux():
 @app.route('/home/creation_offre')
 def creation_offre():
     return render_template('creation_offre.html')
+
+@app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_offre():
+    return render_template('visualiser-reponses-offres.html')
