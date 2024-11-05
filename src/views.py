@@ -26,7 +26,7 @@ def modifier_profil():
     return render_template('profil.html')
 
 @app.route('/home/mes-reseaux')
-def voir_mes_reseaux():
+def mes_reseaux():
     return render_template('mes-reseaux.html')
 
 @app.route('/home/mes-reseaux-admin')
