@@ -12,6 +12,6 @@ class Organisateur(db.Model):
     img_orga = db.Column(db.Text)
 
     les_offres = db.relationship('Offre', back_populates='orga', lazy=True)
-    les_notifs = db.relationship('NotifierOrga', back_populates='orga', lazy=True)
-    orgas_offre = db.relationship('Repondre', back_populates='orga', lazy=True)
-    orgas_reseau = db.relationship('AppartenirOrga', back_populates='orga', lazy=True)
+    les_notifs = db.relationship('Notification_Orga', back_populates='orga', lazy=True)
+    orgas_offre = db.relationship('Reponse', back_populates='orga', lazy=True)
+    orgas_reseau = db.relationship('Organisateur_Reseau', back_populates='orga', lazy=True)
