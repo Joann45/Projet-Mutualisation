@@ -9,7 +9,7 @@ def loaddb(filename):
     db.create_all()
     
     # Import des modèles
-    import src.models.models as md
+    import src.models.Notification_Orga as md
     import yaml
     
     with open(filename, 'r') as file:

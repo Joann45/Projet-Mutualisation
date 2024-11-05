@@ -12,4 +12,4 @@ class Administrateur(db.Model):
     img_admin = db.Column(db.Text)
 
     les_reseaux = db.relationship('Reseau', back_populates='administrateur', lazy=True)
-    les_notifs = db.relationship('NotifierAdmin', back_populates='admin', lazy=True)
+    les_notifs = db.relationship('Notification_Admin', back_populates='admin', lazy=True)

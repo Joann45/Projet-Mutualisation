@@ -6,4 +6,4 @@ class Lien(db.Model):
 
     id_lien = db.Column(db.Integer, primary_key=True)
     nom_lien = db.Column(db.Text)
-    les_offres = db.relationship('ContenirLien', back_populates='lien', lazy=True)
+    les_offres = db.relationship('Lien_Offre', back_populates='lien', lazy=True)
