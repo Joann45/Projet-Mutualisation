@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from src.app import db
 
-from src.models.Utilisateur import Utilisateur, Role
+from src.models.Utilisateur import Utilisateur
+from src.models.Role import Role
 from src.models.Notification import Notification
 from src.models.Notification_Utilisateur import Notification_Utilisateur
 from src.models.Offre import Offre
