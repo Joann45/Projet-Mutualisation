@@ -1,5 +1,5 @@
 .btn-base{
-    background-color: #F7B11E !important;
+    background-color: #F7B11E !important ;
     color: #FFFFFF !important ;
 }
 
@@ -20,4 +20,17 @@ body {
 }
 .div-dark {
     background-color: #050B25;
+}
+
+nav {
+    border-bottom-width: 1cm  !important;
+    border-bottom-color: #050B25;
+    justify-content: space-evenly !important;
+}
+.input-group{
+    width: 355px !important;
+    height: 40;
+}
+.btn:active{
+    border-color: #FFFFFF !important;
 }

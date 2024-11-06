@@ -8,6 +8,7 @@
         <link rel="icon" type="image/png" sizes="16x16"  href="../static/img/logo.svg">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
         {% endblock %}
 
         {% block styles %}
@@ -18,21 +19,21 @@
 
     <body>
         <header>
-            <nav class="nav navbar">
+            <nav class="nav navbar border">
                 <div>
-                    <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>StageFlow</a>
+                    <a class="btn pe-1" href="{{url_for('home')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow"/>   StageFlow</a>
                 </div>
                     
-                <div>
-                    <input type="search" id="zone-search" name="zone-search"/>
-                    <button>
+                <div class="input-group border rounded-pill">
+                    <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search" placeholder="Recherche une offre"/>
+                    <button class = "btn">
                         <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
                     </button>
                 </div>
                 
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
-                    <a href="{{url_for('mes_reseaux')}}">
+                    <a class ="btn btn-default" href="{{url_for('mes_reseaux')}}">
                         Mes réseaux
                         <img src="{{url_for('static', filename='img/icon_reseau.svg')}}" alt="icone réseaux">
                     </a>
@@ -40,14 +41,14 @@
 
                 <div>
                     <!-- créer route vers mes offres -->
-                    <a href="">
+                    <a class ="btn btn-default" href="">
                         Mes offres
                         <img src="{{url_for('static', filename='img/icon_dossier.svg')}}" alt="icone dossier">
                     </a>
                 </div>
                 
                 <div>
-                    <a href="{{url_for('creation_offre')}}">
+                    <a class = "btn btn-base" href="{{url_for('creation_offre')}}">
                         Créer une offre
                         <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus">
                     </a>
@@ -62,7 +63,7 @@
 
                 <div>
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
-                    <a href="{{url_for('modifier_profil')}}">
+                    <a class = "btn" href="{{url_for('modifier_profil')}}">
                         <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
                         Tom Cook
                     </a>
