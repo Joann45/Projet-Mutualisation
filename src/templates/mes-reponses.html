@@ -54,11 +54,8 @@
 
         <div>
             <div>
-                <form action="{{url_for('mes_offres')}}">
-                    <button>Mes offres</button>
-
-                </form>
-                <button>Mes réponses</button>
+                <a  href="{{url_for('mes_offres')}}"><input class="btn" type="button" name="offres" id="offres" value="Mes offres"></a>
+                <a  href="{{url_for('mes_reponses')}}"><input class="btn btn-dark" type="button" name="reponses" id="reponses" value="Mes réponses"></a>
             </div>
             <div>
                 <a href="{{url_for('les_offres')}}">

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<div>
+    <h1>Membres du réseau</h1>
+    
+    <div class="input-group border rounded-pill">
+        <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search"/>
+        <button class = "btn">
+            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+        </button>
+    </div>
+
+    <div>
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p>Tom Cook</p>
+        <input class="btn btn-dark" type="button" name="supprimer" id="supprimer" value="Supprimer">
+    </div>
+
+    <div>
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p>Tom Cook</p>
+        <input class="btn btn-dark" type="button" name="supprimer2" id="supprimer2" value="Supprimer">
+    </div>
+
+    <div>
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p>Tom Cook</p>
+        <input class="btn btn-dark" type="button" name="supprimer3" id="supprimer3" value="Supprimer">
+    </div>
+
+    <h3>Suggestions</h3>
+
+    <div>
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p>Tom Cook</p>
+        <input class="btn btn-dark" type="button" name="ajouter" id="ajouter" value="Ajouter">
+    </div>
+    <div>
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p>Tom Cook</p>
+        <input class="btn btn-dark" type="button" name="ajouter2" id="ajouter2" value="Ajouter">
+    </div>
+</div>
