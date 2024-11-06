@@ -23,9 +23,7 @@ def loaddb(filename):
         'notification': {},
         'genre': {},
         'lien': {},
-        'localisation': {},
         'offre': {},
-        'plage_date': {},
         'appartenir_orga': {},
         'contenir_genre': {},
         'contenir_liens': {},
@@ -104,14 +102,6 @@ def loaddb(filename):
             elements["lien"][elem["id_lien"]] = lien
             db.session.add(lien)
 
-        elif elem["type"] == "localisation":
-            localisation = md.Localisation(
-                id_loc=elem["id_loc"],
-                nom_loc=elem["nom_loc"]
-            )
-            elements["localisation"][elem["id_loc"]] = localisation
-            db.session.add(localisation)
-
         elif elem["type"] == "offre":
             offre = md.Offre(
                 id_offre=elem["id_offre"],
@@ -122,21 +112,14 @@ def loaddb(filename):
                 capacite_min=elem["capacite_min"],
                 capacite_max=elem["capacite_max"],
                 etat=elem["etat"],
+                img=elem["img"],
                 id_orga=elem["id_orga"],
-                id_loc=elem["id_loc"],
-                id_plage=elem["id_plage"]
+                nom_loc = elem["nom_loc"],
+                date_deb = elem["date_deb"],
+                date_fin = elem["date_fin"]
             )
             elements["offre"][elem["id_offre"]] = offre
             db.session.add(offre)
-
-        elif elem["type"] == "plage_date":
-            plage_date = md.PlageDate(
-                id_plage=elem["id_plage"],
-                date_deb=elem["date_deb"],
-                date_fin=elem["date_fin"]
-            )
-            elements["plage_date"][elem["id_plage"]] = plage_date
-            db.session.add(plage_date)
 
         elif elem["type"] == "appartenir_orga":
             appartenir_orga = md.AppartenirOrga(

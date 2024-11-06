@@ -15,6 +15,7 @@ class Offre(db.Model):
     nom_loc = db.Column(db.Text)
     date_deb = db.Column(db.Date)
     date_fin = db.Column(db.Date)
+    img = db.Column(db.Text)
 
     id_orga = db.Column(db.Integer, db.ForeignKey('ORGANISATEUR.id_orga'))
     id_loc = db.Column(db.Integer, db.ForeignKey('LOCALISATION.id_loc'))
@@ -22,8 +23,6 @@ class Offre(db.Model):
 
     # Relations
     orga = db.relationship('Organisateur', backref=db.backref('les_offres', lazy=True))
-    loc = db.relationship('Localisation', backref=db.backref('les_offres', lazy=True))
-    date = db.relationship('PlageDate', backref=db.backref('les_offres', lazy=True))
     les_documents = db.relationship('Document', back_populates='offre', lazy=True)
     les_genres = db.relationship('Genre_Offre', back_populates='offre', lazy=True)
     les_liens = db.relationship('Lien_Offre', back_populates='offre', lazy=True)
