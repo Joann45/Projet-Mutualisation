@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div>
+        <div>
+            <h1>Filtrer par</h1>
+
+            <div>
+                <h2>Réseau</h2>
+
+                <div>
+                    <input type="checkbox" id="reseau1" name="reseau" value="reseau1">
+                    <label for="reseau1">Réseau 1</label>
+                </div>
+                
+                <div>
+                    <input type="checkbox" id="reseau2" name="reseau" value="reseau2">
+                    <label for="reseau2">Réseau 2</label>
+                </div>
+
+            </div>
+
+            <div>
+                <h2>Date d'expiration</h2>
+
+                <div>
+                    <input type="checkbox" id="plus_proche" name="anciennete" value="plus_proche">
+                    <label for="plus_proche">Plus proche</label>
+                </div>
+                
+                <div>
+                    <input type="checkbox" id="moins_proche" name="anciennete" value="moins_proche">
+                    <label for="moins_proche">Moins proche</label>
+                </div>
+
+            </div>
+
+            <div>
+                <h2>Popularité</h2>
+
+                <div>
+                    <input type="checkbox" id="plus_populaire" name="populaire" value="plus_populaire">
+                    <label for="plus_proche">Plus proche</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="moins_populaire" name="populaire" value="moins_populaire">
+                    <label for="moins_populaire">Moins populaire</label>
+                </div>
+
+            </div>
+        </div>
+
+        {% include 'offre.html' %}
+
+    </div>
+
+{% endblock %}

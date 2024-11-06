@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{%extends 'base.html'%}
+{%block content%}
+    <h1>Créer une offre</h1>
+
+    <form action="/creer_offre" method="post">
+
+        <div>
+            <label for="name">Nom de l'offre</label>
+        </div>
+        <div>
+            <label for="genre">Genre de musique</label>
+            <input type="search" id="genre" name="genre" placeholder="Genre"/>
+            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+        </div>
+        <div>
+            <label for="expiration">Expiration de l'offre </label>
+            <input type="text" name="name" id="expiration" placeholder="jj/mm/aaaa">
+        </div>
+        <div>
+            <label for="plage">Plage de l'offre</label>
+            <input type="text" name="plage_debut" id="plage_debut" placeholder="Date de début">
+            <input type="text" name="plage_fin" id="plage_fin" placeholder="Date de Fin">
+        </div>
+        <div>
+            <label for="budget">Budget Estimatif</label>
+            <input type="text" name="budget" id="budget" placeholder="XXX XXX euros">
+        </div>
+        <div>
+            <label for="localisation">Localisation</label>
+            <input type="text" name="localisation" id="localisation">
+        </div>
+        <div>
+            <label for="choix_image">Image</label>
+            <input type="file" id="choix_image" name="choix_image" accept="img/png, img/jpeg" />
+        </div>
+        <div>
+            <label for="choix_ressources">Lien vers des ressources promotionnelles</label>
+            <input type="file" id="choix_ressources" name="choix_ressources"  accept="img/png, img/jpeg"/>
+        </div>
+        <div>
+            <label for="doc_sup"> Ajouter les documents liés à l'offre</label>
+        </div>
+        <div>
+            <label for="description">Description</label>
+            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+        </div>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+
+{%endblock%}

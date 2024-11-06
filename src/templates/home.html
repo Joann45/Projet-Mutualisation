@@ -1,0 +1,28 @@
+{% extends 'base.html' %} 
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <h1 class="fw-bolder display-3"><strong>StageFlow</strong></h1>
+        <h4 class="fst-italic fw-light">Ressentez la simplicité de la collaboration musicale.</h4>
+    </div>
+    <div class="d-flex justify-content-center">
+        <img class="mx-5" src="{{ url_for('static', filename='img/saxo.svg') }}" alt="saxo">
+
+        <img class="mx-5" src="{{ url_for('static', filename='img/musicien.svg') }}" alt="musique">
+    </div>
+
+    <div class="">
+
+        <h2 class="mx-3"> Les offres les plus populaires </h2>
+
+        {% include 'offre.html' %}
+
+        {% include 'offre.html' %}
+
+        <a href="{{url_for('les_offres')}}">
+            <input class="btn btn-base" type="button" name="offres" id="offres" value="Afficher plus d'offre">
+        </a>
+                
+    </div>
+
+{% endblock %}
+
