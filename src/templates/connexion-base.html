@@ -8,14 +8,19 @@
         <link rel="icon" type="image/png" sizes="16x16"  href="../static/img/logo.svg">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+        {% endblock %}
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
         {% endblock %}
     </head> 
 
-    <body>
-        <header>
-            <img src="{{url_for('static', filename='img/logo.svg')}}" alt="logo de StageFlow">
-            <h1>StageFlow</h1>
-            <h2>Ressentez la simplicité de la collaboration musicale</h2>
+    <body class="container d-flex flex-column">
+        <header class="container d-inline-flex justify-content-center ">
+            <img class = "" src="{{url_for('static', filename='img/logo.svg')}}" alt="logo de StageFlow">
+            <h1 class = "plc-dark">StageFlow</h1>
+            <h2 class="plc-colored">Ressentez la simplicité de la collaboration musicale</h2>
         </header>
         <main>
             {% block content %}

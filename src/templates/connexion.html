@@ -2,20 +2,20 @@
 
 {% block content %}
 
-    <div>
-        <h1>Connexion</h1>
+    <div class="border rounded-2 mx-auto w-50 m-auto">
+        <h1 class="plc-colored">Connexion</h1>
     
         <form action="{{url_for('home')}}">
 
-            <label for="email">Adresse e-mail</label>
-            <input type="email" name="email" id="email" placeholder="Entrer votre adresse e-mail">
+            <label class="plc-colored" for="email">Adresse e-mail</label>
+            <input class="rounded-2" type="email" name="email" id="email" placeholder="Entrer votre adresse e-mail">
 
-            <label for="password">Mot de passe</label>
-            <input type="password" name="password" id="password" placeholder="Entrer votre mot de passe">
+            <label class="plc-colored" for="password">Mot de passe</label>
+            <input class="rounded-2" type="password" name="password" id="password" placeholder="Entrer votre mot de passe">
 
-            <a href="{{ url_for('mdp_oublie') }}">Mot de passe oublié</a>
+            <a class="btn" href="{{ url_for('mdp_oublie') }}">Mot de passe oublié</a>
             
-            <button type="submit">Se connecter</button>
+            <button class ="btn btn-envoyer" type="submit">Se connecter</button>
 
         </form>
 
