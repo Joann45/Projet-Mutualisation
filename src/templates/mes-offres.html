@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div>
+        <div>
+            <h1>Filtrer par</h1>
+
+            <div>
+                <h2>Réseau</h2>
+
+                <div>
+                    <input type="checkbox" id="reseau1" name="reseau" value="reseau1">
+                    <label for="reseau1">Réseau 1</label>
+                </div>
+                
+                <div>
+                    <input type="checkbox" id="reseau2" name="reseau" value="reseau2">
+                    <label for="reseau2">Réseau 2</label>
+                </div>
+
+            </div>
+
+            <div>
+                <h2>Date d'expiration</h2>
+
+                <div>
+                    <input type="checkbox" id="plus_proche" name="anciennete" value="plus_proche">
+                    <label for="plus_proche">Plus proche</label>
+                </div>
+                
+                <div>
+                    <input type="checkbox" id="moins_proche" name="anciennete" value="moins_proche">
+                    <label for="moins_proche">Moins proche</label>
+                </div>
+
+            </div>
+
+            <div>
+                <h2>Popularité</h2>
+
+                <div>
+                    <input type="checkbox" id="plus_populaire" name="populaire" value="plus_populaire">
+                    <label for="plus_proche">Plus proche</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" id="moins_populaire" name="populaire" value="moins_populaire">
+                    <label for="moins_populaire">Moins populaire</label>
+                </div>
+
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <button>Mes offres</button>
+                <form action="{{url_for('mes_reponses')}}">
+                    <button>Mes réponses</button>
+
+                </form>
+            </div>
+            <div>
+                <a href="{{url_for('les_offres')}}">
+                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="fetes">
+                <div>
+                    <h2>Titre de l'offre</h2>
+                    <p> Créé par M....</p>
+                </div>
+    
+                <div>
+                    <div>
+                        <p>Nombre de participants</p>
+                        <p>XXX XXX</p>
+                    </div>
+                    <div>
+                        <p>Cotisation minimale</p>
+                        <p>XXX XXX euros</p>
+                    </div>
+                    <div>
+                        <p>Temps restant</p>
+                        <p>XXX XXX jours </p>
+                    </div>
+                </div>
+                </a>
+                <div> 
+                    <p>Publiée <img src="{{ url_for('static', filename='img/valide.svg') }}" alt="validation" ></p>
+                    <button>Modifier</button>
+                    <button>Supprimer</button>
+                </div>
+
+            </div>
+
+            <div>
+                <a href="{{url_for('les_offres')}}">
+                <img src="{{ url_for('static', filename='img/fetes.svg') }}" alt="fetes">
+                <div>
+                    <h2>Titre de l'offre</h2>
+                    <p> Créé par M....</p>
+                </div>
+    
+                <div>
+                    <div>
+                        <p>Nombre de participants</p>
+                        <p>XXX XXX</p>
+                    </div>
+                    <div>
+                        <p>Cotisation minimale</p>
+                        <p>XXX XXX euros</p>
+                    </div>
+                    <div>
+                        <p>Temps restant</p>
+                        <p>XXX XXX jours </p>
+                    </div>
+                </div>
+                </a>
+                <div> 
+                    <button>Publier</button>
+                    <button>Modifier</button>
+                    <button>Supprimer</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div>
+        <h2>Confirmation de suppression</h2>
+        <div>
+            <img src="{{ url_for('static', filename='img/attention.svg') }}" alt="attention">
+            <p> Êtes-vous sûr de vouloir supprimer l’offre ... ?</p>
+
+        </div>
+        <div>
+            <button>Oui</button>
+            <button>Annuler</button>
+        </div>
+    </div>
+
+{% endblock %}
