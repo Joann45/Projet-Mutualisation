@@ -8,5 +8,4 @@ class Notification(db.Model):
     type_operation = db.Column(db.Text)
     date_notification = db.Column(db.Date)
 
-    les_notifs_admin = db.relationship('Notification_Admin', back_populates='notif', lazy=True)
-    les_notifs_orga = db.relationship('Notification_Orga', back_populates='notif', lazy=True)
+    les_notifs = db.relationship('Notification_Utilisateur', back_populates='notif', lazy=True)

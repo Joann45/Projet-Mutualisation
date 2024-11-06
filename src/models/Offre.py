@@ -17,14 +17,13 @@ class Offre(db.Model):
     date_fin = db.Column(db.Date)
     img = db.Column(db.Text)
 
-    id_orga = db.Column(db.Integer, db.ForeignKey('ORGANISATEUR.id_orga'))
-    id_loc = db.Column(db.Integer, db.ForeignKey('LOCALISATION.id_loc'))
-    id_plage = db.Column(db.Integer, db.ForeignKey('PLAGE_DATE.id_plage'))
+    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id'))
 
     # Relations
-    orga = db.relationship('Organisateur', backref=db.backref('les_offres', lazy=True))
+    # utilisateur = db.relationship('Utilisateur', backref=db.backref('les_offres', lazy=True))
+    utilisateur = db.relationship('Utilisateur', back_populates='les_offres', lazy=True)
     les_documents = db.relationship('Document', back_populates='offre', lazy=True)
     les_genres = db.relationship('Genre_Offre', back_populates='offre', lazy=True)
     les_liens = db.relationship('Lien_Offre', back_populates='offre', lazy=True)
-    les_reponses_orgas = db.relationship('Reponse', back_populates='offre_orga', lazy=True)
+    les_reponses_utilisateurs = db.relationship('Reponse', back_populates='offre', lazy=True)
     les_reseaux = db.relationship('Offre_Reseau', back_populates='offre', lazy=True)

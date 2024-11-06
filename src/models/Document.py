@@ -8,4 +8,5 @@ class Document(db.Model):
     nom_doc = db.Column(db.Text)
     details_doc = db.Column(db.Text)
     id_offre = db.Column(db.Integer, db.ForeignKey('OFFRE.id_offre'))
+    
     offre = db.relationship('Offre', back_populates='les_documents', lazy=True)

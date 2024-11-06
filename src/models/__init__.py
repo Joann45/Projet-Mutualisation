@@ -1,4 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
-from app import db
+from src.app import db
 
-from models import *
+from src.models.Utilisateur import Utilisateur, Role
+from src.models.Notification import Notification
+from src.models.Notification_Utilisateur import Notification_Utilisateur
+from src.models.Offre import Offre
+from src.models.Reponse import Reponse
+from src.models.Utilisateur_Reseau import Utilisateur_Reseau
+from src.models.Reseau import Reseau
+from src.models.Document import Document
+from src.models.Genre_Offre import Genre_Offre
+from src.models.Genre import Genre
+from src.models.Lien import Lien
+from src.models.Lien_Offre import Lien_Offre
+from src.models.Offre_Reseau import Offre_Reseau

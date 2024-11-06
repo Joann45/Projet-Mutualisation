@@ -1,5 +1,6 @@
 import click
 from .app import app, db
+from .models.Utilisateur import Utilisateur, Role
 
 @app.cli.command()
 @click.argument('filename')
@@ -9,60 +10,63 @@ def loaddb(filename):
     db.create_all()
     
     # Import des modèles
-    import src.models.Notification_Orga as md
+    import src.models as md
     import yaml
     
     with open(filename, 'r') as file:
         data = yaml.safe_load(file)
 
     elements = {
-        'organisateur': {},
-        'administrateur': {},
+        'utilisateur': {},
         'reseau': {},
         'document': {},
         'notification': {},
+        'notification_utilisateur': {},
+        'genre_offre': {},
         'genre': {},
         'lien': {},
         'offre': {},
-        'appartenir_orga': {},
-        'contenir_genre': {},
-        'contenir_liens': {},
-        'partager_offre': {},
-        'repondre': {},
-        'notifier_admin': {},
-        'notifier_orga': {}
+        'offre_reseau': {},
+        'utilisateur_reseau': {},
+        'lien_offre': {},
+        'reponse': {},
+        'role': {}
     }
 
     for elem in data:
-        if elem["type"] == "organisateur":
-            organisateur = md.Organisateur(
-                id_orga=elem["id_orga"],
-                nom_orga=elem["nom_orga"],
-                prenom_orga=elem["prenom_orga"],
-                mdp_orga=elem["mdp_orga"],
-                email_orga=elem["email_orga"],
-                img_orga=elem["img_orga"]
+        if elem["type"] == "utilisateur":
+            utilisateur = Utilisateur(
+                id=elem["id"],
+                nom=elem["nom"],
+                prenom=elem["prenom"],
+                mdp=elem["mdp"],
+                email=elem["email"],
+                img=elem["img"],
+                role_id=elem["role_id"]
             )
-            elements["organisateur"][elem["id_orga"]] = organisateur
-            db.session.add(organisateur)
+            elements["utilisateur"][elem["id"]] = utilisateur
+            db.session.add(utilisateur)
+            
+        elif elem["type"] == "role":
+            role = Role(
+                id_role=elem["id_role"],
+                name=elem["name"]
+            )
+            elements["role"][elem["id_role"]] = role
+            db.session.add(role)
 
-        elif elem["type"] == "administrateur":
-            administrateur = md.Administrateur(
-                id_admin=elem["id_admin"],
-                nom_admin=elem["nom_admin"],
-                prenom_admin=elem["prenom_admin"],
-                mdp_admin=elem["mdp_admin"],
-                email_admin=elem["email_admin"],
-                img_admin=elem["img_admin"]
+        elif elem["type"] == "offre_reseau":
+            offre_reseau = md.Offre_Reseau(
+                id_offre=elem["id_offre"],
+                id_reseau=elem["id_reseau"]
             )
-            elements["administrateur"][elem["id_admin"]] = administrateur
-            db.session.add(administrateur)
+            elements["offre_reseau"][(elem["id_offre"], elem["id_reseau"])] = offre_reseau
+            db.session.add(offre_reseau)
 
         elif elem["type"] == "reseau":
             reseau = md.Reseau(
                 id_reseau=elem["id_reseau"],
                 nom_reseau=elem["nom_reseau"],
-                id_admin=elem["id_admin"]
             )
             elements["reseau"][elem["id_reseau"]] = reseau
             db.session.add(reseau)
@@ -76,7 +80,7 @@ def loaddb(filename):
             )
             elements["document"][elem["id_doc"]] = document
             db.session.add(document)
-
+            
         elif elem["type"] == "notification":
             notification = md.Notification(
                 id_notif=elem["id_notif"],
@@ -85,6 +89,14 @@ def loaddb(filename):
             )
             elements["notification"][elem["id_notif"]] = notification
             db.session.add(notification)
+            
+        elif elem["type"] == "notification_utilisateur":
+            notification_utilisateur = md.Notification_Utilisateur(
+                id_utilisateur=elem["id_utilisateur"],
+                id_notif=elem["id_notif"]
+            )
+            elements["notification_utilisateur"][(elem["id_utilisateur"], elem["id_notif"])] = notification_utilisateur
+            db.session.add(notification_utilisateur)
 
         elif elem["type"] == "genre":
             genre = md.Genre(
@@ -113,69 +125,101 @@ def loaddb(filename):
                 capacite_max=elem["capacite_max"],
                 etat=elem["etat"],
                 img=elem["img"],
-                id_orga=elem["id_orga"],
-                nom_loc = elem["nom_loc"],
-                date_deb = elem["date_deb"],
-                date_fin = elem["date_fin"]
+                id_utilisateur=elem["id_utilisateur"],
+                nom_loc=elem["nom_loc"],
+                date_deb=elem["date_deb"],
+                date_fin=elem["date_fin"]
             )
             elements["offre"][elem["id_offre"]] = offre
             db.session.add(offre)
 
-        elif elem["type"] == "appartenir_orga":
-            appartenir_orga = md.AppartenirOrga(
-                id_orga=elem["id_orga"],
+        elif elem["type"] == "utilisateur_reseau":
+            utilisateur_reseau = md.Utilisateur_Reseau(
+                id_utilisateur=elem["id_utilisateur"],
                 id_reseau=elem["id_reseau"]
             )
-            elements["appartenir_orga"][(elem["id_orga"], elem["id_reseau"])] = appartenir_orga
-            db.session.add(appartenir_orga)
+            elements["utilisateur_reseau"][(elem["id_utilisateur"], elem["id_reseau"])] = utilisateur_reseau
+            db.session.add(utilisateur_reseau)
 
-        elif elem["type"] == "contenir_genre":
-            contenir_genre = md.ContenirGenre(
+        elif elem["type"] == "genre_offre":
+            genre_offre = md.Genre_Offre(
                 id_genre=elem["id_genre"],
                 id_offre=elem["id_offre"]
             )
-            elements["contenir_genre"][(elem["id_genre"], elem["id_offre"])] = contenir_genre
-            db.session.add(contenir_genre)
+            elements["genre_offre"][(elem["id_genre"], elem["id_offre"])] = genre_offre
+            db.session.add(genre_offre)
 
-        elif elem["type"] == "contenir_liens":
-            contenir_liens = md.ContenirLien(
+        elif elem["type"] == "lien_offre":
+            lien_offre = md.Lien_Offre(
                 id_lien=elem["id_lien"],
                 id_offre=elem["id_offre"]
             )
-            elements["contenir_liens"][(elem["id_lien"], elem["id_offre"])] = contenir_liens
-            db.session.add(contenir_liens)
-
-        elif elem["type"] == "partager_offre":
-            partager_offre = md.PartagerOffre(
-                id_offre=elem["id_offre"],
-                id_reseau=elem["id_reseau"]
-            )
-            elements["partager_offre"][(elem["id_offre"], elem["id_reseau"])] = partager_offre
-            db.session.add(partager_offre)
-
-        elif elem["type"] == "repondre":
-            repondre = md.Repondre(
-                id_orga=elem["id_orga"],
+            elements["lien_offre"][(elem["id_lien"], elem["id_offre"])] = lien_offre
+            db.session.add(lien_offre)
+            
+        elif elem["type"] == "reponse":
+            reponse = md.Reponse(
+                id_utilisateur=elem["id_utilisateur"],
                 id_offre=elem["id_offre"],
                 desc_rep=elem["desc_rep"]
             )
-            elements["repondre"][(elem["id_orga"], elem["id_offre"])] = repondre
-            db.session.add(repondre)
-
-        elif elem["type"] == "notifier_admin":
-            notifier_admin = md.NotifierAdmin(
-                id_admin=elem["id_admin"],
-                id_notif=elem["id_notif"]
-            )
-            elements["notifier_admin"][(elem["id_admin"], elem["id_notif"])] = notifier_admin
-            db.session.add(notifier_admin)
-
-        elif elem["type"] == "notifier_orga":
-            notifier_orga = md.NotifierOrga(
-                id_orga=elem["id_orga"],
-                id_notif=elem["id_notif"]
-            )
-            elements["notifier_orga"][(elem["id_orga"], elem["id_notif"])] = notifier_orga
-            db.session.add(notifier_orga)
+            elements["reponse"][(elem["id_utilisateur"], elem["id_offre"])] = reponse
+            db.session.add(reponse)
 
     db.session.commit()
+
+@app.cli.command()
+def syncdb():
+    '''Synchronizes the database.'''
+    db.drop_all()
+    db.create_all()
+    admin = Role(name='admin')
+    orga = Role(name='organisateur')
+    
+    db.session.add(admin)
+    db.session.add(orga)
+    
+    user1 = Utilisateur(
+        nom='Joe',
+        prenom='Doe',
+        mdp='admin',
+        email='admin',
+        img='admin',
+        role=admin)
+    user2 = Utilisateur(
+        nom='Jane',
+        prenom='Doe',
+        mdp='organisateur',
+        email='organisateur',
+        img='organisateur',
+        role=orga)
+    user3 = Utilisateur(
+        nom='John',
+        prenom='Doe',
+        mdp='organisateur',
+        email='organisateur2',
+        img='organisateur',
+        role=orga)
+    user4 = Utilisateur(
+        nom='Jack',
+        prenom='Doe',
+        mdp='organisateur',
+        email='organisateur3',
+        img='organisateur',
+        role=orga)
+    user5 = Utilisateur(
+        nom='Jill',
+        prenom='Doe',
+        mdp='organisateur',
+        email='organisateur4',
+        img='organisateur',
+        role=admin)
+    
+    db.session.add(user1)
+    db.session.add(user2)
+    db.session.add(user3)
+    db.session.add(user4)
+    db.session.add(user5)
+
+    db.session.commit()
+    print('Database synchronized.')

@@ -4,9 +4,9 @@ from src.app import db
 class Reponse(db.Model):
     __tablename__ = 'REPONSE'
 
-    id_orga = db.Column(db.Integer, db.ForeignKey('ORGANISATEUR.id_orga'), primary_key=True)
+    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id'), primary_key=True)
     id_offre = db.Column(db.Integer, db.ForeignKey('OFFRE.id_offre'), primary_key=True)
     desc_rep = db.Column(db.Text)
 
-    orga = db.relationship("Organisateur", back_populates="orgas_offre", lazy=True)
-    offre_orga = db.relationship("Offre", back_populates="les_reponses_orgas", lazy=True)
+    utilisateur = db.relationship("Utilisateur", back_populates="les_reponses_offre", lazy=True)
+    offre = db.relationship("Offre", back_populates="les_reponses_utilisateurs", lazy=True)
