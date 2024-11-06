@@ -9,7 +9,7 @@ class Utilisateur(db.Model, UserMixin):
     nom_utilisateur = db.Column(db.Text)
     prenom_utilisateur = db.Column(db.Text)
     mdp_utilisateur = db.Column(db.Text)
-    email_utilisateur = db.Column(db.Text)
+    email_utilisateur = db.Column(db.Text, unique=True)
     img_utilisateur = db.Column(db.Text)
     role_id = db.Column(db.Integer, db.ForeignKey('ROLE.id_role'))
     
