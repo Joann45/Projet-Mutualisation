@@ -3,9 +3,12 @@ from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.models.Utilisateur import Utilisateur
+from src.models.Reseau import Reseau
 from src.models.Role import Role
+from src.models.Offre import Offre
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
+from src.forms.ReseauForm import SelectReseauForm
 
 
 @app.route('/')
@@ -90,9 +93,12 @@ def les_offres():
     """
     return render_template('les-offres.html')
 
-@app.route('/home/repondre-offre')
-def repondre_offre():
-    return render_template('repondre-offre.html')
+@app.route('/home/repondre_offre/<int:id_offre>')
+def repondre_offre(id_offre):
+    o = Offre.query.get(id_offre)
+    if not o:
+        return redirect(url_for("home"))
+    return render_template('repondre-offre.html', offre=o)
 
 @app.route('/home/profil')
 def modifier_profil():
@@ -110,7 +116,9 @@ def mes_reseaux():
     Returns:
         mes-reseaux.html: Une page des réseaux de l'utilisateur
     """
-    return render_template('mes-reseaux.html')
+    f = SelectReseauForm()
+    f.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+    return render_template('mes-reseaux.html', form=f)
 
 @app.route('/home/mes-reseaux-admin')
 def mes_reseaux_admin():
