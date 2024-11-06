@@ -35,8 +35,17 @@ nav {
     border-color: #FFFFFF !important;
 }
 
+
+.plc-colored{
+    color:#F7B11E
+}
+.plc-dark{
+    color: #050B25;
+}
+
 .titre_accueil{
     display: flex;
     flex-direction : column; 
     align-items: center;
 }
+
