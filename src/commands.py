@@ -1,6 +1,7 @@
 import click
 from .app import app, db
-from .models.Utilisateur import Utilisateur, Role
+from .models.Utilisateur import Utilisateur
+from .models.Role import Role
 
 @app.cli.command()
 @click.argument('filename')

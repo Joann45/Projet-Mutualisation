@@ -45,6 +45,22 @@
   id_utilisateur: 1
   id_reseau: 1
 
+- type: utilisateur_reseau
+  id_utilisateur: 1
+  id_reseau: 2
+
+- type: utilisateur_reseau
+  id_utilisateur: 1
+  id_reseau: 3
+
+- type: utilisateur_reseau
+  id_utilisateur: 1
+  id_reseau: 4
+
+- type: utilisateur_reseau
+  id_utilisateur: 1
+  id_reseau: 5
+
 - type: utilisateur
   id_utilisateur: 2
   nom_utilisateur: "Utilisateur_2"
