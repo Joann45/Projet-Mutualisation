@@ -46,6 +46,10 @@ def les_offres():
     """
     return render_template('les-offres.html')
 
+@app.route('/home/repondre-offre')
+def repondre_offre():
+    return render_template('repondre-offre.html')
+
 @app.route('/home/profil')
 def modifier_profil():
     """Renvoie la page de modification du profil

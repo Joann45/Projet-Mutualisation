@@ -52,59 +52,7 @@
             </div>
         </div>
 
-        <div>
-            <h1>Les offres</h1>
-            <div>
-                <a href="{{url_for('les_offres')}}">
-                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="fetes">
-                <div>
-                    <h2>Titre de l'offre</h2>
-                    <p> Créé par M....</p>
-                </div>
-    
-                <div>
-                    <div>
-                        <p>Nombre de participants</p>
-                        <p>XXX XXX</p>
-                    </div>
-                    <div>
-                        <p>Cotisation minimale</p>
-                        <p>XXX XXX euros</p>
-                    </div>
-                    <div>
-                        <p>Temps restant</p>
-                        <p>XXX XXX jours </p>
-                    </div>
-                </div>
-                </a>
-            </div>
-
-            <div>
-                <a href="{{url_for('les_offres')}}">
-                <img src="{{ url_for('static', filename='img/fetes.svg') }}" alt="fetes">
-                <div>
-                    <h2>Titre de l'offre</h2>
-                    <p> Créé par M....</p>
-                </div>
-    
-                <div>
-                    <div>
-                        <p>Nombre de participants</p>
-                        <p>XXX XXX</p>
-                    </div>
-                    <div>
-                        <p>Cotisation minimale</p>
-                        <p>XXX XXX euros</p>
-                    </div>
-                    <div>
-                        <p>Temps restant</p>
-                        <p>XXX XXX jours </p>
-                    </div>
-                </div>
-                </a>
-            </div>
-
-        </div>
+        {% include 'moule.html' %}
 
     </div>
 
