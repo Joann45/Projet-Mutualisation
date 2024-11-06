@@ -40,3 +40,11 @@ def creation_offre():
 @app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
     return render_template('visualiser-reponses-offres.html')
+
+@app.route('/home/mes-offres')
+def mes_offres():
+    return render_template('mes-offres.html')
+
+@app.route('/home/mes-offres/mes-reponses')
+def mes_reponses():
+    return render_template('mes-reponses.html')
