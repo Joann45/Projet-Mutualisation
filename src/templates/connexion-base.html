@@ -16,11 +16,16 @@
         {% endblock %}
     </head> 
 
-    <body class="container d-flex flex-column">
-        <header class="container d-inline-flex justify-content-center ">
-            <img class = "" src="{{url_for('static', filename='img/logo.svg')}}" alt="logo de StageFlow">
-            <h1 class = "plc-dark">StageFlow</h1>
-            <h2 class="plc-colored">Ressentez la simplicité de la collaboration musicale</h2>
+    <body class="container d-flex flex-column align-items-stretch">
+        <header class="d-flex flex-column align-items-center m-5">
+            <div class="d-flex justify-content-center">
+                <img class = "my-2 img-fluid" src="{{url_for('static', filename='img/logo.svg')}}" alt="logo de StageFlow">
+                <strong class = "plc-dark font-weight-bolder display-3 fw-bolder">StageFlow</strong>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h3 class="plc-colored">Ressentez la simplicité de la collaboration musicale</h2>
+            </div>
+            
         </header>
         <main>
             {% block content %}
@@ -28,3 +33,5 @@
         </main>
     </body>
 </html>
+
+
