@@ -46,9 +46,3 @@ nav {
 .plc-dark{
     color: #050B25;
 }
-
-.titre_accueil{
-    display: flex;
-    flex-direction : column; 
-    align-items: center;
-}
