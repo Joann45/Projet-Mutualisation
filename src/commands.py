@@ -37,15 +37,15 @@ def loaddb(filename):
     for elem in data:
         if elem["type"] == "utilisateur":
             utilisateur = Utilisateur(
-                id=elem["id"],
-                nom=elem["nom"],
-                prenom=elem["prenom"],
-                mdp=elem["mdp"],
-                email=elem["email"],
-                img=elem["img"],
+                id_utilisateur=elem["id_utilisateur"],
+                nom_utilisateur=elem["nom_utilisateur"],
+                prenom_utilisateur=elem["prenom_utilisateur"],
+                mdp_utilisateur=elem["mdp_utilisateur"],
+                email_utilisateur=elem["email_utilisateur"],
+                img_utilisateur=elem["img_utilisateur"],
                 role_id=elem["role_id"]
             )
-            elements["utilisateur"][elem["id"]] = utilisateur
+            elements["utilisateur"][elem["id_utilisateur"]] = utilisateur
             db.session.add(utilisateur)
             
         elif elem["type"] == "role":
