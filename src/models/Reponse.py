@@ -4,7 +4,7 @@ from src.app import db
 class Reponse(db.Model):
     __tablename__ = 'REPONSE'
 
-    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id'), primary_key=True)
+    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'), primary_key=True)
     id_offre = db.Column(db.Integer, db.ForeignKey('OFFRE.id_offre'), primary_key=True)
     desc_rep = db.Column(db.Text)
 

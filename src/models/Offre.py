@@ -17,7 +17,7 @@ class Offre(db.Model):
     date_fin = db.Column(db.Date)
     img = db.Column(db.Text)
 
-    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id'))
+    id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'))
 
     # Relations
     # utilisateur = db.relationship('Utilisateur', backref=db.backref('les_offres', lazy=True))

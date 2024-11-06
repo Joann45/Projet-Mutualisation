@@ -1,4 +1,4 @@
-from src import db
+from src.app import db
 from flask_security import RoleMixin
 
 class Role(db.Model, RoleMixin):
