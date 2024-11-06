@@ -1,52 +1,54 @@
 <!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
-    <h1>Créer une offre</h1>
-
+<div class="mx-auto w-75 d-flex flex-column align-items-center div-dark rounded-4 mb-3 p-4">
+    <h1 class="mt-3 fw-bolder display-4 m-4 color_white">Créer une offre</h1>
     <form action="/creer_offre" method="post">
-
-        <div>
-            <label for="name">Nom de l'offre</label>
+        <div  class="form-group">
+            <label class="mb-3 mr-3 w-100 color_white" for="name">Nom de l'offre</label>
+            <input type="text" name="name" id="name">
         </div>
-        <div>
-            <label for="genre">Genre de musique</label>
+        <div  class="form-group">
+            <label class="mb-3  mr-3 color_white" for="genre">Genre de musique</label>
             <input type="search" id="genre" name="genre" placeholder="Genre"/>
             <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
         </div>
-        <div>
-            <label for="expiration">Expiration de l'offre </label>
-            <input type="text" name="name" id="expiration" placeholder="jj/mm/aaaa">
+        <div class="form-group">
+            <label class="mb-3 color_white" for="expiration">Expiration de l'offre </label>
+            <input class ="form-control" type="text" name="name" id="expiration" placeholder="jj/mm/aaaa">
         </div>
         <div>
-            <label for="plage">Plage de l'offre</label>
-            <input type="text" name="plage_debut" id="plage_debut" placeholder="Date de début">
-            <input type="text" name="plage_fin" id="plage_fin" placeholder="Date de Fin">
+            <label class=" mb-3 color_white" for="plage">Plage de l'offre</label>
+            <input class ="form-control"  type="text" name="plage_debut" id="plage_debut" placeholder="Date de début">
+            <input class ="form-control"  type="text" name="plage_fin" id="plage_fin" placeholder="Date de Fin">
         </div>
         <div>
-            <label for="budget">Budget Estimatif</label>
-            <input type="text" name="budget" id="budget" placeholder="XXX XXX euros">
+            <label class="mb-3 color_white" for="budget">Budget Estimatif</label>
+            <input class ="form-control"  type="text" name="budget" id="budget" placeholder="XXX XXX euros">
         </div>
         <div>
-            <label for="localisation">Localisation</label>
-            <input type="text" name="localisation" id="localisation">
+            <label class="mb-3 color_white" for="localisation">Localisation</label>
+            <input class ="form-control"  type="text" name="localisation" id="localisation">
         </div>
         <div>
-            <label for="choix_image">Image</label>
-            <input type="file" id="choix_image" name="choix_image" accept="img/png, img/jpeg" />
+            <label class="mb-3 color_white" for="choix_image">Image</label>
+            <input class ="form-control" type="file" id="choix_image" name="choix_image" accept="img/png, img/jpeg" style="display: none;">
         </div>
         <div>
-            <label for="choix_ressources">Lien vers des ressources promotionnelles</label>
-            <input type="file" id="choix_ressources" name="choix_ressources"  accept="img/png, img/jpeg"/>
+            <label class="mb-3 color_white" for="choix_ressources">Lien vers des ressources promotionnelles</label>
+            <input class ="form-control" type="file" id="choix_ressources" name="choix_ressources"  accept="img/png, img/jpeg" style="display: none;" />
         </div>
         <div>
-            <label for="doc_sup"> Ajouter les documents liés à l'offre</label>
+            <label class="mb-3 color_white" for="doc_sup"> Ajouter les documents liés à l'offre</label>
         </div>
         <div>
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            <label class="mb-3 color_white" for="description">Description</label>
+            <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
         </div>
 
-        <button type="submit">Enregistrer</button>
-    </form>
+        <div class="d-flex justify-content-center mt-3">
+            <input class="btn btn-base fw-bolder" type="submit" name="enregistrer" id="enregister" value="Enregistrer">
+        </div>
 
+</div>
 {%endblock%}
