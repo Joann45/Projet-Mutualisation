@@ -35,8 +35,9 @@ nav {
     border-color: #FFFFFF !important;
 }
 
-.titre_accueil{
-    display: flex;
-    flex-direction : column; 
-    align-items: center;
+.color_orange{
+    color: #F7B11E;
+}
+.color_white{
+    color: #FFFFFF;
 }
