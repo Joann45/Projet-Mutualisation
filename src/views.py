@@ -10,7 +10,7 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('connexion.html')
 
 @app.route('/signin', methods=['GET','POST'])
 def signin():
