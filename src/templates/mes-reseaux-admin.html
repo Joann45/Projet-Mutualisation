@@ -1,74 +1,38 @@
-{%extends 'base.html'%}
 {%block content%}
-    <h1>Voir mes réseaux</h1>
-    <div>
-        <div>
-            <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social">
-
-        </div>
-
-        <div>
-            <form>
-
-
-                <input type="radio" id="reseau1" name="reseau" value="reseau1">
-                <label for="reseau1">Reseau 1</label>
-
-
-                <input type="radio" id="reseau2" name="reseau" value="reseau2">
-                <label for="reseau2">Reseau 2</label>
-
-                <input type="radio" id="reseau3" name="reseau" value="reseau3">
-                <label for="reseau3">Reseau 3</label>
-
-            </form>
-
-            <input class="btn btn-dark" type="button" name="voir_membres_admin" id="voir_membres_admin" value="Voir les membres">
-            <input class="btn btn-dark" type="button" name="creer_reseau" id="creer_reseau" value="Créer un réseau">
-            
-
-            
-           
-        </div>
-
-        <div>
-            <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social">
-        </div>
-
-
-
-    </div>
-
-    {%include 'membres-reseaux.html'%}
-
-    <div>
+    {%include 'mes-reseaux.html'%}
+    <div class="d-flex flex-column align-items-center">
         <h1>Créer un réseau</h1>
-        <form>
-            <div>
-                <label for="nom">Nom du réseau</label>
-                <input type="text" id="nom" name="nom" required>
-            </div>
-
-            <div class="input-group border rounded-pill">
-                <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search"/>
-                <button class = "btn">
-                    <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
-                </button>
-            </div>
-
-            <div>
-                <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
-                <p>Tom Cook</p>
-                <input class="btn btn-dark" type="button" name="ajouter" id="ajouter" value="Ajouter">
-            </div>
-
-            <div>
-                <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
-                <p>Tom Cook</p>
-                <input class="btn btn-dark" type="button" name="ajouter2" id="ajouter2" value="Ajouter">
-            </div>
+        <form class="d-flex flex-column align-items-center">
             
-            <a  href="{{url_for('mes_reseaux_admin')}}"><input class="btn btn-base" type="button" name="creer" id="creer" value="Creer"></a>
+            <div class="d-flex flex-column align-items-around">
+
+            
+                <div class="d-flex m-3 flex-column align-items-start">
+                    <label for="nom">Nom du réseau</label>
+                    <input type="text" id="nom" name="nom" required>
+                </div>
+
+                <div class="input-group border rounded-pill">
+                    <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search"/>
+                    <button class = "btn">
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-around m-4">
+                    <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+                    <p class="align-self-end">Tom Cook</p>
+                    <input class="btn btn-dark rounded-4" type="button" name="supprimer" id="supprimer" value="Supprimer">
+                </div>
+
+                <div class="d-flex justify-content-around m-4">
+                    <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+                    <p class="align-self-end">Tom Cook</p>
+                    <input class="btn btn-dark rounded-4" type="button" name="supprimer" id="supprimer" value="Supprimer">
+                </div>
+            </div>
+
+            <a  href="{{url_for('mes_reseaux_admin')}}"><input class="btn btn-base px-4 p-2 fw-bolder align-self-center" type="button" name="creer" id="creer" value="Creer"></a>
                 
 
         </form>
