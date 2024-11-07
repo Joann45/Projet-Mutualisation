@@ -129,7 +129,8 @@ def loaddb(filename):
                 id_utilisateur=elem["id_utilisateur"],
                 nom_loc=elem["nom_loc"],
                 date_deb=elem["date_deb"],
-                date_fin=elem["date_fin"]
+                date_fin=elem["date_fin"],
+                cotisation_min=elem["cotisation_min"]
             )
             elements["offre"][elem["id_offre"]] = offre
             db.session.add(offre)

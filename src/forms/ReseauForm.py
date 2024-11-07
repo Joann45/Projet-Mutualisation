@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from typing import Any, Mapping
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField
+from wtforms import StringField, HiddenField, RadioField
 from wtforms.validators import DataRequired
 from src.models.Reseau import Reseau
 from src.models.Utilisateur import Utilisateur
@@ -31,3 +31,7 @@ class AddUtilisateurReseauForm(FlaskForm):
             self.email_utilisateur.errors.append('Cet utilisateur n\'existe pas')
             return False
         return True
+    
+class SelectReseauForm(FlaskForm):
+    id = HiddenField('id')
+    reseaux = RadioField('Réseaux', validators=[DataRequired()])

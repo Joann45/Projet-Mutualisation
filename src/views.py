@@ -2,10 +2,14 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
+from src.forms.OffreForm import OffreForm
 from src.models.Utilisateur import Utilisateur
+from src.models.Reseau import Reseau
 from src.models.Role import Role
+from src.models.Offre import Offre
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
+from src.forms.ReseauForm import SelectReseauForm
 
 
 @app.route('/')
@@ -90,9 +94,12 @@ def les_offres():
     """
     return render_template('les-offres.html')
 
-@app.route('/home/repondre-offre')
-def repondre_offre():
-    return render_template('repondre-offre.html')
+@app.route('/home/repondre_offre/<int:id_offre>')
+def repondre_offre(id_offre):
+    o = Offre.query.get(id_offre)
+    if not o:
+        return redirect(url_for("home"))
+    return render_template('repondre-offre.html', offre=o)
 
 @app.route('/home/profil')
 def modifier_profil():
@@ -110,7 +117,9 @@ def mes_reseaux():
     Returns:
         mes-reseaux.html: Une page des réseaux de l'utilisateur
     """
-    return render_template('mes-reseaux.html')
+    f = SelectReseauForm()
+    f.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+    return render_template('mes-reseaux.html', form=f)
 
 @app.route('/home/mes-reseaux-admin')
 def mes_reseaux_admin():
@@ -121,14 +130,35 @@ def mes_reseaux_admin():
     """
     return render_template('mes-reseaux-admin.html')
 
-@app.route('/home/creation-offre')
+@app.route('/home/creation-offre', methods=['GET','POST'])
 def creation_offre():
     """Renvoie la page de création d'une offre
 
     Returns:
         creation-offre.html: Une page de création d'une offre
     """
-    return render_template('creation-offre.html')
+    f = OffreForm()
+    f.genre.choices = [(1, "CACA"),(2,"PIPI")]
+    f.reseau.choices = [(1, "CACA"),(2,"PIPI")]
+    if f.validate_on_submit():
+        if f.validate():
+            o = Offre()
+            o.nom_offre = f.nom_offre.data
+            o.description = f.description.data
+            o.date_limite = f.date_limite.data
+            o.budget = f.budget.data
+            o.cotisation_min = f.cotisation_min.data
+            o.capacite_max = f.capacite_max.data
+            o.capacite_min = f.capacite_min.data
+            o.img = f.img.data
+            o.etat = f.etat.data
+            o.nom_loc = f.nom_loc.data
+            o.date_deb = f.date_deb.data
+            o.date_fin = f.date_fin.data
+            db.session.add(o)
+            db.session.commit()
+            return redirect(url_for('login'))
+    return render_template('creation-offre.html', form=f)
 
 @app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
