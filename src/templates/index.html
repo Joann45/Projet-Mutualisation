@@ -10,6 +10,9 @@
 {% endblock %}
 </head>
 <body>
+  {% if current_user.is_authenticated %}
+<h1>Bienvenue {{ current_user.nom_utilisateur }}</h1>
+{% endif %}
   <button type="button" class="btn btn-dark">Dark</button>
   <button type="button" class="btn btn-envoyer">Envoyer</button>
     <div>
