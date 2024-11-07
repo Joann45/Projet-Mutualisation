@@ -35,9 +35,15 @@ nav {
     border-color: #FFFFFF !important;
 }
 
+.bg-color-blanc{
+    background-color: #FFFFFF;
+}
+
+.bg-color-bleu{
+    background-color: #050B25;
+
 .color_white{
     color: #FFFFFF;
-
 }
 
 .plc-colored{
