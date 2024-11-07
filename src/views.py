@@ -68,7 +68,7 @@ user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)
 security = Security(app, user_datastore)
 
 
-@app.route('/mdp-oublie')
+@app.route('/mdp-oublie') # TODO : A faire -> le form et les interactions avec la base de données
 def mdp_oublie():
     """Renvoie la page du mot de passe oublié
 
@@ -77,7 +77,7 @@ def mdp_oublie():
     """
     return render_template('mdp-oublie.html')
 
-@app.route('/mdp-reset')
+@app.route('/mdp-reset') # TODO : A faire -> le form et les interactions avec la base de données
 def mdp_reset():
     """Renvoie la page de réinitialisation du mot de passe
 
@@ -120,7 +120,8 @@ def modifier_profil():
     Returns:
         profil.html: Une page de modification du profil
     """
-    return render_template('profil.html')
+    u = Utilisateur.query.get(current_user.id_utilisateur)
+    return render_template('profil.html', user=u) #! A modifier pour afficher les informations de l'utilisateur
 
 @app.route('/home/mes-reseaux')
 def mes_reseaux():
@@ -167,7 +168,8 @@ def mes_offres():
     Returns:
         mes-offres.html: Une page des offres de l'utilisateur
     """
-    return render_template('mes-offres.html')
+    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    return render_template('mes-offres.html', offres=les_offres)
 
 @app.route('/home/mes-offres/mes-reponses')
 
