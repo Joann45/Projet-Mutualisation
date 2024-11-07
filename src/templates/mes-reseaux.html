@@ -1,41 +1,53 @@
 <!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
-    <h1>Voir mes réseaux</h1>
-    <div>
-        <div>
-            <img src="{{ url_for('static', filename='img/humaaan1.svg')}}" alt="social">
+<div class="d-flex flex-column align-items-center">
+
+    <h1 class="fw-bold my-4">Voir mes réseaux</h1>
+    <div class="d-flex">
+        <div class="m-5 d-inline-block">
+            <img   class ="align-self-basline mt-5 pt-5" src="{{ url_for('static', filename='img/humaaan1.svg')}}" alt="social">
 
         </div>
 
-        <div>
-            <form action="/home/" method="post">
-                <div> 
-                    <label for="reseau1">Reseau 1</label>
+        <div class="d-flex flex-column">
+            <form action="/home/" method="post" class="border border-dark p-5 rounded-3 m-5">
+
+                <div class="m-2"> 
+                    
                     <input type="radio" id="reseau1" name="reseau" value="reseau1">
+                    <label class="fs-3 fw-light m-1 mx-4" for="reseau1">Reseau 1</label>
                 </div>
 
-                <div>
-                    <label for="reseau2">Reseau 2</label>
-                    <input type="radio" id="reseau2" name="reseau" value="reseau2"> 
+                <div class="m-2">
+                    <input type="radio" id="reseau2" name="reseau" value="reseau1">
+                    <label class="fs-3 fw-light m-1 mx-4" for="reseau2">Reseau 2</label> 
                 </div>
-                <div> 
-                    <label for="reseau3">Reseau 3</label>
-                    <input type="radio" id="reseau3" name="reseau" value="reseau3">
+
+                <div class="m-2"> 
+                    <input type="radio" id="reseau3" name="reseau" value="reseau1">
+                    <label class="fs-3 fw-light m-1 mx-4" for="reseau3">Reseau 3</label> 
                 </div>
+
+                
+                
             </form>
 
-            <input class="btn btn-dark" type="button" name="voir_membres" id="voir_membres" value="Voir les membres">
+            <input class="btn btn-dark m-3 rounded-3 fw-bold" type="button" name="voir_membres" id="voir_membres" value="Voir les membres">
             
         </div>
 
-        <div>
+        <div class="m-5">
             <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social">
         </div>
 
 
 
     </div>
-    {%include 'membres-reseaux.html'%}
+    
+    <div id="myModal" class="modal fade" >
+        {%include 'membres-reseaux.html'%}
+    </div>
+</div>
 
 {% endblock %}
