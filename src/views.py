@@ -2,6 +2,7 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
+from src.forms.OffreForm import OffreForm
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role
@@ -129,14 +130,37 @@ def mes_reseaux_admin():
     """
     return render_template('mes-reseaux-admin.html')
 
-@app.route('/home/creation-offre')
+@app.route('/home/creation-offre', methods=['GET','POST'])
 def creation_offre():
     """Renvoie la page de création d'une offre
 
     Returns:
         creation-offre.html: Une page de création d'une offre
     """
-    return render_template('creation-offre.html')
+    f = OffreForm()
+    f.genre.choices = [(1, "CACA"),(2,"PIPI")]
+    f.reseau.choices = [(1, "CACA"),(2,"PIPI")]
+    print("PIPI")
+    if f.validate_on_submit():
+        if f.validate():
+            print("CACA")
+            o = Offre()
+            o.nom_offre = f.nom_offre.data
+            o.description = f.description.data
+            o.date_limite = f.date_limite.data
+            o.budget = f.budget.data
+            o.cotisation_min = f.cotisation_min.data
+            o.capacite_max = f.capacite_max.data
+            o.capacite_min = f.capacite_min.data
+            o.img = f.img.data
+            o.etat = f.etat.data
+            o.nom_loc = f.nom_loc.data
+            o.date_deb = f.date_deb.data
+            o.date_fin = f.date_fin.data
+            db.session.add(o)
+            db.session.commit()
+            return redirect(url_for('login'))
+    return render_template('creation-offre.html', form=f)
 
 @app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
