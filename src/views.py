@@ -9,11 +9,26 @@ from src.models.Offre import Offre
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
+import os
 
 
 @app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/login', methods=['GET','POST'])
+def login():
+    """Renvoie la page de connexion
+
+    Returns:
+        connexion.html : Une page de connexion
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    f = ConnexionForm()
+    if f.validate_on_submit():
+        u = f.get_authenticated_user()
+        if u:
+            login_user(u)
+            return redirect(url_for('home'))
+    return render_template('connexion.html', form=f)
 
 @app.route('/signin', methods=['GET','POST'])
 def signin():
@@ -26,36 +41,32 @@ def signin():
             u.prenom_utilisateur = f.prenom_user.data
             u.mdp_utilisateur = sha256(f.mot_de_passe.data.encode()).hexdigest()
             u.email_utilisateur = f.email.data
-            u.img_utilisateur = f.img.data
+            u.img_utilisateur = f.img.data.filename
             u.role_id = f.role.data
+            file = f.img.data
+            if file:
+                file.save(os.path.join("src/static/img/profil", file.filename))
             db.session.add(u)
             db.session.commit()
             return redirect(url_for('login'))
     return render_template('signin.html', form=f)
 
+@app.route('/logout')
+@login_required
+def logout():
+    """Déconnecte l'utilisateur
 
-@app.route('/login', methods=['GET','POST'])
-def login():
-    f = ConnexionForm()
-    if f.validate_on_submit():
-        u = f.get_authenticated_user()
-        if u:
-            login_user(u)
-            return redirect(url_for('index'))
-    return render_template('login.html', form=f)
+    Returns:
+        login : Redirige vers la page de connexion
+    """
+    logout_user()
+    return redirect(url_for('login'))
 
 
 # A charger après la définition de la route login
 user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)
 security = Security(app, user_datastore)
 
-def connexion():
-    """Renvoie la page de connexion
-
-    Returns:
-        connexion.html : Une page de connexion
-    """
-    return render_template('connexion.html')
 
 @app.route('/mdp-oublie')
 def mdp_oublie():
@@ -82,7 +93,8 @@ def home():
     Returns:
         home.html: Une page d'accueil
     """
-    return render_template('home.html')
+    les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
+    return render_template('home.html', offres=les_offres)
 
 @app.route('/home/les-offres')
 def les_offres():
@@ -91,7 +103,8 @@ def les_offres():
     Returns:
         les-offres.html: Une page des offres
     """
-    return render_template('les-offres.html')
+    les_offres = Offre.query.all()
+    return render_template('les-offres.html', offres=les_offres)
 
 @app.route('/home/repondre_offre/<int:id_offre>')
 def repondre_offre(id_offre):
@@ -138,7 +151,7 @@ def creation_offre():
     """
     return render_template('creation-offre.html')
 
-@app.route('/home/visualiser-reponses-offres') ##!! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
     """Renvoie la page de visualisation des réponses aux offres
 
