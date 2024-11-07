@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
-    <h1>Les réponses à l'offre de </h1>
 
-    <div>
+    <div class = "d-flex justify-content-center">
+        <h1 class ="fw-bolder display-4 m-4 ">Les réponses à l'offre de </h1>
+    </div>
+
+    <div class="m-5">
         <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="offre">
         <div>
             <div>
@@ -15,10 +18,11 @@
                 Consequuntur odio dignissimos qui voluptatibus quia nostrum beatae, maiores com
                 modi adipisci maxime dolorem sint quas corporis dolore quae perspiciatis?</p>
         </div>
-        <button>Voir plus <img src ="{{ url_for('static', filename='img/fleche.svg') }}" alt= "fleche" img> </button>
-
+        <button>Voir plus <img src ="{{ url_for('static', filename='img/fleche.svg') }}" alt= "fleche" img> </button>   
 
     </div>
+
+
     <div>
         <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="offre">
         <div>
