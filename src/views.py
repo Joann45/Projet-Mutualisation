@@ -140,10 +140,8 @@ def creation_offre():
     f = OffreForm()
     f.genre.choices = [(1, "CACA"),(2,"PIPI")]
     f.reseau.choices = [(1, "CACA"),(2,"PIPI")]
-    print("PIPI")
     if f.validate_on_submit():
         if f.validate():
-            print("CACA")
             o = Offre()
             o.nom_offre = f.nom_offre.data
             o.description = f.description.data
