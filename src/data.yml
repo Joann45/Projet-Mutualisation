@@ -41,6 +41,22 @@
   img_utilisateur: "img_utilisateur_1.jpg"
   role_id: 2
 
+- type: offre
+  id_offre: 1
+  nom_offre: "offre1"
+  description: "description_offre1"
+  date_limite: 2025-05-21
+  budget: 500
+  cotisation_min: 50
+  capacite_max: 100
+  capacite_min: 10
+  etat: NULL
+  nom_loc: "stade de france"
+  date_deb: 2026-06-19
+  date_fin: 2026-06-21
+  img: "image.png"
+  id_utilisateur: 1
+
 - type: utilisateur_reseau
   id_utilisateur: 1
   id_reseau: 1
