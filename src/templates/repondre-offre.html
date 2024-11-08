@@ -1,59 +1,66 @@
 <!DOCTYPE html>
-{%extends 'base.html'%}
-{%block content%}
+{%extends 'base.html'%} {%block content%}
+<div>
     <div>
+        <img src="{{ url_for('static', filename='img/fetes.svg')}}" alt="fetes" />
+
         <div>
-            <img src="{{ url_for('static', filename='img/fetes.svg')}}" alt="fetes">
+            <div>
+                <h1>{{ offre.nom_offre}}</h1>
+                <p>fermeture de l'offre: {{offre.date_limite}}</p>
+            </div>
 
             <div>
-                <div>
-                    <h1>Titre de l'offre</h1>
-                    <p>fermeture de l'offre: jj/mm/aaaa</p>
-                </div>
+                <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                <p>{{offre.description}}</p>
+                <p>Nombre de participants: {{offre.nb_participants()}}</p>
+                <p>Cotisation minimale: {{offre.cotisation_min}} €</p>
 
-                <div>
-                    <p>Créer par</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
-                        mollit anim id est laborum
-                    </p>
-                    <p>Nombre de participants: xxx xxx</p>
-                    <p>Cotisation minimale: xxx xxx €</p>
+                <a href="">
+                    <input type="button" name="repondre" id="repondre" value="Répondre" />
+                </a>
 
-                    <a href="{{url_for('repondre_offre')}}">
-                        <input type="button" name="repondre" id="repondre" value="Répondre">                     
-                    </a>
+                <a href="#documents"> Voir les documents associés à l'offre </a>
+            </div>
 
-                    <a href="{{url_for('repondre_offre')}}">
-                        Voir les documents associés à l'offre
-                    </a>
-                </div>
+            <div>
+                <h1>Commentaires</h1>
+                <p>M. xxxxxxxx</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+                    aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum
+                </p>
+            </div>
 
-                <div>
-                    <h1>Commentaires</h1>
-                    <p>M. xxxxxxxx</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
-                        mollit anim id est laborum
-                    </p>
-                </div>
-
-                <div>
-                    <h1>documents</h1>
-                    <a href="">
-                        <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download">
-                        Contrat de xxx
-                    </a>
-                </div>
+            <div id="documents">
+                <h1>Documents</h1>
+                {% for document in offre.les_documents %}
+                <a href="" download="{{document.nom_doc}}">
+                    <p>{{document.nom_doc}}</p>
+                    <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download" />
+                </a>
+                {% endfor %}
             </div>
         </div>
     </div>
+    <form action="{{ url_for('repondre_offre', id_offre=offre.id_offre) }}" method="post">
+
+        <div>
+            {{ form.hidden_tag() }} 
+            {{ form.cotisation_apportee.label }}
+            {{ form.cotisation_apportee(size=50) }}
+        </div>
+
+        <div>
+            {{ form.description.label }}
+            {{ form.description(size=50) }}
+        </div>
+            {{ form.submit() }}
+        </a>
+
+    </form>
+</div>
 {% endblock %}

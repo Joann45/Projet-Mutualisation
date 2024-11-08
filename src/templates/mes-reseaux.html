@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
 <div class="d-flex flex-column align-items-center vh-100" style="background-color: #eeeeee;">
@@ -12,22 +11,7 @@
 
         <div class="d-flex flex-column " >
             <form action="/home/" method="post" class="border border-dark p-5 rounded-3 m-5 bg-white">
-
-                <div class="m-2 "> 
-                    
-                    <input type="radio" id="reseau1" name="reseau" value="reseau1">
-                    <label class="fs-3 fw-light m-1 mx-4" for="reseau1">Reseau 1</label>
-                </div>
-
-                <div class="m-2">
-                    <input type="radio" id="reseau2" name="reseau" value="reseau1">
-                    <label class="fs-3 fw-light m-1 mx-4" for="reseau2">Reseau 2</label> 
-                </div>
-
-                <div class="m-2"> 
-                    <input type="radio" id="reseau3" name="reseau" value="reseau1">
-                    <label class="fs-3 fw-light m-1 mx-4" for="reseau3">Reseau 3</label> 
-                </div>
+              {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
 
                 
                 
@@ -44,13 +28,16 @@
             <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social">
         </div>
 
-
-
-    </div>
     
     <div id="myModal" class="modal fade" >
         {%include 'membres-reseaux.html'%}
     </div>
 </div>
 
-{% endblock %}
+
+    <div>
+        <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social" />
+    </div>
+</div>
+<!-- Faire la pop up et charger la liste des membres en AJAX-->
+{%include 'membres-reseaux.html'%} {% endblock %}

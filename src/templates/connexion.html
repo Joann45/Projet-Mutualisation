@@ -3,19 +3,19 @@
 {% block content %}
 
     <div class=" container border border-dark rounded-4 mx-auto w-50 m-auto d-flex flex-column justify-content-center p-5 ">
+        <h1 class="plc-colored align-self-start""> Connexion</h1>
 
-        <h1  class="plc-colored align-self-start">Connexion</h1>
     
-        <form action="{{url_for('home')}}">
-
+        <form action="{{ url_for('login') }}" method="post">
+        {{ form.hidden_tag() }}
             <div class="container d-flex flex-column align-items-start m-2">
-                <label class="plc-colored m-1" for="email">Adresse e-mail</label>
-                <input class="rounded-2 w-75" type="email" name="email" id="email" placeholder="Entrer votre adresse e-mail"> 
+                <label class="plc-colored m-1" for="email">{{ form.email.label }}</label>
+                {{ form.email(size=50, placeholder="Entrer votre adresse e-mail", _class="rounded-2 w-75") }}
             </div>
             
             <div class="container d-flex flex-column align-items-start m-2">
-                <label class="plc-colored m-1 " for="password">Mot de passe</label>
-                <input class="rounded-2 w-75" type="password" name="password" id="password" placeholder="Entrer votre mot de passe">
+                <label class="plc-colored m-1 " for="password">{{ form.mot_de_passe.label }}</label>
+                {{ form.mot_de_passe(size=50, placeholder="Entrer votre mot de passe", _class="rounded-2 w-75") }}
             </div>
 
             <div class="container ">
