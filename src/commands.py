@@ -2,6 +2,8 @@ import click
 from .app import app, db
 from .models.Utilisateur import Utilisateur
 from .models.Role import Role
+from .models.Genre import Genre
+from .models.Reseau import Reseau
 
 @app.cli.command()
 @click.argument('filename')
@@ -162,7 +164,8 @@ def loaddb(filename):
             reponse = md.Reponse(
                 id_utilisateur=elem["id_utilisateur"],
                 id_offre=elem["id_offre"],
-                desc_rep=elem["desc_rep"]
+                desc_rep=elem["desc_rep"],
+                budget=elem['budget']
             )
             elements["reponse"][(elem["id_utilisateur"], elem["id_offre"])] = reponse
             db.session.add(reponse)
@@ -174,4 +177,19 @@ def syncdb():
     '''Synchronizes the database.'''
     db.drop_all()
     db.create_all()
+    r = Role()
+    r.name = "Organisateur"
+    r2 = Role()
+    r2.name = "Administrateur"
+
+    g = Genre()
+    g.nom_genre = "Rock"
+
+    res = Reseau()
+    res.nom_reseau = "Centre"
+
+    db.session.add(r)
+    db.session.add(r2)
+    db.session.add(res)
+    db.session.add(g)
     db.session.commit()
