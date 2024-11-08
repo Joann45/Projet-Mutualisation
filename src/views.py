@@ -309,7 +309,8 @@ def mes_reponses():
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
-    return render_template('mes-reponses.html')
+    les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    return render_template('mes-reponses.html', reponses=les_reponses)
 
 @app.route('/home/genre', methods=['GET','POST'])
 def genre():
