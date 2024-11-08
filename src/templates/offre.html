@@ -3,21 +3,21 @@
         <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="fetes" />
         <div>
             <h2>{{ offre.nom_offre}}</h2>
-            <p>Créé par M....</p>
+            <p>Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
         </div>
 
         <div>
             <div>
                 <p>Nombre de participants</p>
-                <p>XXX XXX</p>
+                <p>{{offre.nb_participants()}}</p>
             </div>
             <div>
                 <p>Cotisation minimale</p>
-                <p>XXX XXX euros</p>
+                <p>{{offre.cotisation_min}} euros</p>
             </div>
             <div>
                 <p>Temps restant</p>
-                <p>XXX XXX jours</p>
+                <p>{{offre.temps_restant()}} jours</p>
             </div>
         </div>
     </a>
