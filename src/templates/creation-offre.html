@@ -3,50 +3,75 @@
 {%block content%}
     <h1>Créer une offre</h1>
 
-    <form action="/creer_offre" method="post">
+    <form action="{{ url_for('creation_offre') }}" method="post">
 
         <div>
-            <label for="name">Nom de l'offre</label>
+            {{ form.hidden_tag() }} 
+            {{ form.nom_offre.label }} 
+            {{ form.nom_offre(size=50, placeholder="Nom de l'offre") }}
         </div>
         <div>
-            <label for="genre">Genre de musique</label>
-            <input type="search" id="genre" name="genre" placeholder="Genre"/>
+            {{ form.genre.label }} 
+            {{ form.genre }}
             <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche"/>
         </div>
         <div>
-            <label for="expiration">Expiration de l'offre </label>
-            <input type="text" name="name" id="expiration" placeholder="jj/mm/aaaa">
+            {{ form.date_limite.label }} 
+            {{ form.date_limite(size=50, placeholder="expiration") }}
         </div>
         <div>
-            <label for="plage">Plage de l'offre</label>
-            <input type="text" name="plage_debut" id="plage_debut" placeholder="Date de début">
-            <input type="text" name="plage_fin" id="plage_fin" placeholder="Date de Fin">
+            {{ form.date_deb.label }} 
+            {{ form.date_deb(size=50, placeholder="Date de début") }}
         </div>
         <div>
-            <label for="budget">Budget Estimatif</label>
-            <input type="text" name="budget" id="budget" placeholder="XXX XXX euros">
+            {{ form.date_fin.label }} 
+            {{ form.date_fin(size=50, placeholder="Date de fin") }}
         </div>
         <div>
-            <label for="localisation">Localisation</label>
-            <input type="text" name="localisation" id="localisation">
+            {{ form.budget.label }} 
+            {{ form.budget(size=50, placeholder="XXX XXX euros") }}            
         </div>
         <div>
-            <label for="choix_image">Image</label>
-            <input type="file" id="choix_image" name="choix_image" accept="img/png, img/jpeg" />
+            {{ form.cotisation_min.label }} 
+            {{ form.cotisation_min(size=50, placeholder="XXX XXX euros") }}            
         </div>
         <div>
-            <label for="choix_ressources">Lien vers des ressources promotionnelles</label>
-            <input type="file" id="choix_ressources" name="choix_ressources"  accept="img/png, img/jpeg"/>
+            {{ form.capacite_min.label }} 
+            {{ form.capacite_min(size=50) }}            
         </div>
         <div>
-            <label for="doc_sup"> Ajouter les documents liés à l'offre</label>
+            {{ form.capacite_max.label }} 
+            {{ form.capacite_max(size=50) }}            
         </div>
         <div>
-            <label for="description">Description</label>
-            <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            {{ form.nom_loc.label }} 
+            {{ form.nom_loc(size=50) }} 
         </div>
-
-        <button type="submit">Enregistrer</button>
+        <div>
+            {{ form.img.label }} 
+            {{ form.img }} 
+        </div>
+        <div>
+            {{ form.liens.label }} 
+            {{ form.liens(size=50) }} 
+        </div>
+        <div>
+            {{ form.documents.label }} 
+            {{ form.documents }} 
+        </div>
+        <div>
+            {{ form.description.label }} 
+            {{ form.description(size=50) }} 
+        </div>
+        <div>
+            {{ form.etat.label }} 
+            {{ form.etat }} 
+        </div>
+        <div>
+            {{ form.reseau.label }} 
+            {{ form.reseau }} 
+        </div>
+            {{form.submit}}
     </form>
 
 {%endblock%}

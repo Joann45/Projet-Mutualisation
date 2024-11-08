@@ -2,10 +2,18 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
+from src.forms.OffreForm import OffreForm
+from src.forms.GenreForm import GenreForm
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role
 from src.models.Offre import Offre
+from src.models.Genre import Genre
+from src.models.Document import Document
+from src.models.Genre_Offre import Genre_Offre
+from src.models.Offre_Reseau import Offre_Reseau
+from src.models.Utilisateur_Reseau import Utilisateur_Reseau
+from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
@@ -134,23 +142,131 @@ def mes_reseaux():
     f.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
     return render_template('mes-reseaux.html', form=f)
 
-@app.route('/home/mes-reseaux-admin')
+@app.route('/home/mes-reseaux-admin', methods=['GET', 'POST'])
 def mes_reseaux_admin():
     """Renvoie la page des réseaux administrateur
 
     Returns:
         mes-reseaux-admin.html: Une page des réseaux pour un organisateur
     """
-    return render_template('mes-reseaux-admin.html')
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectReseauForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
-@app.route('/home/creation-offre')
+    if f_select_reseau.validate_on_submit():
+        reseau_id = f_select_reseau.reseaux.data
+        return redirect(url_for('mes_reseaux_admin', reseau_id=reseau_id))
+
+    reseau_id = request.args.get('reseau_id', type=int)
+    if reseau_id is not None:
+        f_select_reseau.reseaux.default = reseau_id
+        reseau_id = f_select_reseau.reseaux.default
+    else:
+        f_select_reseau.reseaux.default = les_reseaux[0].id_reseau if les_reseaux else None
+    f_select_reseau.process()
+
+    f_add_reseau = ReseauForm()
+    if f_add_reseau.validate_on_submit():
+        r = Reseau()
+        r.nom_reseau = f_add_reseau.nom_reseau.data
+        db.session.add(r)
+        db.session.commit()
+        return redirect(url_for('mes_reseaux_admin'))
+    reseau = Reseau.query.get(reseau_id)
+    return render_template('mes-reseaux-admin.html', reseaux=les_reseaux, add_form=f_add_reseau, select_form=f_select_reseau, membres=[[membre.orga for membre in reseau.les_utilisateurs]], reseau_id=reseau_id)
+
+@app.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
+def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
+    """Supprime un utilisateur d'un réseau
+    Args:
+        id_reseau (int): L'identifiant du réseau
+        id_utilisateur (int): L'identifiant de l'utilisateur à supprimer
+    Returns:
+        mes-reseaux-admin.html: Une page des réseaux pour un organisateur
+    """
+    utilisateur_reseau = Utilisateur_Reseau.query.filter_by(id_reseau=id_reseau, id_utilisateur=id_utilisateur).first()
+    if utilisateur_reseau:
+        db.session.delete(utilisateur_reseau)
+        db.session.commit()
+    return redirect(url_for('mes_reseaux_admin', reseau_id=id_reseau))
+
+@app.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
+def ajout_utilisateur_reseau(id_reseau):
+    """Ajoute un utilisateur à un réseau
+    Args:
+        id_reseau (int): L'identifiant du réseau
+    Returns:
+        mes-reseaux-admin.html: Une page des réseaux pour un organisateur
+    """
+    reseau = Reseau.query.get(id_reseau)
+    if not reseau:
+        return redirect(url_for('mes_reseaux_admin'))
+    form = AddUtilisateurReseauForm()
+    liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
+    form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
+    if form.validate_on_submit():
+        utilisateur_id = form.utilisateur.data
+        utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
+        db.session.add(utilisateur_reseau)
+        db.session.commit()
+        return redirect(url_for('mes_reseaux_admin', reseau_id=id_reseau))
+    return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)
+
+@app.route('/home/creation-offre', methods=['GET','POST'])
+@login_required
 def creation_offre():
     """Renvoie la page de création d'une offre
 
     Returns:
         creation-offre.html: Une page de création d'une offre
     """
-    return render_template('creation-offre.html')
+    f = OffreForm()
+    f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
+    f.reseau.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+    if f.validate_on_submit(): # and f.validate(): # ! A implémenter quand on affiche les erreurs dans le formulaire
+        o = Offre()
+        o.nom_offre = f.nom_offre.data
+        o.description = f.description.data
+        o.date_limite = f.date_limite.data
+        o.budget = f.budget.data
+        o.cotisation_min = f.cotisation_min.data
+        o.capacite_max = f.capacite_max.data
+        o.capacite_min = f.capacite_min.data
+        o.img = f.img.data
+        o.etat = f.etat.data
+        o.nom_loc = f.nom_loc.data
+        o.date_deb = f.date_deb.data
+        o.date_fin = f.date_fin.data
+        o.id_utilisateur = current_user.id_utilisateur
+        db.session.add(o)
+        db.session.commit()
+        id_offre = Offre.query.filter_by(nom_offre = o.nom_offre, description = o.description).first().id_offre
+        d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
+        d.nom_doc = f.documents.data
+        d.id_offre = id_offre
+        
+        db.session.add(d)
+        db.session.commit()
+        
+        # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
+        g = Genre.query.get(f.genre.data)
+        
+        g_o = Genre_Offre()
+        g_o.id_genre = g.id_genre
+        g_o.id_offre = id_offre
+        db.session.add(g_o)
+        db.session.commit()
+            
+        # for res in f.reseau.data(): # ! pour l'instant il n'y a qu'un reseau par offre. Si ça marche pas, remplacer f.reseau.data par list(f.reseau.data) ou [f.reseau.data]
+        r = Reseau.query.get(f.reseau.data)
+        
+        o_r = Offre_Reseau()
+        o_r.id_reseau = r.id_reseau
+        o_r.id_offre = id_offre
+        db.session.add(o_r)
+        db.session.commit()
+        return redirect(url_for('mes_offres'))
+    return render_template('creation-offre.html', form=f)
 
 @app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
@@ -172,7 +288,6 @@ def mes_offres():
     return render_template('mes-offres.html', offres=les_offres)
 
 @app.route('/home/mes-offres/mes-reponses')
-
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
 
@@ -180,3 +295,37 @@ def mes_reponses():
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
     return render_template('mes-reponses.html')
+
+@app.route('/home/genre', methods=['GET','POST'])
+def genre():
+    """Renvoie la page de création d'un genre
+
+    Returns:
+        creation-genre.html: Une page de création d'un genre
+    """
+    f = GenreForm()
+    les_genres = Genre.query.all()
+    if f.validate_on_submit():
+        if f.validate():
+            g = Genre()
+            g.nom_genre = f.nom_genre.data
+            db.session.add(g)
+            db.session.commit()
+            return redirect(url_for('genre'))
+    return render_template('genre.html', form=f, genres=les_genres)
+
+@app.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
+def suppression_genre(id_genre):
+    """Supprime un genre
+
+    Args:
+        id_genre (int): L'identifiant du genre à supprimer
+
+    Returns:
+        genre.html: Une page de création d'un genre
+    """
+    g = Genre.query.get(id_genre)
+    if g:
+        db.session.delete(g)
+        db.session.commit()
+    return redirect(url_for('genre'))
