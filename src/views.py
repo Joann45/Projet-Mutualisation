@@ -101,6 +101,7 @@ def home():
     Returns:
         home.html: Une page d'accueil
     """
+    print(current_user.role)
     les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
     return render_template('home.html', offres=les_offres)
 
@@ -115,6 +116,8 @@ def les_offres():
     return render_template('les-offres.html', offres=les_offres)
 
 @app.route('/home/repondre_offre/<int:id_offre>')
+@login_required
+@roles_required('administrateur')
 def repondre_offre(id_offre):
     o = Offre.query.get(id_offre)
     if not o:
