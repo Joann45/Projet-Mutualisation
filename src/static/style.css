@@ -57,3 +57,14 @@ nav {
 .plc-dark{
     color: #050B25;
 }
+
+.back-white{
+    background-color: #FFFFFF;
+}
+
+.back-grey{
+    background-color: #EEEEEE;
+}
+.border-darkflow{
+    border-color: #050B25 !important;
+}

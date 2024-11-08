@@ -2,18 +2,20 @@
 
 {% block content %}
 
-    <div>
-        <div>
-            <h1>Filtrer par</h1>
+<div class="d-flex vh-100">
+    <div class="w-25 border">
+        <div class="d-flex flex-column m-5">
 
-            <div>
+            <h1 class="w-100 fw-bolder">Filtrer par</h1>
+
+            <div class="my-3">
                 <h2>Réseau</h2>
 
                 <div>
                     <input type="checkbox" id="reseau1" name="reseau" value="reseau1">
                     <label for="reseau1">Réseau 1</label>
                 </div>
-                
+
                 <div>
                     <input type="checkbox" id="reseau2" name="reseau" value="reseau2">
                     <label for="reseau2">Réseau 2</label>
@@ -21,14 +23,14 @@
 
             </div>
 
-            <div>
+            <div class="my-3">
                 <h2>Date d'expiration</h2>
 
                 <div>
                     <input type="checkbox" id="plus_proche" name="anciennete" value="plus_proche">
                     <label for="plus_proche">Plus proche</label>
                 </div>
-                
+
                 <div>
                     <input type="checkbox" id="moins_proche" name="anciennete" value="moins_proche">
                     <label for="moins_proche">Moins proche</label>
@@ -36,88 +38,46 @@
 
             </div>
 
-            <div>
+            <div class="my-3">
                 <h2>Popularité</h2>
 
                 <div>
                     <input type="checkbox" id="plus_populaire" name="populaire" value="plus_populaire">
-                    <label for="plus_proche">Plus proche</label>
+                    <label for="plus_populaire">Plus populaire</label>
                 </div>
 
                 <div>
                     <input type="checkbox" id="moins_populaire" name="populaire" value="moins_populaire">
                     <label for="moins_populaire">Moins populaire</label>
                 </div>
-
             </div>
         </div>
-
-        <div>
-            <div>
-                <a  href="{{url_for('mes_offres')}}"><input class="btn" type="button" name="offres" id="offres" value="Mes offres"></a>
-                <a  href="{{url_for('mes_reponses')}}"><input class="btn btn-dark" type="button" name="reponses" id="reponses" value="Mes réponses"></a>
-            </div>
-            <div>
-                <a href="{{url_for('les_offres')}}">
-                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="fetes">
-                <div>
-                    <h2>Titre de l'offre</h2>
-                    <p> Créé par M....</p>
-                </div>
+    </div>
+        
     
-                <div>
-                    <div>
-                        <p>Nombre de participants</p>
-                        <p>XXX XXX</p>
-                    </div>
-                    <div>
-                        <p>Cotisation minimale</p>
-                        <p>XXX XXX euros</p>
-                    </div>
-                    <div>
-                        <p>Temps restant</p>
-                        <p>XXX XXX jours </p>
-                    </div>
-                </div>
-                </a>
 
-            </div>
+    <div class="d-flex justify-content-center bg-color-gris flex-grow-1 p-5">
+        
+        <div >
 
             <div>
-                <a href="{{url_for('les_offres')}}">
-                <img src="{{ url_for('static', filename='img/fetes.svg') }}" alt="fetes">
-                <div>
-                    <h2>Titre de l'offre</h2>
-                    <p> Créé par M....</p>
+                <div class="d-flex flex-row justify-content-center vw-75" role="group" aria-label="Basic example">
+                    <a  href="{{url_for('mes_offres')}}"><input class="btn  border-3 border-darkflow fs-3 px-5 " type="button" name="offres" id="offres" value="Mes offres"></a>
+                    <a  href="{{url_for('mes_reponses')}}"><input class="btn  btn-dark border-3 border-darkflow fs-3 w-75" type="button " name="reponses" id="reponses" value="Mes réponses"></a>
                 </div>
-    
                 <div>
-                    <div>
-                        <p>Nombre de participants</p>
-                        <p>XXX XXX</p>
-                    </div>
-                    <div>
-                        <p>Cotisation minimale</p>
-                        <p>XXX XXX euros</p>
-                    </div>
-                    <div>
-                        <p>Temps restant</p>
-                        <p>XXX XXX jours </p>
-                    </div>
+                    {% include 'offre.html' %}
                 </div>
-                </a>
+                <div>
+                    {% include 'offre.html' %}
+                </div>
                 
             </div>
-
         </div>
 
+
     </div>
-    <div>
-        <h2>Réponse à l'offre</h2>
-        <p><strong>Nom de l'offre:</strong> Nom de l'offre</p>
-        <p><strong>Cotisation apportée:</strong> 300 euros</p>
-        <p><strong>Description de la participation:</strong></p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
+
+</div>
 
 {% endblock %}

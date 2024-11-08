@@ -1,6 +1,5 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
 
-{% block content %}
 
     <div class="d-flex vh-100">
         <div class="w-25 border">
@@ -60,11 +59,12 @@
             <div>
                 <h2 class="fw-bolder display-5">Les offres</h2>
 
-                {% include 'offre.html' %}
+                <div>{% for offre in offres %} {% include 'offre.html' %} {% endfor %}</div>
             </div>
         </div>
         
-
     </div>
+    
+</div>
 
 {% endblock %}
