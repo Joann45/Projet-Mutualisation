@@ -10,11 +10,12 @@
         </button>
     </div>
 
+
     {% for m in membre %}
-    <div>
+    <div class="d-flex justify-content-around m-4">
         <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil" />
-        {{m.nom_utilisateur}}
-        <button class="btn btn-dark">
+        <p class="align-self-end">{{m.nom_utilisateur}}</p>
+        <button class="btn btn-dark rounded-4">
             <a
                 href="{{url_for('suppression_utilisateur_reseau', id_reseau=reseau_id,
             id_utilisateur=m.id_utilisateur)}}"
@@ -24,16 +25,17 @@
     </div>
     {% endfor %}
 
-    <h3>Suggestions</h3>
+    <h3 class="plc-colored border-top border-warning">Suggestions</h3>
 
-    <div>
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil" />
-        <p>Tom Cook</p>
-        <input class="btn btn-dark" type="button" name="ajouter" id="ajouter" value="Ajouter" />
+
+    <div class="d-flex justify-content-around m-4 ">
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p class="align-self-end">Tom Cook</p>
+        <input class="btn btn-dark rounded-4" type="button" name="ajouter" id="ajouter" value="Ajouter">
     </div>
-    <div>
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil" />
-        <p>Tom Cook</p>
-        <input class="btn btn-dark" type="button" name="ajouter2" id="ajouter2" value="Ajouter" />
+    <div class="d-flex justify-content-around m-4">
+        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
+        <p class="align-self-end">Tom Cook</p>
+        <input class="btn btn-dark rounded-4" type="button" name="ajouter2" id="ajouter2" value="Ajouter">
     </div>
 </div>

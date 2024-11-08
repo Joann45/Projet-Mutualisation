@@ -20,15 +20,6 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 import os
 
-def role_accepted(*roles):
-    def decorator(f):
-        def decorated_function(*args, **kwargs):
-            if current_user.role.name in roles:
-                return f(*args, **kwargs)
-            return redirect(url_for('home'))
-        return decorated_function
-    return decorator
-
 @app.route('/')
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -46,6 +37,7 @@ def login():
             login_user(u)
             return redirect(url_for('home'))
     return render_template('connexion.html', form=f)
+
 
 @app.route('/signin', methods=['GET','POST'])
 def signin():
@@ -351,3 +343,14 @@ def suppression_genre(id_genre):
         db.session.delete(g)
         db.session.commit()
     return redirect(url_for('genre'))
+
+
+@app.route('/home/boite-reception')
+def boite_reception():
+    """Renvoie la page de la boite de réception
+
+    Returns:
+        boite-reception.html: Une page de la boite de réception
+    """
+    return render_template('boite-reception.html')
+

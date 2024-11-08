@@ -35,9 +35,20 @@ nav {
     border-color: #FFFFFF !important;
 }
 
+.bg-color-blanc{
+    background-color: #FFFFFF;
+}
+
+.bg-color-bleu{
+    background-color: #050B25;
+}
+
+.bg-color-gris{
+    background-color: #EEEEEE;
+}
+
 .color_white{
     color: #FFFFFF;
-
 }
 
 .plc-colored{
@@ -45,4 +56,12 @@ nav {
 }
 .plc-dark{
     color: #050B25;
+}
+
+.back-white{
+    background-color: #FFFFFF;
+}
+
+.back-grey{
+    background-color: #EEEEEE;
 }
