@@ -63,6 +63,8 @@
                         <a  href="{{url_for('mes_offres')}}"><input class="btn btn-dark  border-3 border-darkflow fs-3 px-5 " type="button" name="offres" id="offres" value="Mes offres"></a>
                         <a  href="{{url_for('mes_reponses')}}"><input class="btn border-3 border-darkflow fs-3 w-75" type="button " name="reponses" id="reponses" value="Mes réponses"></a>
                     </div>
+
+                    {% for offre in offres%}
                     <div>
                         {% include 'offre.html' %}
                         <div class="d-flex justify-content-around">
@@ -71,18 +73,10 @@
                             <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="supprimer" id="supprimer" value="Supprimer">
                         </div>
                     </div>
-                    <div>
-                        {% include 'offre.html' %}
-                        <div class="d-flex justify-content-around">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="publier" id="publier" value="Publier">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="modifier" id="modifier" value="Modifier">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="supprimer" id="supprimer" value="Supprimer">
-                        </div>
-                    </div>
+                    {% endfor %}
                     
 
                 </div>
-                {% endfor %}
             </a>
         </div>
     </div>
