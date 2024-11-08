@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-</head>
+    <body>
+        <h1>S'inscrire</h1>
 
-<body>
-    <h1>S'inscrire</h1>
+        <form method="post" action="{{ url_for('signin') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }} {{ form.nom_user.label }} {{ form.nom_user(size=50, placeholder="Nom") }} <br />
+            {{ form.prenom_user.label }} {{ form.prenom_user(size=50, placeholder="Prenom") }}<br />
+            {{ form.mot_de_passe.label }} {{ form.mot_de_passe(size=50, placeholder="Mot de passe") }}<br />
+            {{ form.confirmation_mot_de_passe.label }} {{ form.confirmation_mot_de_passe(size=50,
+            placeholder="Confirmation mot de passe") }}<br />
+            {{ form.email.label }} {{ form.email(size=50, placeholder="Adresse mail") }}<br />
+            {{ form.img.label }} {{ form.img() }}<br />
+            {{ form.role.label }} {{ form.role() }}<br />
 
-    <form action="" method="post" action="{{ url_for('signin') }}">
-        {{ form.hidden_tag() }}
-
-        {{ form.nom_user.label }} {{ form.nom_user(size=50, placeholder="Nom") }} <br>
-        {{ form.prenom_user.label }} {{ form.prenom_user(size=50, placeholder="Prenom") }}<br>
-        {{ form.mot_de_passe.label }} {{ form.mot_de_passe(size=50, placeholder="Mot de passe") }}<br>
-        {{ form.confirmation_mot_de_passe.label }} {{ form.confirmation_mot_de_passe(size=50, placeholder="Confirmation
-        mot de passe") }}<br>
-        {{ form.email.label }} {{ form.email(size=50, placeholder="Adresse mail") }}<br>
-        {{ form.img.label }} {{ form.img() }}<br>
-        {{ form.role.label }} {{ form.role() }}<br>
-
-        <button type="submit">S'inscrire</button>
-
-    </form>
-</body>
-
+            <button type="submit">S'inscrire</button>
+        </form>
+    </body>
 </html>
