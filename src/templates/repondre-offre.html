@@ -21,7 +21,7 @@
                     <p>Nombre de participants: {{offre.nb_participants()}}</p>
                     <p>Cotisation minimale: {{offre.cotisation_min}} €</p>
 
-                    <a href="{{url_for('repondre_offre')}}">
+                    <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
                         <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Répondre">
                     </a>
                 </div>
@@ -73,54 +73,35 @@
             {% endfor %}
         </div>
 
-        <div class="border border-dark p-5" style="border-radius: 10px; width: 40%;">
+        <div class="border border-dark p-5" style="border-radius: 10px; width: 40%;">     
             <div class="d-flex justify-content-between">
                 <h2>Répondre à l'offre</h2>
-                <a href="{{url_for('repondre_offre')}}">
+                <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
                     <input type="button" name="fermer" id="fermer" class="btn-close">
                 </a>
             </div>
             
             <p>Nom de l'offre</p>
             
-            <form action="">
-
+            <form action="{{ url_for('repondre_offre', id_offre=offre.id_offre) }}" method="post">
+                {{ form.hidden_tag() }} 
                 <div class="d-flex flex-column justify-content-between mb-5">
-                    <label for="cotisation">Cotisation apportée</label>
-                    <input class="form-control" type="text" name="cotisation" id="cotisation">
+                    {{ form.cotisation_apportee.label }}
+                    {{ form.cotisation_apportee(size=50) }}
                 </div>
                 
                 <div class="d-flex flex-column justify-content-between mb-5">
-                    <label for="description">Description de la participation</label>
-                    <textarea class="form-control" name="description" id="description"></textarea>
+                    {{ form.description.label }}
+                    {{ form.description(size=50) }}
                 </div>
 
                 <div class="d-flex justify-content-center">
                     <a href="{{url_for('home')}}">
-                        <input class="btn btn-base fw-bolder" type="button" name="repondre" id="repondre" value="Répondre">
+                        {{ form.submit(class="btn btn-base fw-bolder") }}
                     </a>
                 </div>
                 
             </form>
-           
         </div>
     </div>
-
-    <form action="{{ url_for('repondre_offre', id_offre=offre.id_offre) }}" method="post">
-
-        <div>
-            {{ form.hidden_tag() }} 
-            {{ form.cotisation_apportee.label }}
-            {{ form.cotisation_apportee(size=50) }}
-        </div>
-
-        <div>
-            {{ form.description.label }}
-            {{ form.description(size=50) }}
-        </div>
-            {{ form.submit() }}
-        </a>
-
-    </form>
-</div>
 {% endblock %}
