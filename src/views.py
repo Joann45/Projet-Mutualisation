@@ -19,7 +19,6 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 import os
 
-
 @app.route('/')
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -117,7 +116,6 @@ def les_offres():
 
 @app.route('/home/repondre_offre/<int:id_offre>')
 @login_required
-@roles_required('administrateur')
 def repondre_offre(id_offre):
     o = Offre.query.get(id_offre)
     if not o:
@@ -166,6 +164,7 @@ def mes_reseaux_admin():
         reseau_id = f_select_reseau.reseaux.default
     else:
         f_select_reseau.reseaux.default = les_reseaux[0].id_reseau if les_reseaux else None
+        reseau_id = f_select_reseau.reseaux.default
     f_select_reseau.process()
 
     f_add_reseau = ReseauForm()
