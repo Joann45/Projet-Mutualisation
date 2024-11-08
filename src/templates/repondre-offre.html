@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 {%extends 'base.html'%}
 {%block content%}
-    <div>
-        <div>
-            <img src="{{ url_for('static', filename='img/fetes.svg')}}" alt="fetes">
+    <div class="d-flex flex-column align-items-center my-5">
+        <div class="d-flex flex-nowrap mb-3" style="width: 65%;">
 
-            <div>
-                <div>
-                    <h1>Titre de l'offre</h1>
-                    <p>fermeture de l'offre: jj/mm/aaaa</p>
+            <img style="width: 40em; max-width: 100%;" src="{{url_for('static', filename='img/fetes.svg')}}" alt="fetes">
+            
+            <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
+                
+                <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%;">
+                    <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                        <h1>Titre de l'offre</h1>
+                        <p>fermeture de l'offre: jj/mm/aaaa</p>
+                    </div>
+                    <p>Créer par M.xxx</p>
                 </div>
-
-                <div>
-                    <p>Créer par</p>
+    
+                <div class="d-flex flex-column w-100">
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
                         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
                         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
@@ -23,37 +27,85 @@
                     </p>
                     <p>Nombre de participants: xxx xxx</p>
                     <p>Cotisation minimale: xxx xxx €</p>
-
+        
                     <a href="{{url_for('repondre_offre')}}">
-                        <input type="button" name="repondre" id="repondre" value="Répondre">                     
-                    </a>
-
-                    <a href="{{url_for('repondre_offre')}}">
-                        Voir les documents associés à l'offre
+                        <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Répondre">
                     </a>
                 </div>
 
-                <div>
-                    <h1>Commentaires</h1>
-                    <p>M. xxxxxxxx</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
-                        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
-                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
-                        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-                        occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
-                        mollit anim id est laborum
-                    </p>
-                </div>
-
-                <div>
-                    <h1>documents</h1>
-                    <a href="">
-                        <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download">
-                        Contrat de xxx
-                    </a>
-                </div>
             </div>
+
+        </div>
+
+        <div class="d-flex justify-content-end mb-3" style="width: 65%;">
+            <a class="text-dark fw-bolder" style="justify-self: end;" href="{{url_for('repondre_offre')}}">
+                Voir les documents associés à l'offre
+            </a>
+        </div>
+
+        <div class="my-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
+
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Commentaires</h1>
+                <a href="">
+                    <img src="{{url_for('static', filename='img/moins.svg')}}" alt="moins">
+                </a>
+            </div>
+            
+            <p>M. xxxxxxxx</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim 
+                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea 
+                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate 
+                velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
+                occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+                mollit anim id est laborum
+            </p>
+        </div>
+
+        <div class="mb-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1>Documents</h1>
+                <a href="">
+                    <img src="{{url_for('static', filename='img/plus.svg')}}" alt="plus">
+                </a>
+            </div>
+            <a class="fw-bolder" style="color: grey;" href="">
+                <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download">Contrat de xxx</a>
+        </div>
+
+        <div class="border border-dark p-5" style="border-radius: 10px; width: 40%;">
+            <div class="d-flex justify-content-between">
+                <h2>Répondre à l'offre</h2>
+                <a href="{{url_for('repondre_offre')}}">
+                    <input type="button" name="fermer" id="fermer" class="btn-close">
+                </a>
+            </div>
+            
+            <p>Nom de l'offre</p>
+            
+            <form action="">
+
+                <div class="d-flex flex-column justify-content-between mb-5">
+                    <label for="cotisation">Cotisation apportée</label>
+                    <input class="form-control" type="text" name="cotisation" id="cotisation">
+                </div>
+                
+                <div class="d-flex flex-column justify-content-between mb-5">
+                    <label for="description">Description de la participation</label>
+                    <textarea class="form-control" name="description" id="description"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <a href="{{url_for('home')}}">
+                        <input class="btn btn-base fw-bolder" type="button" name="repondre" id="repondre" value="Répondre">
+                    </a>
+                </div>
+                
+                
+
+            </form>
+            
         </div>
     </div>
 {% endblock %}
