@@ -21,7 +21,6 @@ class OffreForm(FlaskForm):
     date_fin = DateField('Date de fin', validators=[DataRequired()])
     liens = TextAreaField('Lien vers des ressources promotionnelles', validators=[DataRequired()])
     documents = FileField("Ajouter les documents liés à l'offre", validators=[DataRequired()])
-    submit = SubmitField("Enregistrer")
 
     # def validate(self, extra_validators=None):
     #     if not FlaskForm.validate(self, extra_validators=extra_validators):
