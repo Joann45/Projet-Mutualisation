@@ -44,5 +44,21 @@
             </div>
         </div>
     </div>
+    <form action="{{ url_for('repondre_offre', id_offre=offre.id_offre) }}" method="post">
+
+        <div>
+            {{ form.hidden_tag() }} 
+            {{ form.cotisation_apportee.label }}
+            {{ form.cotisation_apportee(size=50) }}
+        </div>
+
+        <div>
+            {{ form.description.label }}
+            {{ form.description(size=50) }}
+        </div>
+            {{ form.submit() }}
+        </a>
+
+    </form>
 </div>
 {% endblock %}

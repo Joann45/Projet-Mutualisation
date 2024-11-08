@@ -8,8 +8,8 @@ class OffreForm(FlaskForm):
     nom_offre = StringField("Nom de l'offre", validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
     date_limite = DateField("Date limite", validators=[DataRequired()])
-    budget = IntegerField("Budget Estimatif", validators=[DataRequired()])
-    cotisation_min = IntegerField("Cotisation minimal", validators=[DataRequired()])
+    budget = FloatField("Budget Estimatif", validators=[DataRequired()])
+    cotisation_min = FloatField("Cotisation minimal", validators=[DataRequired()])
     capacite_min = IntegerField('Capacité minimal', validators=[DataRequired()])
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
     img = FileField("Image de l'offre", validators=[DataRequired()])
@@ -61,3 +61,9 @@ class OffreForm(FlaskForm):
     #             return False
 
     #     return True
+
+class ReponseForm(FlaskForm):
+    id = HiddenField('id')
+    cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired()])
+    submit = SubmitField("Repondre")

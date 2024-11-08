@@ -164,7 +164,8 @@ def loaddb(filename):
             reponse = md.Reponse(
                 id_utilisateur=elem["id_utilisateur"],
                 id_offre=elem["id_offre"],
-                desc_rep=elem["desc_rep"]
+                desc_rep=elem["desc_rep"],
+                budget=elem['budget']
             )
             elements["reponse"][(elem["id_utilisateur"], elem["id_offre"])] = reponse
             db.session.add(reponse)
