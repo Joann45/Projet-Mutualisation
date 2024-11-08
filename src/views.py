@@ -96,6 +96,7 @@ def mdp_reset():
     return render_template('mdp-reset.html')
 
 @app.route('/home')
+@login_required
 def home():
     """Renvoie la page d'accueil
 
