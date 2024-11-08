@@ -157,3 +157,13 @@ def mes_reponses():
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
     return render_template('mes-reponses.html')
+
+
+@app.route('/home/boite-reception')
+def boite_reception():
+    """Renvoie la page de la boite de réception
+
+    Returns:
+        boite-reception.html: Une page de la boite de réception
+    """
+    return render_template('boite-reception.html')
