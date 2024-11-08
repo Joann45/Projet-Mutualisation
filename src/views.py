@@ -20,6 +20,15 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 import os
 
+def role_accepted(*roles):
+    def decorator(f):
+        def decorated_function(*args, **kwargs):
+            if current_user.role.name in roles:
+                return f(*args, **kwargs)
+            return redirect(url_for('home'))
+        return decorated_function
+    return decorator
+
 @app.route('/')
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -101,7 +110,6 @@ def home():
     Returns:
         home.html: Une page d'accueil
     """
-    print(current_user.role)
     les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
     return render_template('home.html', offres=les_offres)
 

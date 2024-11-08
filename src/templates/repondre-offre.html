@@ -11,16 +11,16 @@
             </div>
 
             <div>
-                <p>Créer par XXX</p>
+                <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
                 <p>{{offre.description}}</p>
-                <p>Nombre de participants: xxx xxx</p>
-                <p>Cotisation minimale: xxx xxx €</p>
+                <p>Nombre de participants: {{offre.nb_participants()}}</p>
+                <p>Cotisation minimale: {{offre.cotisation_min}} €</p>
 
                 <a href="">
                     <input type="button" name="repondre" id="repondre" value="Répondre" />
                 </a>
 
-                <a href=""> Voir les documents associés à l'offre </a>
+                <a href="#documents"> Voir les documents associés à l'offre </a>
             </div>
 
             <div>
@@ -35,12 +35,14 @@
                 </p>
             </div>
 
-            <div>
-                <h1>documents</h1>
-                <a href="">
+            <div id="documents">
+                <h1>Documents</h1>
+                {% for document in offre.les_documents %}
+                <a href="" download="{{document.nom_doc}}">
+                    <p>{{document.nom_doc}}</p>
                     <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download" />
-                    Contrat de xxx
                 </a>
+                {% endfor %}
             </div>
         </div>
     </div>

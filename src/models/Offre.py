@@ -1,4 +1,5 @@
 from src.app import db
+from datetime import datetime, date
 
 # Classe Offre
 class Offre(db.Model):
@@ -28,3 +29,10 @@ class Offre(db.Model):
     les_liens = db.relationship('Lien_Offre', back_populates='offre', lazy=True)
     les_reponses_utilisateurs = db.relationship('Reponse', back_populates='offre', lazy=True)
     les_reseaux = db.relationship('Offre_Reseau', back_populates='offre', lazy=True)
+    
+    def nb_participants(self):
+        return len(self.les_reponses_utilisateurs)
+    
+    def temps_restant(self):
+        temps = self.date_limite - datetime.now().date()
+        return temps.days
