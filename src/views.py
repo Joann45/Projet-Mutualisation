@@ -2,13 +2,14 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
-from src.forms.OffreForm import OffreForm
+from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role
 from src.models.Offre import Offre
 from src.models.Genre import Genre
+from src.models.Reponse import Reponse
 from src.models.Document import Document
 from src.models.Genre_Offre import Genre_Offre
 from src.models.Offre_Reseau import Offre_Reseau
@@ -114,13 +115,23 @@ def les_offres():
     les_offres = Offre.query.all()
     return render_template('les-offres.html', offres=les_offres)
 
-@app.route('/home/repondre_offre/<int:id_offre>')
+@app.route('/home/repondre_offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def repondre_offre(id_offre):
+    f = ReponseForm()
     o = Offre.query.get(id_offre)
     if not o:
         return redirect(url_for("home"))
-    return render_template('repondre-offre.html', offre=o)
+    if f.validate_on_submit():
+        r = Reponse()
+        r.desc_rep = f.description.data
+        r.budget = f.cotisation_apportee.data
+        r.id_utilisateur = current_user.id_utilisateur
+        r.id_offre = o.id_offre
+        db.session.add(r)
+        db.session.commit()
+        return redirect(url_for('mes_offres'))
+    return render_template('repondre-offre.html', offre=o, form = f)
 
 @app.route('/home/profil')
 def modifier_profil():
@@ -243,6 +254,7 @@ def creation_offre():
         db.session.add(o)
         db.session.commit()
         id_offre = Offre.query.filter_by(nom_offre = o.nom_offre, description = o.description).first().id_offre
+
         d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
         d.nom_doc = f.documents.data
         d.id_offre = id_offre
