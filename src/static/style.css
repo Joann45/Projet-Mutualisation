@@ -65,6 +65,6 @@ nav {
 .back-grey{
     background-color: #EEEEEE;
 }
-.aucun{
-    display: none;
+.border-darkflow{
+    border-color: #050B25 !important;
 }
