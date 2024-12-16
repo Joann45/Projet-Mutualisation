@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_bootstrap import Bootstrap5
+
 import os.path
 
 
@@ -26,6 +28,9 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
+app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+bootstrap = Bootstrap5(app)
 
 from src.models.Utilisateur import Utilisateur
 from src.models.Role import Role
