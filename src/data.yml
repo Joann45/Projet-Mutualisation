@@ -6,11 +6,11 @@
 
 - type: role
   id_role: 1
-  name: "organisateur"
+  name: "Organisateur"
 
 - type: role
   id_role: 2
-  name: "administrateur"
+  name: "Administrateur"
 
 - type: reseau
   id_reseau: 2
