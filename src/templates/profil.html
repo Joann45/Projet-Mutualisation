@@ -22,15 +22,15 @@
     <form class="w-75" action="/home/profil" method="post">
         <div class="mb-3 form-group">
             <label class="color_white mb-2" for="name">Nom</label>
-            <input type="text" class="form-control" name="name" id="name" value="name" />
+            <input type="text" class="form-control" name="name" id="name" value="{{ current_user.prenom_utilisateur }}" />
         </div>
         <div class="mb-2 form-group">
             <label class="color_white mb-3" for="firstname">Prénom</label>
-            <input type="text" class="form-control" name="firstname" id="firstname" value="firstname" />
+            <input type="text" class="form-control" name="firstname" id="firstname" value="{{ current_user.nom_utilisateur }}" />
         </div>
         <div class="mb-2 form-group">
             <label class="color_white mb-3" for="email">Email</label>
-            <input type="email" class="form-control" name="email" id="email" value="email" />
+            <input type="email" class="form-control" name="email" id="email" value="{{ current_user.email_utilisateur }}" />
         </div>
         <div class="mb-2 form-group">
             <label class="color_white mb-3" for="password">Mot de passe</label>
