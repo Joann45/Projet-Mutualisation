@@ -10,6 +10,7 @@ from .models.Reseau import Reseau
 def loaddb(filename):
     '''Creates the tables and populates them with data.'''
     # Création de toutes les tables
+    db.drop_all()
     db.create_all()
     
     # Import des modèles

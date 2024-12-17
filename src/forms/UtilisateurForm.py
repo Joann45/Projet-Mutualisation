@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_security import current_user
 from wtforms import StringField, HiddenField, FileField, PasswordField, RadioField
 from wtforms.validators import DataRequired
 from hashlib import sha256
@@ -36,3 +37,20 @@ class ConnexionForm(FlaskForm):
         if u and u.mdp_utilisateur == sha256(self.mot_de_passe.data.encode()).hexdigest():
             return u
         return None
+    
+class UpdateUser(FlaskForm):
+    id =HiddenField('id')
+    nom_user = StringField("Nom", validators=[DataRequired()])
+    prenom_user = StringField('Prenom', validators=[DataRequired()])
+    email = StringField('Adresse mail', validators=[DataRequired()])
+    def validate(self, extra_validators=None):
+        if not super().validate(extra_validators=extra_validators):
+            return False
+        #if self.mot_de_passe.data != self.confirmation_mot_de_passe.data:
+        #    self.confirmation_mot_de_passe.errors.append('Les mots de passe ne correspondent pas')
+        #    return False
+        user = Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).first()
+        if user.email_utilisateur != self.email.data and Utilisateur.query.filter_by(email_utilisateur=self.email.data).first():
+            self.email.errors.append('Un utilisateur existe déjà avec cette adresse mail')
+            return False
+        return True
