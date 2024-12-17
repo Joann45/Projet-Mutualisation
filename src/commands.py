@@ -171,7 +171,13 @@ def loaddb(filename):
             )
             elements["reponse"][(elem["id_utilisateur"], elem["id_offre"])] = reponse
             db.session.add(reponse)
+        g = Genre(nom_genre="Rock")
+        g1 = Genre(nom_genre="Pop")
+        g2 = Genre(nom_genre="Rap")
+        g3 = Genre(nom_genre="Reggae")
+        g4 = Genre(nom_genre="Classique")
 
+    db.session.add_all([g, g1, g2, g3, g4])
     db.session.commit()
 
 @app.cli.command()
@@ -195,3 +201,5 @@ def syncdb():
     db.session.add(res)
     db.session.add(g)
     db.session.commit()
+
+

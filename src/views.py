@@ -1,7 +1,10 @@
 from .app import app, db
-from flask import render_template, redirect, url_for, request, flash
+from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser
+from flask import render_template, redirect, url_for, request
+from flask_security import login_required, current_user,logout_user, login_user
+from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
 from src.models.Utilisateur import Utilisateur
@@ -19,6 +22,30 @@ from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 import os
+from functools import wraps
+from flask import abort
+
+def roles(*roles):
+    """Vérifie si l'utilisateur a un rôle parmi ceux passés en paramètre
+    
+    Args:
+        *roles : Les rôles à vérifier
+        
+    Returns:
+        decorator : La fonction décorée
+    Examples:
+        >>> @roles("Administrateur","Organisateur")
+        >>> def home():
+        >>>     return render_template('home.html')
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not Role.query.get(current_user.role_id).name in roles:
+                abort(403)
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 @app.route('/')
 @app.route('/login', methods=['GET','POST'])
@@ -97,6 +124,7 @@ def mdp_reset():
 
 @app.route('/home', methods=['GET','POST'])
 @login_required
+@roles("Administrateur","Organisateur") #! A modifier pour les rôles
 def home():
     """Renvoie la page d'accueil
 
