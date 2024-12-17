@@ -283,15 +283,6 @@ def creation_offre():
         return redirect(url_for('mes_offres'))
     return render_template('creation-offre.html', form=f)
 
-@app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
-def visualiser_offre():
-    """Renvoie la page de visualisation des réponses aux offres
-
-    Returns:
-        visualiser-reponses-offres.html: Une page de visualisation des réponses aux offres
-    """
-    return render_template('visualiser-reponses-offres.html')
-
 @app.route('/home/mes-offres')
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
@@ -301,6 +292,24 @@ def mes_offres():
     """
     les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
     return render_template('mes-offres.html', offres=les_offres)
+
+@app.route('/home/offre_personnel/<int:id_offre>')
+@login_required
+def offre_personnel(id_offre):
+    f = ReponseForm()
+    o = Offre.query.get(id_offre)
+    if not o:
+        return redirect(url_for("home"))
+    return render_template('visualiser-offre-personnel.html', offre=o, form=f)
+
+@app.route('/home/visualiser-reponses-offre') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_reponses_offre():
+    """Renvoie la page de visualisation des réponses aux offres
+
+    Returns:
+        visualiser-reponses-offre.html: Une page de visualisation des réponses aux offres
+    """
+    return render_template('visualiser-reponses-offre.html')
 
 @app.route('/home/mes-offres/mes-reponses')
 def mes_reponses():
