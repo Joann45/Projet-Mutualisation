@@ -21,3 +21,11 @@ class Utilisateur(db.Model, UserMixin):
     les_offres = db.relationship('Offre', back_populates='utilisateur', lazy=True)
     les_reponses_offre = db.relationship('Reponse', back_populates='utilisateur', lazy=True)
     les_reseaux = db.relationship('Utilisateur_Reseau', back_populates='orga', lazy=True)
+
+    def get_last_id():
+        id = 0
+        users = Utilisateur.query.all()
+        for user in users:
+            if user.id_utilisateur > id:
+                id = user.id_utilisateur
+        return id

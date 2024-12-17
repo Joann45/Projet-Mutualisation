@@ -1,5 +1,8 @@
 from .app import app, db
 from flask import render_template, redirect, url_for, request
+from flask_security import login_required, current_user, roles_required,  logout_user, login_user
+from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser
+from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user,logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
@@ -74,11 +77,11 @@ def signin():
             u.prenom_utilisateur = f.prenom_user.data
             u.mdp_utilisateur = sha256(f.mot_de_passe.data.encode()).hexdigest()
             u.email_utilisateur = f.email.data
-            u.img_utilisateur = f.img.data.filename
+            u.img_utilisateur = str(Utilisateur.get_last_id())
             u.role_id = f.role.data
             file = f.img.data
             if file:
-                file.save(os.path.join("src/static/img/profil", file.filename))
+                file.save(os.path.join("src/static/img/profil", str(Utilisateur.get_last_id())))
             db.session.add(u)
             db.session.commit()
             return redirect(url_for('login'))
@@ -119,7 +122,8 @@ def mdp_reset():
     """
     return render_template('mdp-reset.html')
 
-@app.route('/home')
+@app.route('/home', methods=['GET','POST'])
+@login_required
 @roles("Administrateur","Organisateur") #! A modifier pour les rôles
 def home():
     """Renvoie la page d'accueil
@@ -158,15 +162,30 @@ def repondre_offre(id_offre):
         return redirect(url_for('mes_offres'))
     return render_template('repondre-offre.html', offre=o, form = f)
 
-@app.route('/home/profil')
+@app.route('/home/profil', methods=['GET','POST'])
 def modifier_profil():
     """Renvoie la page de modification du profil
 
     Returns:
         profil.html: Une page de modification du profil
     """
-    u = Utilisateur.query.get(current_user.id_utilisateur)
-    return render_template('profil.html', user=u) #! A modifier pour afficher les informations de l'utilisateur
+    f = UpdateUser()
+    if f.validate_on_submit():
+        if f.validate():
+            user = current_user  # Récupérer l'utilisateur actuel via Flask-Login
+            user.prenom_utilisateur = f.prenom_user.data
+            user.nom_utilisateur = f.nom_user.data
+            user.email_utilisateur = f.email.data
+            print(f.prenom_user.data)
+            db.session.commit()
+            #file = f.img.data
+            #if file:
+                #file.save(os.path.join("src/static/img/profil", file.filename))
+            return redirect(url_for('home'))
+    f.nom_user.data = current_user.nom_utilisateur
+    f.prenom_user.data = current_user.prenom_utilisateur
+    f.email.data = current_user.email_utilisateur 
+    return render_template('profil.html', form=f)
 
 @app.route('/home/mes-reseaux')
 def mes_reseaux():
