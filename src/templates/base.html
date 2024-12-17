@@ -19,8 +19,13 @@
             <nav class="nav navbar border">
                 <div class="d-flex align-items-center">
                     <a class="btn pe-1 d-flex align-items-center" href="{{url_for('home')}}"
-                        ><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logo de StageFlow" class="mx-3 ml-4"/>
-                        <p class="mb-0 ml-4">StageFlow</p></a>
+                        ><img
+                            src="{{ url_for('static', filename='img/logo.svg') }}"
+                            alt="logo de StageFlow"
+                            class="mx-3 ml-4"
+                        />
+                        <p class="mb-0 ml-4">StageFlow</p></a
+                    >
                 </div>
 
                 <div class="input-group border rounded-pill">
@@ -41,20 +46,28 @@
                     <a class="btn btn-default" href="{{url_for('mes_reseaux')}}">
                         Mes réseaux
 
-                        <img src="{{url_for('static', filename='img/icon_reseau.svg')}}" alt="icone réseaux"  class="ms-3">
+                        <img
+                            src="{{url_for('static', filename='img/icon_reseau.svg')}}"
+                            alt="icone réseaux"
+                            class="ms-3"
+                        />
                     </a>
                 </div>
 
                 <div>
                     <!-- créer route vers mes offres -->
-                    <a class ="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
+                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
                         Mes offres
-                        <img src="{{url_for('static', filename='img/icon_dossier.svg')}}" alt="icone dossier" class="ms-3"/>
+                        <img
+                            src="{{url_for('static', filename='img/icon_dossier.svg')}}"
+                            alt="icone dossier"
+                            class="ms-3"
+                        />
                     </a>
                 </div>
 
                 <div>
-                    <a class = "btn btn-base mx-3" href="{{url_for('creation_offre')}}">
+                    <a class="btn btn-base mx-3" href="{{url_for('creation_offre')}}">
                         Créer une offre
                         <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus" class="ms-2" />
                     </a>
@@ -62,7 +75,7 @@
 
                 <div>
                     <!-- créer la route vers notification -->
-                    <a href="">
+                    <a href="{{url_for('boite_reception')}}" class="btn">
                         <img
                             src="{{ url_for('static', filename='img/boite_reception.svg') }}"
                             alt="boite de réception"
