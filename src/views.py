@@ -144,18 +144,8 @@ def modifier_profil():
     u = Utilisateur.query.get(current_user.id_utilisateur)
     return render_template('profil.html', user=u) #! A modifier pour afficher les informations de l'utilisateur
 
-@app.route('/home/mes-reseaux')
-def mes_reseaux():
-    """Renvoie la page des réseaux
 
-    Returns:
-        mes-reseaux.html: Une page des réseaux de l'utilisateur
-    """
-    f = SelectReseauForm()
-    f.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
-    return render_template('mes-reseaux.html', form=f)
-
-@app.route('/home/mes-reseaux-admin', methods=['GET', 'POST'])
+@app.route('/home/mes-reseaux', methods=['GET', 'POST'])
 def mes_reseaux_admin():
     """Renvoie la page des réseaux administrateur
 
@@ -165,7 +155,8 @@ def mes_reseaux_admin():
     les_reseaux = Reseau.query.all()
     f_select_reseau = SelectReseauForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
-
+    if current_user.role_id == 1:
+        return render_template('mes-reseaux.html', reseaux=les_reseaux, select_form=f_select_reseau)
     if f_select_reseau.validate_on_submit():
         reseau_id = f_select_reseau.reseaux.data
         return redirect(url_for('mes_reseaux_admin', reseau_id=reseau_id))
