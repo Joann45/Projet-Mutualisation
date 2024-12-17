@@ -12,7 +12,7 @@
 
         <div class="d-flex flex-column">
             <form action="/home/" method="post" class="border border-dark p-5 rounded-3 m-5 bg-white">
-                {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
+                {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
             </form>
 
             <input
@@ -39,5 +39,4 @@
         <div id="myModal" class="modal fade">{%include 'membres-reseaux.html'%}</div>
     </div>
 </div>
-<!-- Faire la pop up et charger la liste des membres en AJAX-->
-{%include 'membres-reseaux.html'%} {% endblock %}
+<!-- Faire la pop up et charger la liste des membres en AJAX--> {% endblock %}
