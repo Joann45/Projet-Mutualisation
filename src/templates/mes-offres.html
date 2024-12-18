@@ -94,7 +94,9 @@
 
             </div>
             <div class ="d-flex justify-content-end mx-3">
-                <button class="btn btn-dark fw-bolder mx-3 rounded-3">Oui</button>
+                <a href="{{url_for('suppression_offre', id_offre=offre.id_offre)}}">
+                    <input class="btn btn-dark fw-bolder rounded-3" type="input" name="oui" id="oui" value="Oui">
+                </a>
                 <button class="btn btn-dark fw-bolder rounded-3">Annuler</button>
             </div>
 
