@@ -46,11 +46,30 @@ class UpdateUser(FlaskForm):
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
             return False
-        #if self.mot_de_passe.data != self.confirmation_mot_de_passe.data:
-        #    self.confirmation_mot_de_passe.errors.append('Les mots de passe ne correspondent pas')
-        #    return False
-        user = Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).first()
+        user = current_user
         if user.email_utilisateur != self.email.data and Utilisateur.query.filter_by(email_utilisateur=self.email.data).first():
             self.email.errors.append('Un utilisateur existe déjà avec cette adresse mail')
             return False
         return True
+
+class UpdatePassword(FlaskForm):
+    id = HiddenField('id')
+    current_password = PasswordField('Mot de passe actuel', validators=[DataRequired()])
+    new_password = PasswordField('Nouveau mot de passe', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirmation mot de passe', validators=[DataRequired()])
+    def validate(self, extra_validators=None):
+        if not super().validate(extra_validators=extra_validators):
+            return False
+        user = current_user
+        if sha256(self.current_password.data.encode()).hexdigest() != user.mdp_utilisateur:
+            self.current_password.errors.append("Le mot de passe actuel ne correspond pas")
+            return False
+        if self.confirm_password.data != self.new_password.data:
+            self.new_password.errors.append("Le nouveau mot de passe ne correspond pas à la confirmation")
+            return False
+        if self.current_password.data == self.new_password.data:
+            self.new_password.errors.append("Le nouveau mot de passe est le même le l'ancien")
+            return False
+        return True
+        
+            
