@@ -12,7 +12,8 @@
 
         <div class="d-flex flex-column">
             <form action="/home/" method="post" class="border border-dark p-5 rounded-3 m-5 bg-white">
-                {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
+                {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }} {% for choix
+                in select_form.reseaux%} {{ choix(onchange="this.form.submit()") }} {% endfor %}
             </form>
 
             <input
@@ -40,4 +41,4 @@
     </div>
 </div>
 <!-- Faire la pop up et charger la liste des membres en AJAX-->
-{%include 'membres-reseaux.html'%} {% endblock %}
+{% endblock %}

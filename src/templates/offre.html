@@ -1,5 +1,5 @@
 <div class="my-5 taille-min-55">
-    <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+    <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('details_offre', id_offre=offre.id_offre)}}">
         <img
             class="rounded-start-4"
             src="{{ url_for('static', filename='img/fete_fumee.svg') }}"
@@ -25,6 +25,11 @@
                     <p>Temps restant</p>
                     <p>{{offre.temps_restant()}} jours</p>
                 </div>
+                <div class="d-flex flex-column align-items-center">
+                    <p>Réseaux</p>
+                    {% for reseau in offre.les_reseaux%}
+                    <p>{{reseau.reseau.nom_reseau}}</p>
+                    {% endfor %}
             </div>
         </div>
     </a>
