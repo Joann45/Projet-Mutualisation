@@ -63,6 +63,9 @@ class OffreForm(FlaskForm):
 
 class ReponseForm(FlaskForm):
     id = HiddenField('id')
+    
     cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
+    autre_rep = TextAreaField('Autres', validators=[DataRequired()])
+    dates_dispo = DateField('Dates Disponibles')
+    cap_salle = IntegerField('Capacité de la salle', validators=[DataRequired()])
     submit = SubmitField("Repondre")
