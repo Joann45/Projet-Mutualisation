@@ -24,3 +24,13 @@ class Utilisateur(db.Model, UserMixin):
     
     def is_admin(self):
         return self.role_id == 2
+
+
+    def get_last_id():
+        id = 0
+        users = Utilisateur.query.all()
+        for user in users:
+            if user.id_utilisateur > id:
+                id = user.id_utilisateur
+        return id
+

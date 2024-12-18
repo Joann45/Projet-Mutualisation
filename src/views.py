@@ -1,6 +1,8 @@
 from .app import app, db
 from flask import render_template, redirect, url_for, request
-from flask_security import login_required, current_user,logout_user, login_user
+from flask_security import login_required, current_user, roles_required,  logout_user, login_user
+from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
+from flask import render_template, redirect, url_for, request
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
@@ -74,11 +76,11 @@ def signin():
             u.prenom_utilisateur = f.prenom_user.data
             u.mdp_utilisateur = sha256(f.mot_de_passe.data.encode()).hexdigest()
             u.email_utilisateur = f.email.data
-            u.img_utilisateur = f.img.data.filename
+            u.img_utilisateur = str(Utilisateur.get_last_id()+1)
             u.role_id = f.role.data
             file = f.img.data
             if file:
-                file.save(os.path.join("src/static/img/profil", file.filename))
+                file.save(os.path.join("src/static/img/profil", str(Utilisateur.get_last_id()+1)))
             db.session.add(u)
             db.session.commit()
             return redirect(url_for('login'))
@@ -119,7 +121,21 @@ def mdp_reset():
     """
     return render_template('mdp-reset.html')
 
-@app.route('/home')
+@app.route('/mdp-modif', methods=['GET','POST'])
+@login_required
+@roles("Administrateur", "Organisateur")
+def mdp_modif():
+    f = UpdatePassword()
+    if f.validate_on_submit():
+        if f.validate():
+            user = current_user
+            user.mdp_utilisateur = sha256(f.new_password.data.encode()).hexdigest()
+            db.session.commit()
+            return redirect(url_for('home'))
+    return render_template('mdp-modif.html', form = f)
+
+@app.route('/home', methods=['GET','POST'])
+@login_required
 @roles("Administrateur","Organisateur") #! A modifier pour les rôles
 def home():
     """Renvoie la page d'accueil
@@ -140,9 +156,9 @@ def les_offres():
     les_offres = Offre.query.all()
     return render_template('les-offres.html', offres=les_offres)
 
-@app.route('/home/repondre_offre/<int:id_offre>', methods=['GET','POST'])
+@app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
-def repondre_offre(id_offre):
+def details_offre(id_offre):
     f = ReponseForm()
     o = Offre.query.get(id_offre)
     if not o:
@@ -156,17 +172,51 @@ def repondre_offre(id_offre):
         db.session.add(r)
         db.session.commit()
         return redirect(url_for('mes_offres'))
+    return render_template('details_offre.html', offre=o, form = f)
+
+@app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
+@login_required
+def repondre_offre(id_offre):
+    f = ReponseForm()
+    o = Offre.query.get(id_offre)
+    if not o:
+        return redirect(url_for("home"))
+    if f.validate_on_submit():
+        r = Reponse()
+        r.desc_rep = f.autre_rep.data
+        r.budget = f.cotisation_apportee.data
+        r.id_utilisateur = current_user.id_utilisateur
+        r.id_offre = o.id_offre
+        db.session.add(r)
+        db.session.commit()
+        return redirect(url_for('mes_offres'))
     return render_template('repondre-offre.html', offre=o, form = f)
 
-@app.route('/home/profil')
+@app.route('/home/profil', methods=['GET','POST'])
 def modifier_profil():
     """Renvoie la page de modification du profil
 
     Returns:
         profil.html: Une page de modification du profil
     """
-    u = Utilisateur.query.get(current_user.id_utilisateur)
-    return render_template('profil.html', user=u) #! A modifier pour afficher les informations de l'utilisateur
+    f = UpdateUser()
+    if f.validate_on_submit():
+        if f.validate():
+            user = current_user  # Récupérer l'utilisateur actuel via Flask-Login
+            user.prenom_utilisateur = f.prenom_user.data
+            user.nom_utilisateur = f.nom_user.data
+            user.email_utilisateur = f.email.data
+            file = f.img.data
+            print(file)
+            if file:
+                file_path = os.path.join("src/static/img/profil", str(current_user.id_utilisateur))
+                file.save(file_path)
+            db.session.commit()
+            return redirect(url_for('home'))
+    f.nom_user.data = current_user.nom_utilisateur
+    f.prenom_user.data = current_user.prenom_utilisateur
+    f.email.data = current_user.email_utilisateur 
+    return render_template('profil.html', form=f)
 
 
 @app.route('/home/mes-reseaux', methods=['GET', 'POST'])
@@ -283,7 +333,7 @@ def creation_offre():
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
         o.img = f.img.data
-        o.etat = f.etat.data
+        #o.etat = f.etat.data
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data

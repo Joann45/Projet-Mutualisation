@@ -13,7 +13,6 @@ class OffreForm(FlaskForm):
     capacite_min = IntegerField('Capacité minimal', validators=[DataRequired()])
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
     img = FileField("Image de l'offre", validators=[DataRequired()])
-    etat = StringField("État de l'offre", validators=[DataRequired()])
     genre = SelectField('Genre', coerce=int)
     reseau = SelectField('Réseaux', coerce=int)
     nom_loc = StringField('Localisation', validators=[DataRequired()])
@@ -63,6 +62,9 @@ class OffreForm(FlaskForm):
 
 class ReponseForm(FlaskForm):
     id = HiddenField('id')
+    
     cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
+    autre_rep = TextAreaField('Autres', validators=[DataRequired()])
+    dates_dispo = DateField('Dates Disponibles')
+    cap_salle = IntegerField('Capacité de la salle', validators=[DataRequired()])
     submit = SubmitField("Repondre")
