@@ -1,0 +1,51 @@
+    <div class="w-25 border">
+        <div class="d-flex flex-column m-5">
+
+            <h1 class="w-100 fw-bolder">Filtrer par</h1>
+
+            <div class="my-3">
+                <h2>Réseaux</h2>
+
+                
+                <div>
+                    <form action="/home/" method="post">
+                        {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="my-3">
+                <h2>Date d'expiration</h2>
+
+                <div>
+                    <input type="radio" id="plus_proche" name="anciennete" value="plus_proche">
+                    <label for="plus_proche">Plus proche</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="moins_proche" name="anciennete" value="moins_proche">
+                    <label for="moins_proche">Moins proche</label>
+                </div>
+
+            </div>
+
+            <div class="my-3">
+                <h2>Popularité</h2>
+
+                <div>
+                    <input type="radio" id="plus_populaire" name="populaire" value="plus_populaire">
+                    <label for="plus_populaire">Plus populaire</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="moins_populaire" name="populaire" value="moins_populaire">
+                    <label for="moins_populaire">Moins populaire</label>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-base rounded-3">  Rechercher </button>
+            </div>
+        </div>
+    </div>
