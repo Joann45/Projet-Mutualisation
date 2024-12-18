@@ -1,9 +1,8 @@
 from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
-from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser
+from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
 from flask import render_template, redirect, url_for, request
-from flask_security import login_required, current_user,logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
@@ -121,6 +120,19 @@ def mdp_reset():
         mdp-reset.html: Une page pour réinitialiser le mot de passe
     """
     return render_template('mdp-reset.html')
+
+@app.route('/mdp-modif', methods=['GET','POST'])
+@login_required
+@roles("Administrateur", "Organisateur")
+def mdp_modif():
+    f = UpdatePassword()
+    if f.validate_on_submit():
+        if f.validate():
+            user = current_user
+            user.mdp_utilisateur = sha256(f.new_password.data.encode()).hexdigest()
+            db.session.commit()
+            return redirect(url_for('home'))
+    return render_template('mdp-modif.html', form = f)
 
 @app.route('/home', methods=['GET','POST'])
 @login_required

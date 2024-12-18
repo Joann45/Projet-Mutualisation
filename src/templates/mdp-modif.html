@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} {% block content %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Modifier le mot de passe</title>
+    </head>
+
+    <body>
+        <div class="d-flex justify-content-center m-5">
+            <h1 class="fw-bolder display-4 m-4">Modifier le mot de passe</h1>
+        </div>
+        <div class="mx-auto w-25 d-flex flex-column align-items-center div-dark rounded-4 mb-3 p-4">
+            <form class="w-75" method="post" action="{{ url_for('mdp_modif') }}">
+                {{ form.hidden_tag() }} 
+                <div class="mb-3 form-group">
+                    <label class="color_white mb-2" for="name">{{ form.current_password.label }}</label>
+                    {{ form.current_password(class_ ="form-control") }}
+                </div>
+                <div class="mb-3 form-group">
+                    <label class="color_white mb-2" for="name">{{ form.new_password.label }}</label>
+                    {{ form.new_password(class_ ="form-control") }}  
+                </div>
+                <div class="mb-3 form-group">
+                    <label class="color_white mb-2" for="name">{{ form.confirm_password.label }}</label>
+                    {{ form.confirm_password(class_ ="form-control") }}
+                </div>
+                <div class="mb-3 form-group">
+                    <button class="btn btn-base fw-bolder" type="submit">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </body>
+{% endblock %}
