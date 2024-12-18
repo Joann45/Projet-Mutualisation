@@ -1,50 +1,88 @@
 {%extends 'base.html'%} {%block content%}
-<h1>Voir mes réseaux</h1>
-<div>
-    <div>
-        <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social" />
-    </div>
+<div id="resau_view" class="row">
+    <div class="col-sm">
+        <h1>Voir mes réseaux</h1>
+        <div>
+            <div>
+                <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social" />
+            </div>
 
-    <div>
-        <form method="post" action="{{ url_for('mes_reseaux') }}">
-            {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
-            <input
-                class="btn btn-dark"
-                type="submit"
-                name="voir_membres_admin"
-                id="voir_membres_admin"
-                value="Voir les membres"
-            />
-        </form>
+            <div>
+                <form method="post" action="{{ url_for('mes_reseaux') }}">
+                <div class="input-group">
+                    {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
+                    <input
+                        class="btn btn-dark"
+                        type="submit"
+                        name="voir_membres_admin"
+                        id="voir_membres_admin"
+                        value="Voir les membres"
+                    />
+                </form>
+                {% if current_user.is_admin() %}
 
-        <input class="btn btn-dark" type="button" name="creer_reseau" id="creer_reseau" value="Créer un réseau" />
-    </div>
+                <input
+                    class="btn btn-dark"
+                    type="button"
+                    name="creer_reseau"
+                    id="creer_reseau"
+                    value="Créer un réseau"
+                />
+                <input
+                    class="btn btn-dark"
+                    type="button"
+                    name="modifier_reseau"
+                    id="modifier_reseau"
+                    value="Modifier un réseau"
+                />
+                <input
+                    class="btn btn-dark"
+                    type="button"
+                    name="ajouter_membre"
+                    id="ajouter_membre"
+                    value="Ajouter un membre"
+                />
 
-    <div>
-        <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social" />
+                <input
+                    class="btn btn-dark"
+                    type="button"
+                    name="supprimer_reseau"
+                    id="supprimer_reseau"
+                    value="Supprimer un réseau"
+                />
+                {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social" />
+            </div>
+        </div>
     </div>
+    <div class="col-sm">{% for offre in offres%} {%include 'offre.html'%} {% endfor %}</div>
+    <div class="col-sm">{% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}</div>
 </div>
-{% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}
-
+{% if current_user.is_admin() %}
 <div>
     <h1>Créer un réseau</h1>
     <form method="post" action="{{url_for('mes_reseaux')}}">
         <div>{{ add_form.hidden_tag() }} {{ add_form.nom_reseau.label }} {{ add_form.nom_reseau() }}</div>
     </form>
-    <div class="input-group border rounded-pill">
-        <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search" />
-        <button class="btn">
-            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
-        </button>
-    </div>
-
-    <div>
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil" />
-        <p>Tom Cook</p>
-        <input class="btn btn-dark" type="button" name="ajouter" id="ajouter" value="Ajouter" />
-    </div>
-
-    {%include 'mes-reseaux.html'%}
 </div>
 
-{% endblock %}
+<div>
+<h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
+<div>
+    <form method="post" action="{{ url_for('ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
+        {{ add_user_form.hidden_tag() }}
+        <div class="form-group">
+            {{ add_user_form.utilisateur.label(class="form-label") }} {{ add_user_form.utilisateur(class="form-control") }} {% for error
+            in add_user_form.utilisateur.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+</div>
+{% endif %} {% endblock %}

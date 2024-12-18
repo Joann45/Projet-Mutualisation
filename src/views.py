@@ -180,8 +180,6 @@ def mes_reseaux():
     f_select_reseau = SelectReseauForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
     
-    if current_user.role_id == 1:
-        return render_template('mes-reseaux.html', select_form=f_select_reseau)
 
     if f_select_reseau.validate_on_submit():
         reseau_id = f_select_reseau.reseaux.data
@@ -195,7 +193,10 @@ def mes_reseaux():
         f_select_reseau.reseaux.default = les_reseaux[0].id_reseau if les_reseaux else None
         reseau_id = f_select_reseau.reseaux.default
     f_select_reseau.process()
-
+    reseau = Reseau.query.get(reseau_id)
+    add_user_form = AddUtilisateurReseauForm()
+    liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
+    add_user_form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
     f_add_reseau = ReseauForm()
     if f_add_reseau.validate_on_submit():
         r = Reseau()
@@ -203,8 +204,8 @@ def mes_reseaux():
         db.session.add(r)
         db.session.commit()
         return redirect(url_for('mes_reseaux'))
-    reseau = Reseau.query.get(reseau_id)
-    return render_template('mes-reseaux-admin.html', reseaux=les_reseaux, add_form=f_add_reseau, select_form=f_select_reseau, membres=[[membre.orga for membre in reseau.les_utilisateurs]], reseau_id=reseau_id)
+    les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
+    return render_template('mes-reseaux-admin.html', add_user_form=add_user_form, reseaux=les_reseaux, add_form=f_add_reseau, select_form=f_select_reseau, membres=[[membre.orga for membre in reseau.les_utilisateurs]], reseau_id=reseau_id, offres=les_offres, reseau=reseau)
 
 @app.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
@@ -219,7 +220,7 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     if utilisateur_reseau:
         db.session.delete(utilisateur_reseau)
         db.session.commit()
-    return redirect(url_for('mes_reseaux_admin', reseau_id=id_reseau))
+    return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
 
 @app.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
@@ -231,7 +232,7 @@ def ajout_utilisateur_reseau(id_reseau):
     """
     reseau = Reseau.query.get(id_reseau)
     if not reseau:
-        return redirect(url_for('mes_reseaux_admin'))
+        return redirect(url_for('mes_reseaux'))
     form = AddUtilisateurReseauForm()
     liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
     form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
@@ -240,7 +241,7 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
         db.session.commit()
-        return redirect(url_for('mes_reseaux_admin', reseau_id=id_reseau))
+        return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
     return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)
 
 @app.route('/home/creation-offre', methods=['GET','POST'])

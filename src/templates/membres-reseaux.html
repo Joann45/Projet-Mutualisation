@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<div>
+<div class="h-50 d-inline-block overflow-auto">
     <h1>Membres du réseau</h1>
 
     <div class="input-group border rounded-pill">
@@ -16,9 +16,10 @@
         <p class="align-self-end">{{m.nom_utilisateur}}</p>
         {% if current_user.is_admin() %}
         <button class="btn btn-dark rounded-4">
-            <ahref="{{url_for('suppression_utilisateur_reseau', id_reseau=reseau_id,
+            <a
+                href="{{url_for('suppression_utilisateur_reseau', id_reseau=reseau_id,
             id_utilisateur=m.id_utilisateur)}}"
-                >Supprimer</ahref=
+                >Supprimer</a
             >
         </button>
         {% endif %}
