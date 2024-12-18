@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<div>
+<div class="h-50 d-inline-block overflow-auto">
     <h1>Membres du réseau</h1>
 
     <div class="input-group border rounded-pill">
@@ -10,11 +10,11 @@
         </button>
     </div>
 
-
     {% for m in membre %}
     <div class="d-flex justify-content-around m-4">
         <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil" />
         <p class="align-self-end">{{m.nom_utilisateur}}</p>
+        {% if current_user.is_admin() %}
         <button class="btn btn-dark rounded-4">
             <a
                 href="{{url_for('suppression_utilisateur_reseau', id_reseau=reseau_id,
@@ -22,20 +22,7 @@
                 >Supprimer</a
             >
         </button>
+        {% endif %}
     </div>
     {% endfor %}
-
-    <h3 class="plc-colored border-top border-warning">Suggestions</h3>
-
-
-    <div class="d-flex justify-content-around m-4 ">
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
-        <p class="align-self-end">Tom Cook</p>
-        <input class="btn btn-dark rounded-4" type="button" name="ajouter" id="ajouter" value="Ajouter">
-    </div>
-    <div class="d-flex justify-content-around m-4">
-        <img src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}" alt="profil">
-        <p class="align-self-end">Tom Cook</p>
-        <input class="btn btn-dark rounded-4" type="button" name="ajouter2" id="ajouter2" value="Ajouter">
-    </div>
 </div>
