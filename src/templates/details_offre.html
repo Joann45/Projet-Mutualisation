@@ -21,7 +21,7 @@
                     <p>Nombre de participants: {{offre.nb_participants()}}</p>
                     <p>Cotisation minimale: {{offre.cotisation_min}} €</p>
 
-                    <a href="{{url_for('repondre-offre', id_offre=offre.id_offre)}}">
+                    <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
                         <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Répondre">
                     </a>
                 </div>
