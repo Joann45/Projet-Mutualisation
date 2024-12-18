@@ -15,7 +15,12 @@
                 style="width: 150px; height: 150px"
             />
             <div>
-                <label for="modif_pp" class="btn btn-outline-light mt-2 fw-bold">Modifier la photo</label>
+                <label for="modif_pp" 
+                       class="col-md-8 form-group btn btn-outline-light mt-4 fw-bold"
+                       style="font-size: 14px; padding: 5px 10px; width: 200px; height: 48px;">
+                    {{ form.img.label(style="font-size:20px") }} 
+                    {{ form.img(size=25, class_="w-25 invisible btn btn-outline-light mt-2 fw-bold") }}
+                </label>
                 <input type="file" name="modif_pp" id="modif_pp" style="display: none" />
             </div>
         </div>

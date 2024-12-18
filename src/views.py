@@ -76,11 +76,11 @@ def signin():
             u.prenom_utilisateur = f.prenom_user.data
             u.mdp_utilisateur = sha256(f.mot_de_passe.data.encode()).hexdigest()
             u.email_utilisateur = f.email.data
-            u.img_utilisateur = str(Utilisateur.get_last_id())
+            u.img_utilisateur = str(Utilisateur.get_last_id()+1)
             u.role_id = f.role.data
             file = f.img.data
             if file:
-                file.save(os.path.join("src/static/img/profil", str(Utilisateur.get_last_id())))
+                file.save(os.path.join("src/static/img/profil", str(Utilisateur.get_last_id()+1)))
             db.session.add(u)
             db.session.commit()
             return redirect(url_for('login'))
@@ -183,7 +183,7 @@ def repondre_offre(id_offre):
         return redirect(url_for("home"))
     if f.validate_on_submit():
         r = Reponse()
-        r.desc_rep = f.description.data
+        r.desc_rep = f.autre_rep.data
         r.budget = f.cotisation_apportee.data
         r.id_utilisateur = current_user.id_utilisateur
         r.id_offre = o.id_offre
@@ -206,11 +206,12 @@ def modifier_profil():
             user.prenom_utilisateur = f.prenom_user.data
             user.nom_utilisateur = f.nom_user.data
             user.email_utilisateur = f.email.data
-            print(f.prenom_user.data)
+            file = f.img.data
+            print(file)
+            if file:
+                file_path = os.path.join("src/static/img/profil", str(current_user.id_utilisateur))
+                file.save(file_path)
             db.session.commit()
-            #file = f.img.data
-            #if file:
-                #file.save(os.path.join("src/static/img/profil", file.filename))
             return redirect(url_for('home'))
     f.nom_user.data = current_user.nom_utilisateur
     f.prenom_user.data = current_user.prenom_utilisateur
@@ -320,7 +321,6 @@ def creation_offre():
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
         o.img = f.img.data
-        o.etat = f.etat.data
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data

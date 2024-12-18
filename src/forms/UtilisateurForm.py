@@ -43,6 +43,7 @@ class UpdateUser(FlaskForm):
     nom_user = StringField("Nom", validators=[DataRequired()])
     prenom_user = StringField('Prenom', validators=[DataRequired()])
     email = StringField('Adresse mail', validators=[DataRequired()])
+    img = FileField('Modifier la photo', validators=[DataRequired()])
     def validate(self, extra_validators=None):
         if not super().validate(extra_validators=extra_validators):
             return False
