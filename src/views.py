@@ -320,7 +320,7 @@ def creation_offre():
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
         o.img = f.img.data
-        o.etat = f.etat.data
+        #o.etat = f.etat.data
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
