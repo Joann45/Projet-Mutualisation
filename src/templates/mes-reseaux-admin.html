@@ -42,7 +42,7 @@
                     id="ajouter_membre"
                     value="Ajouter un membre"
                 />
-
+                <a href="{{ url_for('suppression_reseau', id_reseau=reseau.id_reseau) }}">
                 <input
                     class="btn btn-dark"
                     type="button"
@@ -50,6 +50,7 @@
                     id="supprimer_reseau"
                     value="Supprimer un réseau"
                 />
+                </a>
                 {% endif %}
                 </div>
             </div>
