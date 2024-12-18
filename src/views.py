@@ -144,7 +144,25 @@ def les_offres():
     les_offres = Offre.query.all()
     return render_template('les-offres.html', offres=les_offres)
 
-@app.route('/home/repondre_offre/<int:id_offre>', methods=['GET','POST'])
+@app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
+@login_required
+def details_offre(id_offre):
+    f = ReponseForm()
+    o = Offre.query.get(id_offre)
+    if not o:
+        return redirect(url_for("home"))
+    if f.validate_on_submit():
+        r = Reponse()
+        r.desc_rep = f.description.data
+        r.budget = f.cotisation_apportee.data
+        r.id_utilisateur = current_user.id_utilisateur
+        r.id_offre = o.id_offre
+        db.session.add(r)
+        db.session.commit()
+        return redirect(url_for('mes_offres'))
+    return render_template('details_offre.html', offre=o, form = f)
+
+@app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def repondre_offre(id_offre):
     f = ReponseForm()
