@@ -180,12 +180,16 @@ def repondre_offre(id_offre):
         if f.validate_on_submit():
             reponse.desc_rep = f.autre_rep.data
             reponse.budget = f.cotisation_apportee.data
+            reponse.date_debut = f.date_debut.data
+            reponse.date_fin = f.date_fin.data
+            reponse.capacite_salle = f.cap_salle.data
             db.session.commit()
             return redirect(url_for('mes_reponses'))
         f.autre_rep.data = reponse.desc_rep
         f.cotisation_apportee.data = reponse.budget
         f.date_debut.data = reponse.date_debut
         f.date_fin.data = reponse.date_fin
+        f.cap_salle.data = reponse.capacite_salle
     else:
         if f.validate_on_submit():
             r = Reponse()
@@ -194,10 +198,13 @@ def repondre_offre(id_offre):
             r.id_utilisateur = current_user.id_utilisateur
             r.date_debut = f.date_debut.data
             r.date_fin = f.date_fin.data
+            r.capacite_salle = f.cap_salle.data
             r.id_offre = o.id_offre
             db.session.add(r)
             db.session.commit()
             return redirect(url_for('mes_reponses'))
+        f.cotisation_apportee.data = o.cotisation_min
+        f.cap_salle.data = o.capacite_min
     return render_template('repondre-offre.html', offre=o, form=f)
 
 @app.route('/home/profil', methods=['GET','POST'])
