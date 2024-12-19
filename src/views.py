@@ -20,6 +20,7 @@ from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
+from src.forms.RechercheOffreForm import SelectRechercheOffreForm
 import os
 from functools import wraps
 from flask import abort
@@ -146,15 +147,7 @@ def home():
     les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
     return render_template('home.html', offres=les_offres)
 
-@app.route('/home/les-offres')
-def les_offres():
-    """Renvoie la page des offres
 
-    Returns:
-        les-offres.html: Une page des offres
-    """
-    les_offres = Offre.query.all()
-    return render_template('les-offres.html', offres=les_offres)
 
 @app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
@@ -217,6 +210,7 @@ def modifier_profil():
     f.prenom_user.data = current_user.prenom_utilisateur
     f.email.data = current_user.email_utilisateur 
     return render_template('profil.html', form=f)
+
 
 
 @app.route('/home/mes-reseaux', methods=['GET', 'POST'])
@@ -369,6 +363,17 @@ def creation_offre():
         return redirect(url_for('mes_offres'))
     return render_template('creation-offre.html', form=f)
 
+
+@app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_offre():
+    """Renvoie la page de visualisation des réponses aux offres
+
+    Returns:
+        visualiser-reponses-offres.html: Une page de visualisation des réponses aux offres
+    """
+    
+    return render_template('visualiser-reponses-offres.html')
+
 @app.route('/home/mes-offres')
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
@@ -377,7 +382,26 @@ def mes_offres():
         mes-offres.html: Une page des offres de l'utilisateur
     """
     les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-    return render_template('mes-offres.html', offres=les_offres)
+
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau)
+
+@app.route('/home/les-offres')
+def les_offres():
+    """Renvoie la page des offres
+
+    Returns:
+        les-offres.html: Une page des offres
+    """
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    les_offres = Offre.query.all()
+    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau)
 
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
@@ -407,8 +431,14 @@ def mes_reponses():
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+    
+
+
     les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-    return render_template('mes-reponses.html', reponses=les_reponses)
+    return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau)
 
 @app.route('/home/genre', methods=['GET','POST'])
 def genre():
