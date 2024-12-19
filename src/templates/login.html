@@ -11,9 +11,8 @@
 
         <form method="post" action="{{ url_for('login') }}">
             {{ form.hidden_tag() }} {{ form.mot_de_passe.label }} {{ form.mot_de_passe(size=50, placeholder="Mot de
-            passe") }}<br />
-            {{ form.email.label }} {{ form.email(size=50, placeholder="Adresse mail") }}<br />
-
+            passe") }}<br/>
+            {{ form.email.label }} {{ form.email(size=50, placeholder="Adresse mail") }}<br/>
             <button type="submit">Se connecter</button>
         </form>
     </body>
