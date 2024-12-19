@@ -24,7 +24,7 @@ class Offre(db.Model):
     # Relations
     # utilisateur = db.relationship('Utilisateur', backref=db.backref('les_offres', lazy=True))
     utilisateur = db.relationship('Utilisateur', back_populates='les_offres', lazy=True)
-    les_documents = db.relationship('Document', back_populates='offre', lazy=True)
+    les_documents = db.relationship('Document', back_populates='offre', lazy=True,  cascade="all, delete-orphan")
     les_genres = db.relationship('Genre_Offre', back_populates='offre', lazy=True, cascade="all, delete-orphan")
     les_liens = db.relationship('Lien_Offre', back_populates='offre', lazy=True)
     les_reponses_utilisateurs = db.relationship('Reponse', back_populates='offre', lazy=True)

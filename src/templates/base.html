@@ -60,19 +60,8 @@
                         />
                     </a>
                 </div>
-                {% if current_user.is_admin() %}
-                <div> 
-                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('les_offres')}}"> 
-                        Les offres
-                        <img
-                        src="{{url_for('static', filename='img/icon_dossier.svg')}}"
-                        alt="icone dossier"
-                        class="ms-3"
-                        />
-                    </a>
-                </div>
-                
-                {% else %}
+               
+                {% if not current_user.is_admin() %}
                 <div>
                     <!-- créer route vers mes offres -->
                     
