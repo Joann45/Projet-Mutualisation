@@ -274,6 +274,24 @@ def suppression_reseau(id_reseau):
         db.session.commit()
     return redirect(url_for('mes_reseaux'))
 
+@app.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
+def suppression_offre(id_offre):
+    """Supprime une offre
+
+    Args:
+        id_offre (int): L'identifiant de l'offre à supprimer
+
+    Returns:
+        mes-offres.html: Une page des offres de l'utilisateur
+    """
+    o = Offre.query.get(id_offre)
+    if o:
+        Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
+        Genre_Offre.query.filter_by(id_offre=id_offre).delete()
+        db.session.delete(o)
+        db.session.commit()
+    return redirect(url_for('mes_offres'))
+
 @app.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     """Supprime un utilisateur d'un réseau
