@@ -64,8 +64,34 @@ class OffreForm(FlaskForm):
 class ReponseForm(FlaskForm):
     id = HiddenField('id')
     
-    cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
+    cotisation_apportee = IntegerField("Cotisation apportée", validators=[DataRequired()])
     autre_rep = TextAreaField('Autres', validators=[DataRequired()])
-    dates_dispo = DateField('Dates Disponibles')
+    date_debut = DateField('Date de début', validators=[DataRequired()])
+    date_fin = DateField('Date de fin', validators=[DataRequired()])
     cap_salle = IntegerField('Capacité de la salle', validators=[DataRequired()])
     submit = SubmitField("Repondre")
+    
+    def __init__(self, offre):
+        super(ReponseForm, self).__init__()
+        self.cotisation_apportee.render_kw = {'min': offre.cotisation_min,'step': 0.01}
+        self.date_debut.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
+        self.date_fin.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
+        self.cap_salle.render_kw = {'min': offre.capacite_min}
+    
+    #def validate(self, extra_validators = None):
+    #    if not FlaskForm.validate(self, extra_validators = extra_validators):
+    #        return False
+    #    
+    #    # Validation de la date de début par rapport à la date de fin
+    #    if self.date_debut.data is not None and self.date_fin.data is not None:
+    #        if self.date_debut.data > self.date_fin.data:
+    #            self.date_debut.errors.append("La date de début doit être antérieure ou égale à la date de fin.")
+    #            return False
+    #    
+    #    # Validation de la date de fin par rapport à la date de début
+    #    if self.date_fin.data is not None:
+    #        if self.date_debut.data is not None and self.date_fin.data < self.date_debut.data:
+    #            self.date_fin.errors.append("La date de fin doit être postérieure ou égale à la date de début.")
+    #            return False
+    #    
+    #    return True
