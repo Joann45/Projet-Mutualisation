@@ -207,7 +207,6 @@ def modifier_profil():
             user.nom_utilisateur = f.nom_user.data
             user.email_utilisateur = f.email.data
             file = f.img.data
-            print(file)
             if file:
                 file_path = os.path.join("src/static/img/profil", str(current_user.id_utilisateur))
                 file.save(file_path)
