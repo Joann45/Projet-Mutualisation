@@ -395,19 +395,21 @@ def mes_offres():
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
 
     les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
-    
+
     if les_reseaux_elu != []:
-        offre_voulu = set()
-        for o in les_offres:
-            for ro in o.les_reseaux:
-                print(ro.id_reseau)
-                if ro.id_reseau in les_reseaux_elu:
-                    offre_voulu.add(o)
-        les_offres = list(offre_voulu)
-    
+        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau)
 
-@app.route('/home/les-offres')
+def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
+    offre_voulu = set()
+    for offre in les_offres:
+        for reseux_off in offre.les_reseaux:
+            print(reseux_off.id_reseau)
+            if reseux_off.id_reseau in les_reseaux_elu:
+                offre_voulu.add(offre)
+    return list(offre_voulu)
+
+@app.route('/home/les-offres', methods=["POST","GET"])
 def les_offres():
     """Renvoie la page des offres
 
@@ -418,7 +420,20 @@ def les_offres():
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+    
+    if f_select_reseau.validate_on_submit():
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+
     les_offres = Offre.query.filter_by(etat="publiee").all()
+
+    if les_reseaux_elu != []:
+        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+
+    
+
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau)
 
 @app.route('/home/offre_personnel/<int:id_offre>')
@@ -442,7 +457,7 @@ def visualiser_reponses_offre(id_offre):
         return render_template('visualiser-reponses-offre.html', None)    
     return render_template('visualiser-reponses-offre.html', reponses=les_reponses)
 
-@app.route('/home/mes-offres/mes-reponses')
+@app.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
 
@@ -453,10 +468,27 @@ def mes_reponses():
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
     
-
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+    
+    if f_select_reseau.validate_on_submit():
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
 
     les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+
+    if les_reseaux_elu != []:
+        les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
+
     return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau)
+def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
+    rep_voulu = set()
+    for rep in les_reponses:
+        for reseux_off in rep.offre.les_reseaux:
+            print(reseux_off.id_reseau)
+            if reseux_off.id_reseau in les_reseaux_elu:
+                rep_voulu.add(rep)
+    return list(rep_voulu)
 
 @app.route('/home/genre', methods=['GET','POST'])
 def genre():

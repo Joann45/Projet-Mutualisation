@@ -36,9 +36,12 @@
                         name="zone-search"
                         placeholder="Recherche une offre"
                     />
-                    <button class="btn">
-                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
-                    </button>
+                    <a href="{{url_for('les_offres')}}">
+                        <button class="btn">
+                            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
+                            
+                        </button>
+                    </a>
                 </div>
 
                 <div>
