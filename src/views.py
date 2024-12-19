@@ -274,9 +274,11 @@ def suppression_offre(id_offre):
     """
     o = Offre.query.get(id_offre)
     if o:
+        Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
+        Genre_Offre.query.filter_by(id_offre=id_offre).delete()
         db.session.delete(o)
         db.session.commit()
-    return redirect(url_for('mes_offres'),offre=o)
+    return redirect(url_for('mes_offres'))
 
 @app.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
