@@ -65,6 +65,7 @@ class ReponseForm(FlaskForm):
     
     cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
     autre_rep = TextAreaField('Autres', validators=[DataRequired()])
-    dates_dispo = DateField('Dates Disponibles')
+    date_debut = DateField('Date de début', validators=[DataRequired()])
+    date_fin = DateField('Date de fin', validators=[DataRequired()])
     cap_salle = IntegerField('Capacité de la salle', validators=[DataRequired()])
     submit = SubmitField("Repondre")
