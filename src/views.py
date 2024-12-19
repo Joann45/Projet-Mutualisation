@@ -381,7 +381,7 @@ def mes_offres():
     Returns:
         mes-offres.html: Une page des offres de l'utilisateur
     """
-    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by().all()
 
     les_reseaux = Reseau.query.all()
     f_select_reseau = SelectRechercheOffreForm()
