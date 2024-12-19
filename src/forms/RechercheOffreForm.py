@@ -44,7 +44,7 @@ class SelectRechercheOffreForm(FlaskForm):
     id = IntegerField(widget=HiddenField('id'))
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
-    reseaux = MultiCheckboxField('Reseaux', validators=[DataRequired()])
+    reseaux = MultiCheckboxField('Reseaux')
 
 
 

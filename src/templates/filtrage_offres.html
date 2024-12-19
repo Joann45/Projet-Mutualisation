@@ -8,8 +8,9 @@
 
                 
                 <div>
-                    <form action="/home/" method="post">
+                    <form action="{{ url_for('mes_offres') }}" method="post">
                         {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
+                        <button type="submit" class="btn btn-base rounded-3">  Rechercher </button>
                     </form>
                 </div>
 
@@ -44,8 +45,6 @@
                 </div>
             </div>
 
-            <div>
-                <button type="submit" class="btn btn-base rounded-3">  Rechercher </button>
-            </div>
+            
         </div>
     </div>

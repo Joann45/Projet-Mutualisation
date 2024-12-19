@@ -374,19 +374,37 @@ def visualiser_offre():
     
     return render_template('visualiser-reponses-offres.html')
 
-@app.route('/home/mes-offres')
+@app.route('/home/mes-offres', methods=["POST","GET"])
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
 
     Returns:
         mes-offres.html: Une page des offres de l'utilisateur
     """
-    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by().all()
+    
 
     les_reseaux = Reseau.query.all()
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+    
+    if f_select_reseau.validate_on_submit():
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+
+    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+    
+    if les_reseaux_elu != []:
+        offre_voulu = set()
+        for o in les_offres:
+            for ro in o.les_reseaux:
+                print(ro.id_reseau)
+                if ro.id_reseau in les_reseaux_elu:
+                    offre_voulu.add(o)
+        les_offres = list(offre_voulu)
+    
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau)
 
 @app.route('/home/les-offres')
@@ -400,7 +418,7 @@ def les_offres():
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
-    les_offres = Offre.query.all()
+    les_offres = Offre.query.filter_by(etat="publiee").all()
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau)
 
 @app.route('/home/offre_personnel/<int:id_offre>')
