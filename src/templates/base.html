@@ -27,7 +27,13 @@
                         <p class="mb-0 ml-4">StageFlow</p></a
                     >
                 </div>
-
+                <div>
+                    <a class="mb-5" href="{{url_for('les_offres')}}">
+                        <input class="btn btn-dark p-3" type="button" name="offres" id="offres" value="Afficher plus d'offres">
+                    </a>
+                </div>
+              
+                <!--
                 <div class="input-group border rounded-pill">
                     <input
                         class="form-control rounded-pill rounded-end"
@@ -40,6 +46,7 @@
                         <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
                     </button>
                 </div>
+                -->
 
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
@@ -53,9 +60,22 @@
                         />
                     </a>
                 </div>
-
+                {% if current_user.is_admin() %}
+                <div> 
+                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('les_offres')}}"> 
+                        Les offres
+                        <img
+                        src="{{url_for('static', filename='img/icon_dossier.svg')}}"
+                        alt="icone dossier"
+                        class="ms-3"
+                        />
+                    </a>
+                </div>
+                
+                {% else %}
                 <div>
                     <!-- créer route vers mes offres -->
+                    
                     <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
                         Mes offres
                         <img
@@ -65,13 +85,15 @@
                         />
                     </a>
                 </div>
-
+                {% endif %}
+                {% if not current_user.is_admin() %}
                 <div>
                     <a class="btn btn-base mx-3" href="{{url_for('creation_offre')}}">
                         Créer une offre
                         <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus" class="ms-2" />
                     </a>
                 </div>
+                {% endif %}
 
                 <div>
                     <!-- créer la route vers notification -->
