@@ -15,6 +15,7 @@ class OffreForm(FlaskForm):
     img = FileField("Image de l'offre", validators=[DataRequired()])
     genre = SelectField('Genre', coerce=int)
     reseau = SelectField('Réseaux', coerce=int)
+    etat = StringField('Etat')
     nom_loc = StringField('Localisation', validators=[DataRequired()])
     date_deb = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])

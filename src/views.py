@@ -378,6 +378,8 @@ def creation_offre():
         o.cotisation_min = f.cotisation_min.data
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
+        o.img = f.img.data
+        o.etat = "brouillon"
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
@@ -418,6 +420,23 @@ def creation_offre():
         db.session.commit()
         return redirect(url_for('mes_offres'))
     return render_template('creation-offre.html', form=f)
+
+@app.route('/home/mes-offres/publication/<int:id_offre>', methods=['GET','POST'])
+@login_required
+def definir_etat(id_offre):
+    """
+    Définit l'état d'un objet Offre à l'état spécifié.
+    Args:
+        id_offre (int): L'identifiant de l'offre à mettre à jour.
+    Returns:
+        None
+    """
+
+    o = Offre.query.get(id_offre)
+    if o :
+        o.etat = "publiée"
+        db.session.commit()
+    return redirect(url_for('mes_offres'))
 
 @app.route('/home/mes-offres')
 def mes_offres():

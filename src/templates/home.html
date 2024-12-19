@@ -14,10 +14,6 @@
     <h2 class="mt-5 text-white fw-bolder"> Les offres les plus populaires</h2>
 
     {% for offre in offres %} {% include 'offre.html' %} {% endfor %}
-
-        <a class="mb-5" href="{{url_for('les_offres')}}">
-            <input class="btn btn-base fw-bolder p-3" type="button" name="offres" id="offres" value="Afficher plus d'offres">
-        </a>
 </div>
 
 
