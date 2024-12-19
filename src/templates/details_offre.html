@@ -66,10 +66,12 @@
             </div>
           
             {% for document in offre.les_documents %}
-                <a class="fw-bolder" style="color: grey;" href="{{document.nom_doc}}">
-                    <img src="{{url_for('static', filename='img/icon_download.svg')}}" alt="icon_download" />
-                    <p>{{document.nom_doc}}</p>
-                </a>
+            <a class="fw-bolder" style="color: grey;" 
+                href="{{ url_for('static', filename='Documents/' ~ document.id_doc ~ '-' ~ offre.id_offre) }}" 
+                download="test.png">
+                <img src="{{ url_for('static', filename='img/icon_download.svg') }}" alt="icon_download" />
+                {{ document.nom_doc }}
+            </a>
             {% endfor %}
         </div>
     </div>

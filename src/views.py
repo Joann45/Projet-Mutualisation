@@ -2,7 +2,7 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, send_from_directory
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
@@ -20,6 +20,7 @@ from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
+from werkzeug.utils import secure_filename
 import os
 from functools import wraps
 from flask import abort
@@ -289,6 +290,20 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
         db.session.commit()
     return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
 
+@app.route('/static/Documents/<int:id_d>-<int:id_o>', methods=['GET', 'POST'])
+def get_documents(id_d, id_o):
+
+    documents_folder = os.path.join("static", "Documents")
+    file_name = Document.query.filter_by(id_doc=id_d).first()
+    new_filename = f"{file_name.nom_doc}"
+    print(file_name.nom_doc)
+    return send_from_directory(
+        documents_folder,
+        str(id_d)+"-"+str(id_o),
+        as_attachment=True,
+        download_name=new_filename
+    )
+
 @app.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
     """Ajoute un utilisateur à un réseau
@@ -331,22 +346,26 @@ def creation_offre():
         o.cotisation_min = f.cotisation_min.data
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
-        o.img = f.img.data
-        #o.etat = f.etat.data
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
         o.id_utilisateur = current_user.id_utilisateur
         db.session.add(o)
         db.session.commit()
-        id_offre = Offre.query.filter_by(nom_offre = o.nom_offre, description = o.description).first().id_offre
+        id_offre = o.id_offre
+        o.img = id_offre
 
         d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
-        d.nom_doc = f.documents.data
+        file = f.documents.data
+        filename = secure_filename(file.filename)
+        d.nom_doc = filename
+        file = f.documents.data
         d.id_offre = id_offre
-        
         db.session.add(d)
         db.session.commit()
+        if file:
+            file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
+            file.save(file_path)
         
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
