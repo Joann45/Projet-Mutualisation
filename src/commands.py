@@ -4,6 +4,8 @@ from .models.Utilisateur import Utilisateur
 from .models.Role import Role
 from .models.Genre import Genre
 from .models.Reseau import Reseau
+from hashlib import sha256
+
 
 @app.cli.command()
 @click.argument('filename')
@@ -43,7 +45,7 @@ def loaddb(filename):
                 id_utilisateur=elem["id_utilisateur"],
                 nom_utilisateur=elem["nom_utilisateur"],
                 prenom_utilisateur=elem["prenom_utilisateur"],
-                mdp_utilisateur=elem["mdp_utilisateur"],
+                mdp_utilisateur=sha256(str(elem["mdp_utilisateur"]).encode()).hexdigest(),
                 email_utilisateur=elem["email_utilisateur"],
                 img_utilisateur=elem["img_utilisateur"],
                 role_id=elem["role_id"]

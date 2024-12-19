@@ -2,7 +2,7 @@ from .app import app, db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, send_from_directory
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm
 from src.forms.GenreForm import GenreForm
@@ -20,6 +20,7 @@ from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
+from werkzeug.utils import secure_filename
 import os
 from functools import wraps
 from flask import abort
@@ -170,8 +171,8 @@ def details_offre(id_offre):
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def repondre_offre(id_offre):
-    f = ReponseForm()
     o = Offre.query.get(id_offre)
+    f = ReponseForm(o)
     if not o:
         return redirect(url_for("home"))
     reponse = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first()
@@ -183,12 +184,16 @@ def repondre_offre(id_offre):
             return redirect(url_for('mes_reponses'))
         f.autre_rep.data = reponse.desc_rep
         f.cotisation_apportee.data = reponse.budget
+        f.date_debut.data = reponse.date_debut
+        f.date_fin.data = reponse.date_fin
     else:
         if f.validate_on_submit():
             r = Reponse()
             r.desc_rep = f.autre_rep.data
             r.budget = f.cotisation_apportee.data
             r.id_utilisateur = current_user.id_utilisateur
+            r.date_debut = f.date_debut.data
+            r.date_fin = f.date_fin.data
             r.id_offre = o.id_offre
             db.session.add(r)
             db.session.commit()
@@ -210,7 +215,6 @@ def modifier_profil():
             user.nom_utilisateur = f.nom_user.data
             user.email_utilisateur = f.email.data
             file = f.img.data
-            print(file)
             if file:
                 file_path = os.path.join("src/static/img/profil", str(current_user.id_utilisateur))
                 file.save(file_path)
@@ -278,6 +282,24 @@ def suppression_reseau(id_reseau):
         db.session.commit()
     return redirect(url_for('mes_reseaux'))
 
+@app.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
+def suppression_offre(id_offre):
+    """Supprime une offre
+
+    Args:
+        id_offre (int): L'identifiant de l'offre à supprimer
+
+    Returns:
+        mes-offres.html: Une page des offres de l'utilisateur
+    """
+    o = Offre.query.get(id_offre)
+    if o:
+        Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
+        Genre_Offre.query.filter_by(id_offre=id_offre).delete()
+        db.session.delete(o)
+        db.session.commit()
+    return redirect(url_for('mes_offres'))
+
 @app.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     """Supprime un utilisateur d'un réseau
@@ -292,6 +314,20 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
         db.session.delete(utilisateur_reseau)
         db.session.commit()
     return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
+
+@app.route('/static/Documents/<int:id_d>-<int:id_o>', methods=['GET', 'POST'])
+def get_documents(id_d, id_o):
+
+    documents_folder = os.path.join("static", "Documents")
+    file_name = Document.query.filter_by(id_doc=id_d).first()
+    new_filename = f"{file_name.nom_doc}"
+    print(file_name.nom_doc)
+    return send_from_directory(
+        documents_folder,
+        str(id_d)+"-"+str(id_o),
+        as_attachment=True,
+        download_name=new_filename
+    )
 
 @app.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
@@ -335,22 +371,26 @@ def creation_offre():
         o.cotisation_min = f.cotisation_min.data
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
-        o.img = f.img.data
-        #o.etat = f.etat.data
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
         o.id_utilisateur = current_user.id_utilisateur
         db.session.add(o)
         db.session.commit()
-        id_offre = Offre.query.filter_by(nom_offre = o.nom_offre, description = o.description).first().id_offre
+        id_offre = o.id_offre
+        o.img = id_offre
 
         d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
-        d.nom_doc = f.documents.data
+        file = f.documents.data
+        filename = secure_filename(file.filename)
+        d.nom_doc = filename
+        file = f.documents.data
         d.id_offre = id_offre
-        
         db.session.add(d)
         db.session.commit()
+        if file:
+            file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
+            file.save(file_path)
         
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
@@ -385,8 +425,8 @@ def mes_offres():
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
 def offre_personnel(id_offre):
-    f = ReponseForm()
     o = Offre.query.get(id_offre)
+    f = ReponseForm(o)
     if not o:
         return redirect(url_for("home"))
     return render_template('visualiser-offre-personnel.html', offre=o, form=f)

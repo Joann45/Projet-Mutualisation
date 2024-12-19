@@ -4,7 +4,7 @@
 
 <div class="mx-auto w-75 d-flex flex-column align-items-center div-dark rounded-4 mb-3 p-4">
     <h1 class="mt-3 fw-bolder display-4 m-4 color_white">Créer une offre</h1>
-    <form action="{{ url_for('creation_offre') }}" method="post">
+    <form action="{{ url_for('creation_offre') }}" method="post" enctype="multipart/form-data">
       {{ form.hidden_tag() }} 
 
         <div class ="mx-auto d-flex flex-column m-4 w-50">
