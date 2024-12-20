@@ -1,5 +1,5 @@
 <div class="my-5 taille-min-55">
-    {% if offre.id_utilisateur == current_user.id_utilisateur%}
+    {% if offre.id_utilisateur == current_user.id_utilisateur or current_user.is_admin %}
     <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('offre_personnel', id_offre=offre.id_offre)}}">
     {% else %}
     <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('details_offre', id_offre=offre.id_offre)}}">
