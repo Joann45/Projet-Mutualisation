@@ -161,11 +161,13 @@ def les_offres():
 @login_required
 def details_offre(id_offre):
     o = Offre.query.get(id_offre)
-    verif = False
+    verif = 1
     if not o:
         return redirect(url_for("home"))
     if Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first():
-        verif = True
+        verif = 2
+    elif o.utilisateur == current_user or current_user.role_id == 2:
+        verif = 3
     return render_template('details-offre.html', offre=o, verif=verif)
 
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
@@ -490,15 +492,6 @@ def mes_offres():
     """
     les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
     return render_template('mes-offres.html', offres=les_offres)
-
-@app.route('/home/offre_personnel/<int:id_offre>')
-@login_required
-def offre_personnel(id_offre):
-    o = Offre.query.get(id_offre)
-    f = ReponseForm(o)
-    if not o:
-        return redirect(url_for("home"))
-    return render_template('visualiser-offre-personnel.html', offre=o, form=f)
 
 @app.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_reponses_offre(id_offre):

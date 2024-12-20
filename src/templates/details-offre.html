@@ -21,13 +21,17 @@
                     <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
                     <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
 
-                    {% if verif %}
+                    {% if verif == 1 %}
+                    <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+                        <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Répondre">
+                    </a>
+                    {% elif verif == 2 %}
                     <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
                         <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Modifier réponse">
                     </a>
-                    {% else %}
-                    <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
-                        <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Répondre">
+                    {% elif verif == 3 %}    
+                    <a href="{{url_for('visualiser_reponses_offre', id_offre=offre.id_offre)}}">
+                        <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button" name="repondre" id="repondre" value="Visualiser les réponses">
                     </a>
                     {% endif %}
                 </div>
