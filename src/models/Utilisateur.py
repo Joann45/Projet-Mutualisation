@@ -20,7 +20,8 @@ class Utilisateur(db.Model, UserMixin):
     les_notifs = db.relationship('Notification_Utilisateur', back_populates='utilisateur', lazy=True) 
     les_offres = db.relationship('Offre', back_populates='utilisateur', lazy=True)
     les_reponses_offre = db.relationship('Reponse', back_populates='utilisateur', lazy=True)
-    les_reseaux = db.relationship('Utilisateur_Reseau', back_populates='orga', lazy=True)
+    les_reseaux = db.relationship('Utilisateur_Reseau', back_populates='orga', lazy=True,  cascade="all, delete-orphan")
+    les_commentaires = db.relationship('Commentaire', back_populates='utilisateur', lazy=True, cascade="all, delete-orphan")
     
     def is_admin(self):
         return self.role_id == 2

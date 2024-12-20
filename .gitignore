@@ -3,3 +3,5 @@ __pycache__
 *.db
 *.pyc
 src/static/img/profil
+.nfs00000001e1026ff900000002
+src/static/Documents/*

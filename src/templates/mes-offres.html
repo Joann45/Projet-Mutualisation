@@ -17,11 +17,40 @@
 
                     {% for offre in offres%}
                     <div>
-                        {% include 'offre-personnel.html' %}
-                        <div class="d-flex justify-content-around">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="publier" id="publier" value="Publier">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="modifier" id="modifier" value="Modifier">
-                            <input class= "btn btn-dark rounded-4 px-4 fs-5" type="button" name="supprimer" id="supprimer" value="Supprimer">
+                        {% include 'offre.html' %}
+                        <div class="d-flex justify-content-around" >
+                            
+                            <a href="{{url_for('definir_etat', id_offre=offre.id_offre)}}">
+                                <button class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" onclick="changerTexte(event)">Publier</button>
+                            </a>
+
+                            <script defer>
+                               
+                                function changerTexte(event) {
+                                    event.preventDefault(); 
+                                    const button = event.target; 
+                                    button.textContent = 'Publiée';
+                                    button.className= 'btn btn-green rounded-4 px-4 fs-5';
+                                }
+                            </script>
+                            
+                            <input class= "btn btn-dark rounded-4 px-4 fw-bolder fs-5" 
+                            type="button" 
+                            name="modifier" 
+                            id="modifier" 
+                            value="Modifier">
+                        
+                    
+                    
+                            <a href="{{url_for('suppression_offre', id_offre=offre.id_offre)}}">
+                                <input class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" 
+                                type="button" 
+                                name="supprimer_offre" 
+                                id="supprimer_offre" 
+                                value="Supprimer"
+                                />
+                            </a>         
+                                      
                         </div>
                     </div>
                     {% endfor %}
@@ -31,26 +60,28 @@
             </a>
         </div>
     </div>
-    <div class ="d-flex justify-content-center">  
-        <div class ="d-flex flex-column w-25">
-            <div class="d-flex flex-row justify-content-between" > 
-                <h2 class ="fw-bolder">Confirmation de suppression</h2>
-                <a href="{{url_for('mes_offres')}}">
-                    <input class="btn btn-close" type="button" name="close" id="close">
-                </a>
-            </div>
-            <div class ="d-flex flex-row mt-3">
-                <img class="ml-3" style="width:40px; height: 40px;"src="{{ url_for('static', filename='img/attention.svg') }}" alt="attention">
-                <p class="mt-2 mx-4"> Êtes-vous sûr de vouloir supprimer l’offre ... ?</p>
+    <!--
+        <div class ="d-flex justify-content-center">  
+            <div class ="d-flex flex-column w-25">
+                <div class="d-flex flex-row justify-content-between" > 
+                    <h2 class ="fw-bolder">Confirmation de suppression</h2>
+                    <a href="{{url_for('mes_offres')}}">
+                        <input class="btn btn-close" type="button" name="close" id="close">
+                    </a>
+                </div>
+                <div class ="d-flex flex-row mt-3">
+                    <img class="ml-3" style="width:40px; height: 40px;"src="{{ url_for('static', filename='img/attention.svg') }}" alt="attention">
+                    <p class="mt-2 mx-4"> Êtes-vous sûr de vouloir supprimer l’offre ... ?</p>
+
+                </div>
+                <div class ="d-flex justify-content-end mx-3">
+                    
+                    <button class="btn btn-dark fw-bolder rounded-3">Annuler</button>
+                </div>
 
             </div>
-            <div class ="d-flex justify-content-end mx-3">
-                <button class="btn btn-dark fw-bolder mx-3 rounded-3">Oui</button>
-                <button class="btn btn-dark fw-bolder rounded-3">Annuler</button>
-            </div>
-
         </div>
-    </div>
+    -->
     
    
 </div>

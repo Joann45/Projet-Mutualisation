@@ -10,7 +10,11 @@
             <div>
                 <h2 class="fw-bolder display-5">Les offres</h2>
 
-                <div>{% for offre in offres %} {% include 'offre.html' %} {% endfor %}</div>
+                <div>
+                    {% for offre in offres %}
+                        {% include 'offre.html' %}
+                    {% endfor %}
+                </div>
             </div>
         </div>
         

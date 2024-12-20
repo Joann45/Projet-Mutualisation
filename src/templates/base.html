@@ -28,7 +28,20 @@
                     >
                 </div>
 
-                <div class="input-group border rounded-pill">
+                <div>
+                    <a class="mb-5" href="{{url_for('les_offres')}}">
+                        <input
+                            class="btn btn-dark p-3"
+                            type="button"
+                            name="offres"
+                            id="offres"
+                            value="Afficher plus d'offres"
+                        />
+                    </a>
+                </div>
+
+                <!--
+                <form class="input-group border rounded-pill" action="{{url_for('les_offres')}}" method="get">
                     <input
                         class="form-control rounded-pill rounded-end"
                         type="search"
@@ -36,13 +49,12 @@
                         name="zone-search"
                         placeholder="Recherche une offre"
                     />
-                    <a href="{{url_for('les_offres')}}">
-                        <button class="btn">
-                            <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
-                            
-                        </button>
-                    </a>
-                </div>
+                    
+                    <button class="btn" type="submit">
+                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
+                    </button>
+                </form>
+                -->
 
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
@@ -57,8 +69,10 @@
                     </a>
                 </div>
 
+                {% if not current_user.is_admin() %}
                 <div>
                     <!-- créer route vers mes offres -->
+
                     <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
                         Mes offres
                         <img
@@ -68,13 +82,14 @@
                         />
                     </a>
                 </div>
-
+                {% endif %} {% if not current_user.is_admin() %}
                 <div>
                     <a class="btn btn-base mx-3" href="{{url_for('creation_offre')}}">
                         Créer une offre
                         <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus" class="ms-2" />
                     </a>
                 </div>
+                {% endif %}
 
                 <div>
                     <!-- créer la route vers notification -->
@@ -103,5 +118,6 @@
         </header>
 
         <main>{% block content %} {% endblock %}</main>
+        <script src="{{ url_for('static', filename='popup.js')}}" crossorigin="anonymous" defer></script>
     </body>
 </html>
