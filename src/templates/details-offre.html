@@ -4,9 +4,22 @@
 <div class="d-flex flex-column align-items-center my-5">
     <div class="d-flex flex-nowrap mb-3" style="width: 65%;">
 
-        <img style="width: 40em; max-width: 100%;" src="{{url_for('static', filename='img/fetes.svg')}}" alt="fetes">
-
-        <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
+            <img style="width: 40em; max-width: 100%;" src="{{url_for('static', filename='img/fetes.svg')}}" alt="fetes">
+            
+            <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
+                
+                <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%;">
+                    <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                        <h1>{{ offre.nom_offre}}</h1>
+                        <p>fermeture de l'offre: {{offre.date_limite}}</p>
+                    </div>
+                    <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                </div>
+    
+                <div class="d-flex flex-column w-100">
+                    <p>{{offre.description}}</p>
+                    <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
+                    <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
 
             <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%;">
                 <div class="d-flex flex-nowrap justify-content-between align-items-center">
