@@ -95,3 +95,8 @@ class ReponseForm(FlaskForm):
     #            return False
     #    
     #    return True
+    
+class CommentaireForm(FlaskForm):
+    id = HiddenField('id')
+    texte_commentaire = TextAreaField('Commentaire', validators=[DataRequired()])
+    submit = SubmitField("Commenter")
