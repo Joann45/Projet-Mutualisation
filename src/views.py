@@ -219,39 +219,72 @@ def mes_reseaux():
         mes-reseaux-admin.html: Une page des réseaux pour un organisateur
     """
     f_select_reseau = SelectReseauForm()
-    if current_user.is_admin():
-        les_reseaux = Reseau.query.all()
-    else:
-        les_reseaux = Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=current_user.id_utilisateur)).all()
-    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+    f_add_reseau = ReseauForm()
+    add_user_form = AddUtilisateurReseauForm()
+
+    # Récupérer les réseaux en fonction du rôle de l'utilisateur
+    les_reseaux = get_reseaux_for_user(current_user)
+
+    # Si aucun réseau n'est trouvé, afficher une page spécifique
     if not les_reseaux:
         return render_template('pas_reseau.html')
 
+    # Définir les choix pour le formulaire de sélection de réseau
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    # Gérer la soumission du formulaire de sélection de réseau
     if f_select_reseau.validate_on_submit():
         reseau_id = f_select_reseau.reseaux.data
         return redirect(url_for('mes_reseaux', reseau_id=reseau_id))
 
-    reseau_id = request.args.get('reseau_id', type=int)
-    if reseau_id is not None:
-        f_select_reseau.reseaux.default = reseau_id
-        reseau_id = f_select_reseau.reseaux.default
-    else:
-        f_select_reseau.reseaux.default = les_reseaux[0].id_reseau if les_reseaux else None
-        reseau_id = f_select_reseau.reseaux.default
+    # Déterminer le réseau sélectionné
+    reseau_id = request.args.get('reseau_id', type=int) or les_reseaux[0].id_reseau
+    f_select_reseau.reseaux.default = reseau_id
     f_select_reseau.process()
+
+    # Récupérer le réseau sélectionné
     reseau = Reseau.query.get(reseau_id)
-    add_user_form = AddUtilisateurReseauForm()
-    liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
-    add_user_form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
-    f_add_reseau = ReseauForm()
+
+    # Définir les choix pour le formulaire d'ajout d'utilisateur au réseau
+    add_user_form.utilisateur.choices = get_available_users_for_reseau(reseau)
+
+    # Gérer la soumission du formulaire d'ajout de réseau
     if f_add_reseau.validate_on_submit():
-        r = Reseau()
-        r.nom_reseau = f_add_reseau.nom_reseau.data
-        db.session.add(r)
-        db.session.commit()
+        add_new_reseau(f_add_reseau)
         return redirect(url_for('mes_reseaux'))
+
+    # Récupérer les offres associées au réseau sélectionné
     les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
-    return render_template('mes-reseaux-admin.html', add_user_form=add_user_form, reseaux=les_reseaux, add_form=f_add_reseau, select_form=f_select_reseau, membres=[[membre.orga for membre in reseau.les_utilisateurs]], reseau_id=reseau_id, offres=les_offres, reseau=reseau)
+
+    return render_template(
+        'mes-reseaux-admin.html',
+        add_user_form=add_user_form,
+        reseaux=les_reseaux,
+        add_form=f_add_reseau,
+        select_form=f_select_reseau,
+        membres=[[membre.orga for membre in reseau.les_utilisateurs]],
+        reseau_id=reseau_id,
+        offres=les_offres,
+        reseau=reseau
+    )
+
+def get_reseaux_for_user(user):
+    """Récupère les réseaux en fonction du rôle de l'utilisateur."""
+    if user.is_admin():
+        return Reseau.query.all()
+    return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
+
+def get_available_users_for_reseau(reseau):
+    """Récupère les utilisateurs disponibles pour être ajoutés au réseau."""
+    liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
+    return [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
+
+def add_new_reseau(form):
+    """Ajoute un nouveau réseau à la base de données."""
+    r = Reseau()
+    r.nom_reseau = form.nom_reseau.data
+    db.session.add(r)
+    db.session.commit()
 
 @app.route('/home/suppression_reseau/<int:id_reseau>', methods=['GET'])
 def suppression_reseau(id_reseau):
@@ -425,7 +458,7 @@ def visualiser_reponses_offre(id_offre):
     """
     les_reponses = Reponse.query.filter_by(id_offre=id_offre)
     if not les_reponses:
-        return render_template('visualiser-reponses-offre.html', None)    
+        return render_template('visualiser-reponses-offre.html', reponses=None)    
     return render_template('visualiser-reponses-offre.html', reponses=les_reponses)
 
 @app.route('/home/mes-offres/mes-reponses')
