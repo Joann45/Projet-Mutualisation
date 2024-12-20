@@ -1,4 +1,7 @@
 <div class="my-5 taille-min-55">
+    {% if offre.id_utilisateur == current_user.id_utilisateur or current_user.is_admin %}
+    <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('offre_personnel', id_offre=offre.id_offre)}}">
+    {% else %}
     <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('details_offre', id_offre=offre.id_offre)}}">
         {% if offre.img == "0" %}
             <img
@@ -15,6 +18,8 @@
                 alt="fetes"
             />
         {% endif %}
+
+
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
             <div class="d-flex flex-column align-items-center justify-content-center m-4">
                 <h2>{{ offre.nom_offre}}</h2>
