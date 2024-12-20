@@ -10,6 +10,7 @@ class Reponse(db.Model):
     budget = db.Column(db.Float)
     date_debut = db.Column(db.DateTime)
     date_fin = db.Column(db.DateTime)
+    capacite_salle = db.Column(db.Integer)
 
     utilisateur = db.relationship("Utilisateur", back_populates="les_reponses_offre", lazy=True)
     offre = db.relationship("Offre", back_populates="les_reponses_utilisateurs", lazy=True)

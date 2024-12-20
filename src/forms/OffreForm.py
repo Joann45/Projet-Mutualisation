@@ -15,6 +15,7 @@ class OffreForm(FlaskForm):
     img = FileField("Image de l'offre", validators=[DataRequired()])
     genre = SelectField('Genre', coerce=int)
     reseau = SelectField('Réseaux', coerce=int)
+    etat = StringField('Etat')
     nom_loc = StringField('Localisation', validators=[DataRequired()])
     date_deb = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])
@@ -72,11 +73,9 @@ class ReponseForm(FlaskForm):
     
     def __init__(self, offre):
         super(ReponseForm, self).__init__()
-        self.cotisation_apportee.data = offre.cotisation_min
         self.cotisation_apportee.render_kw = {'min': offre.cotisation_min,'step': 0.01}
         self.date_debut.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
         self.date_fin.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
-        self.cap_salle.data = offre.capacite_min
         self.cap_salle.render_kw = {'min': offre.capacite_min}
     
     #def validate(self, extra_validators = None):

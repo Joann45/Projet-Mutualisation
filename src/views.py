@@ -161,9 +161,12 @@ def les_offres():
 @login_required
 def details_offre(id_offre):
     o = Offre.query.get(id_offre)
+    verif = False
     if not o:
         return redirect(url_for("home"))
-    return render_template('details_offre.html', offre=o)
+    if Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first():
+        verif = True
+    return render_template('details-offre.html', offre=o, verif=verif)
 
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
@@ -172,18 +175,37 @@ def repondre_offre(id_offre):
     f = ReponseForm(o)
     if not o:
         return redirect(url_for("home"))
-    if f.validate_on_submit():
-        r = Reponse()
-        r.desc_rep = f.autre_rep.data
-        r.budget = f.cotisation_apportee.data
-        r.id_utilisateur = current_user.id_utilisateur
-        r.id_offre = o.id_offre
-        r.date_debut = f.date_debut.data
-        r.date_fin = f.date_fin.data
-        db.session.add(r)
-        db.session.commit()
-        return redirect(url_for('mes_offres'))
-    return render_template('repondre-offre.html', offre=o, form = f)
+    reponse = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first()
+    if reponse:
+        if f.validate_on_submit():
+            reponse.desc_rep = f.autre_rep.data
+            reponse.budget = f.cotisation_apportee.data
+            reponse.date_debut = f.date_debut.data
+            reponse.date_fin = f.date_fin.data
+            reponse.capacite_salle = f.cap_salle.data
+            db.session.commit()
+            return redirect(url_for('mes_reponses'))
+        f.autre_rep.data = reponse.desc_rep
+        f.cotisation_apportee.data = reponse.budget
+        f.date_debut.data = reponse.date_debut
+        f.date_fin.data = reponse.date_fin
+        f.cap_salle.data = reponse.capacite_salle
+    else:
+        if f.validate_on_submit():
+            r = Reponse()
+            r.desc_rep = f.autre_rep.data
+            r.budget = f.cotisation_apportee.data
+            r.id_utilisateur = current_user.id_utilisateur
+            r.date_debut = f.date_debut.data
+            r.date_fin = f.date_fin.data
+            r.capacite_salle = f.cap_salle.data
+            r.id_offre = o.id_offre
+            db.session.add(r)
+            db.session.commit()
+            return redirect(url_for('mes_reponses'))
+        f.cotisation_apportee.data = o.cotisation_min
+        f.cap_salle.data = o.capacite_min
+    return render_template('repondre-offre.html', offre=o, form=f)
 
 @app.route('/home/profil', methods=['GET','POST'])
 def modifier_profil():
@@ -369,6 +391,16 @@ def ajout_utilisateur_reseau(id_reseau):
         return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
     return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)
 
+@app.route('/home/rechercher/les-offres', methods=['GET', 'POST'])
+@login_required
+def rechercher():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
+
+    
 @app.route('/home/creation-offre', methods=['GET','POST'])
 @login_required
 def creation_offre():
@@ -389,6 +421,8 @@ def creation_offre():
         o.cotisation_min = f.cotisation_min.data
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
+        #o.img = f.img.data
+        o.etat = "brouillon"
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
@@ -430,6 +464,23 @@ def creation_offre():
         return redirect(url_for('mes_offres'))
     return render_template('creation-offre.html', form=f)
 
+@app.route('/home/mes-offres/publication/<int:id_offre>', methods=['GET','POST'])
+@login_required
+def definir_etat(id_offre):
+    """
+    Définit l'état d'un objet Offre à l'état spécifié.
+    Args:
+        id_offre (int): L'identifiant de l'offre à mettre à jour.
+    Returns:
+        None
+    """
+
+    o = Offre.query.get(id_offre)
+    if o :
+        o.etat = "publiée"
+        db.session.commit()
+    return redirect(url_for('mes_offres'))
+
 @app.route('/home/mes-offres')
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
@@ -443,8 +494,8 @@ def mes_offres():
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
 def offre_personnel(id_offre):
-    f = ReponseForm()
     o = Offre.query.get(id_offre)
+    f = ReponseForm(o)
     if not o:
         return redirect(url_for("home"))
     return render_template('visualiser-offre-personnel.html', offre=o, form=f)
