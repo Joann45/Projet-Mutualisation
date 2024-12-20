@@ -45,6 +45,16 @@ class SelectRechercheOffreForm(FlaskForm):
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
     reseaux = MultiCheckboxField('Reseaux')
+    
+class SelectDateProximité(FlaskForm):
+
+    id = HiddenField("id")
+    proxi = RadioField("Date d'expiration")
+
+class SelectPopularité(FlaskForm):
+
+    id = HiddenField("id")
+    pop = RadioField("Popularité")
 
 
 
