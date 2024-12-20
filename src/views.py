@@ -499,9 +499,8 @@ def definir_etat(id_offre):
         db.session.commit()
     return redirect(url_for('mes_offres'))
 
-@app.route('/home/mes-offres')
-@login_required
 @app.route('/home/mes-offres', methods=["POST","GET"])
+@login_required
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
 
