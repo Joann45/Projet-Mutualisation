@@ -22,6 +22,8 @@ from datetime import datetime
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
+from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité
+from werkzeug.utils import secure_filename
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import os
@@ -151,15 +153,7 @@ def home():
     les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
     return render_template('home.html', offres=les_offres)
 
-@app.route('/home/les-offres')
-def les_offres():
-    """Renvoie la page des offres
 
-    Returns:
-        les-offres.html: Une page des offres
-    """
-    les_offres = Offre.query.all()
-    return render_template('les-offres.html', offres=les_offres)
 
 @app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
@@ -247,6 +241,7 @@ def modifier_profil():
     f.prenom_user.data = current_user.prenom_utilisateur
     f.email.data = current_user.email_utilisateur 
     return render_template('profil.html', form=f)
+
 
 
 @app.route('/home/mes-reseaux', methods=['GET', 'POST'])
@@ -482,6 +477,16 @@ def creation_offre():
         return redirect(url_for('mes_offres'))
     return render_template('creation-offre.html', form=f)
 
+@app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_offre():
+    """Renvoie la page de visualisation des réponses aux offres
+
+    Returns:
+        visualiser-reponses-offres.html: Une page de visualisation des réponses aux offres
+    """
+    
+    return render_template('visualiser-reponses-offres.html')
+
 @app.route('/home/mes-offres/publication/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def definir_etat(id_offre):
@@ -499,7 +504,9 @@ def definir_etat(id_offre):
         db.session.commit()
     return redirect(url_for('mes_offres'))
 
-@app.route('/home/mes-offres')
+
+
+@app.route('/home/mes-offres', methods=["POST","GET"])
 @login_required
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
@@ -507,8 +514,91 @@ def mes_offres():
     Returns:
         mes-offres.html: Une page des offres de l'utilisateur
     """
-    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-    return render_template('mes-offres.html', offres=les_offres)
+    
+
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    proximité_date = SelectDateProximité()
+    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
+
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
+
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+
+
+    proxi_elu = proximité_date.proxi.data
+
+   
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+        else:
+                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin.desc()).all()
+
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+    else:
+        les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+
+    if les_reseaux_elu != []:
+        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+
+def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
+    offre_voulu = set()
+    for offre in les_offres:
+        for reseux_off in offre.les_reseaux:
+            if reseux_off.id_reseau in les_reseaux_elu:
+                offre_voulu.add(offre)
+    return list(offre_voulu)
+
+@app.route('/home/les-offres', methods=["POST","GET"])
+def les_offres():
+    """Renvoie la page des offres
+
+    Returns:
+        les-offres.html: Une page des offres
+    """
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    proximité_date = SelectDateProximité()
+    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
+
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
+    
+    proxi_elu = proximité_date.proxi.data
+
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+    
+    
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+        else:
+                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin.desc()).all()
+
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+    else:
+        les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+
+
+    if les_reseaux_elu != []:
+        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+
+    
+
+    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
@@ -540,15 +630,58 @@ def visualiser_reponses_offre(id_offre):
 
 
 
-@app.route('/home/mes-offres/mes-reponses')
+@app.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
 
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
-    les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-    return render_template('mes-reponses.html', reponses=les_reponses)
+    les_reseaux = Reseau.query.all()
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    proximité_date = SelectDateProximité()
+    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
+
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
+
+    proxi_elu = proximité_date.proxi.data
+
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+    
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+        else:
+                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+    else:
+        les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+
+
+    if les_reseaux_elu != []:
+        les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
+
+    return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
+    
+
+   
+    
+
+def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
+    rep_voulu = set()
+    for rep in les_reponses:
+        for reseux_off in rep.offre.les_reseaux:
+            print(reseux_off.id_reseau)
+            if reseux_off.id_reseau in les_reseaux_elu:
+                rep_voulu.add(rep)
+    return list(rep_voulu)
 
 @app.route('/home/genre', methods=['GET','POST'])
 def genre():
