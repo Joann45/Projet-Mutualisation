@@ -51,10 +51,5 @@ class SelectDateProximité(FlaskForm):
     id = HiddenField("id")
     proxi = RadioField("Date d'expiration")
 
-class SelectPopularité(FlaskForm):
-
-    id = HiddenField("id")
-    pop = RadioField("Popularité")
-
 
 

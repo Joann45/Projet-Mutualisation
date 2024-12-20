@@ -4,47 +4,14 @@
         <h1 class="w-100 fw-bolder">Filtrer par</h1>
 
         <div class="my-3">
-            <h2>Réseaux</h2>
-
             
-            <div>
-                <form action="{{ url_for('mes_reponses') }}" method="post">
-                    {{ form.hidden_tag() }} {{ form.reseaux.label }} {{ form.reseaux() }}
-                    <button type="submit" class="btn btn-base rounded-3">  Rechercher </button>
-                </form>
-            </div>
-
+            <form action="{{ url_for('mes_reponses') }}" method="post">
+                <h2>Réseaux</h2>
+                {{ form.hidden_tag() }} {{ form.reseaux() }}
+                <h2>Date d'expiration</h2>
+                {{ formd.hidden_tag() }} {{ formd.proxi() }}
+                <button type="submit" class="btn btn-base rounded-3">  Rechercher </button>
+            </form>
         </div>
-
-        <div class="my-3">
-            <h2>Date d'expiration</h2>
-
-            <div>
-                <input type="radio" id="plus_proche" name="anciennete" value="plus_proche" checked>
-                <label for="plus_proche">Plus proche</label>
-            </div>
-
-            <div>
-                <input type="radio" id="moins_proche" name="anciennete" value="moins_proche">
-                <label for="moins_proche">Moins proche</label>
-            </div>
-
-        </div>
-
-        <div class="my-3">
-            <h2>Popularité</h2>
-
-            <div>
-                <input type="radio" id="plus_populaire" name="populaire" value="plus_populaire" checked>
-                <label for="plus_populaire">Plus populaire</label>
-            </div>
-
-            <div>
-                <input type="radio" id="moins_populaire" name="populaire" value="moins_populaire">
-                <label for="moins_populaire">Moins populaire</label>
-            </div>
-        </div>
-
-        
     </div>
 </div>

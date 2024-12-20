@@ -20,7 +20,7 @@ from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
-from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité, SelectPopularité
+from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité
 import os
 from functools import wraps
 from flask import abort
@@ -390,27 +390,36 @@ def mes_offres():
     proximité_date = SelectDateProximité()
     proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
 
-    popularité = SelectPopularité()
-    popularité.pop.choices = ["Plus Populaire", "Moins Populaire"] 
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
 
     id_reseaux_elu =  f_select_reseau.reseaux.data
     les_reseaux_elu = []
-    
-    if f_select_reseau.validate_on_submit():
+
+
+    proxi_elu = proximité_date.proxi.data
+
+   
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+        else:
+                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin.desc()).all()
+
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
-
-    les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+    else:
+        les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
-    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date, formp=popularité)
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
 def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
     offre_voulu = set()
     for offre in les_offres:
         for reseux_off in offre.les_reseaux:
-            print(reseux_off.id_reseau)
             if reseux_off.id_reseau in les_reseaux_elu:
                 offre_voulu.add(offre)
     return list(offre_voulu)
@@ -429,24 +438,34 @@ def les_offres():
     proximité_date = SelectDateProximité()
     proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
 
-    popularité = SelectPopularité()
-    popularité.pop.choices = ["Plus Populaire", "Moins Populaire"] 
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
+    
+    proxi_elu = proximité_date.proxi.data
 
     id_reseaux_elu =  f_select_reseau.reseaux.data
     les_reseaux_elu = []
     
-    if f_select_reseau.validate_on_submit():
+    
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+        else:
+                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin.desc()).all()
+
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+    else:
+        les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
 
-    les_offres = Offre.query.filter_by(etat="publiee").all()
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
 
     
 
-    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date, formp=popularité)
+    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
@@ -483,23 +502,36 @@ def mes_reponses():
     proximité_date = SelectDateProximité()
     proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
 
-    popularité = SelectPopularité()
-    popularité.pop.choices = ["Plus Populaire", "Moins Populaire"] 
+    if proximité_date.proxi.data == None :
+        proximité_date.proxi.default = "Plus Proche"
+        proximité_date.process()
+
+    proxi_elu = proximité_date.proxi.data
 
     id_reseaux_elu =  f_select_reseau.reseaux.data
     les_reseaux_elu = []
     
-    if f_select_reseau.validate_on_submit():
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+        if proxi_elu == "Plus Proche": 
+                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+        else:
+                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+    else:
+        les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
 
-
-    les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
 
     if les_reseaux_elu != []:
         les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
 
-    return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date, formp=popularité)
+    return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
+    
+
+   
+    
+
 def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
     rep_voulu = set()
     for rep in les_reponses:
