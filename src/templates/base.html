@@ -27,14 +27,17 @@
                         <p class="mb-0 ml-4">StageFlow</p></a
                     >
                 </div>
+            
                 <div>
                     <a class="mb-5" href="{{url_for('les_offres')}}">
                         <input class="btn btn-dark p-3" type="button" name="offres" id="offres" value="Afficher plus d'offres">
                     </a>
                 </div>
+                
               
+            
                 <!--
-                <div class="input-group border rounded-pill">
+                <form class="input-group border rounded-pill" action="{{url_for('les_offres')}}" method="get">
                     <input
                         class="form-control rounded-pill rounded-end"
                         type="search"
@@ -42,11 +45,13 @@
                         name="zone-search"
                         placeholder="Recherche une offre"
                     />
-                    <button class="btn">
+                    
+                    <button class="btn" type="submit">
                         <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
                     </button>
-                </div>
+                </form>
                 -->
+                
 
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->

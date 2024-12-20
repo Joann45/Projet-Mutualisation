@@ -358,6 +358,16 @@ def ajout_utilisateur_reseau(id_reseau):
         return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
     return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)
 
+@app.route('/home/rechercher/les-offres', methods=['GET', 'POST'])
+@login_required
+def rechercher():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
+
+    
 @app.route('/home/creation-offre', methods=['GET','POST'])
 @login_required
 def creation_offre():
@@ -378,7 +388,7 @@ def creation_offre():
         o.cotisation_min = f.cotisation_min.data
         o.capacite_max = f.capacite_max.data
         o.capacite_min = f.capacite_min.data
-        o.img = f.img.data
+        #o.img = f.img.data
         o.etat = "brouillon"
         o.nom_loc = f.nom_loc.data
         o.date_deb = f.date_deb.data
