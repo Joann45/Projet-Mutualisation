@@ -24,6 +24,7 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité
 from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 import os
 from functools import wraps
 from flask import abort
@@ -478,6 +479,19 @@ def visualiser_offre():
     """
     
     return render_template('visualiser-reponses-offres.html')
+
+
+
+@app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_offre():
+    """Renvoie la page de visualisation des réponses aux offres
+
+    Returns:
+        visualiser-reponses-offres.html: Une page de visualisation des réponses aux offres
+    """
+    
+    return render_template('visualiser-reponses-offres.html')
+
 @app.route('/home/mes-offres/publication/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def definir_etat(id_offre):
