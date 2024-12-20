@@ -18,8 +18,8 @@
     
                 <div class="d-flex flex-column w-100">
                     <p>{{offre.description}}</p>
-                    <p>Nombre de participants: {{offre.nb_participants()}}</p>
-                    <p>Cotisation minimale: {{offre.cotisation_min}} €</p>
+                    <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
+                    <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
 
                     {% if verif %}
                     <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
