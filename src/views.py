@@ -4,7 +4,7 @@ from flask_security import login_required, current_user, roles_required,  logout
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
 from flask import render_template, redirect, url_for, request, send_from_directory
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
-from src.forms.OffreForm import OffreForm, ReponseForm
+from src.forms.OffreForm import OffreForm, ReponseForm, CommentaireForm
 from src.forms.GenreForm import GenreForm
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
@@ -16,7 +16,9 @@ from src.models.Document import Document
 from src.models.Genre_Offre import Genre_Offre
 from src.models.Offre_Reseau import Offre_Reseau
 from src.models.Utilisateur_Reseau import Utilisateur_Reseau
+from src.models.Commentaire import Commentaire
 from src.forms.ReseauForm import ReseauForm, AddUtilisateurReseauForm
+from datetime import datetime
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
@@ -161,12 +163,22 @@ def les_offres():
 @login_required
 def details_offre(id_offre):
     o = Offre.query.get(id_offre)
+    commentaireForm = CommentaireForm()
     verif = False
+    if commentaireForm.validate_on_submit():
+        c = Commentaire()
+        c.texte_commentaire = commentaireForm.texte_commentaire.data
+        c.id_offre = id_offre
+        c.id_utilisateur = current_user.id_utilisateur
+        c.date_commentaire = datetime.now()
+        db.session.add(c)
+        db.session.commit()
+        return redirect(url_for('details_offre', id_offre=id_offre))
     if not o:
         return redirect(url_for("home"))
     if Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first():
         verif = True
-    return render_template('details-offre.html', offre=o, verif=verif)
+    return render_template('details-offre.html', offre=o, verif=verif, commentaireForm=commentaireForm)
 
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
@@ -482,6 +494,7 @@ def definir_etat(id_offre):
     return redirect(url_for('mes_offres'))
 
 @app.route('/home/mes-offres')
+@login_required
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
 

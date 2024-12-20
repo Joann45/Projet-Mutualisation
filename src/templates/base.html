@@ -27,15 +27,19 @@
                         <p class="mb-0 ml-4">StageFlow</p></a
                     >
                 </div>
-            
+
                 <div>
                     <a class="mb-5" href="{{url_for('les_offres')}}">
-                        <input class="btn btn-dark p-3" type="button" name="offres" id="offres" value="Afficher plus d'offres">
+                        <input
+                            class="btn btn-dark p-3"
+                            type="button"
+                            name="offres"
+                            id="offres"
+                            value="Afficher plus d'offres"
+                        />
                     </a>
                 </div>
-                
-              
-            
+
                 <!--
                 <form class="input-group border rounded-pill" action="{{url_for('les_offres')}}" method="get">
                     <input
@@ -51,7 +55,6 @@
                     </button>
                 </form>
                 -->
-                
 
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
@@ -65,11 +68,11 @@
                         />
                     </a>
                 </div>
-               
+
                 {% if not current_user.is_admin() %}
                 <div>
                     <!-- créer route vers mes offres -->
-                    
+
                     <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
                         Mes offres
                         <img
@@ -79,8 +82,7 @@
                         />
                     </a>
                 </div>
-                {% endif %}
-                {% if not current_user.is_admin() %}
+                {% endif %} {% if not current_user.is_admin() %}
                 <div>
                     <a class="btn btn-base mx-3" href="{{url_for('creation_offre')}}">
                         Créer une offre
@@ -116,5 +118,6 @@
         </header>
 
         <main>{% block content %} {% endblock %}</main>
+        <script src="{{ url_for('static', filename='popup.js')}}" crossorigin="anonymous" defer></script>
     </body>
 </html>
