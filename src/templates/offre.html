@@ -1,11 +1,20 @@
 <div class="my-5 taille-min-55">
     <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('details_offre', id_offre=offre.id_offre)}}">
-        <img
-            class="rounded-start-4"
-            src="{{ url_for('static', filename='img/fete_fumee.svg') }}"
-            style="width: 261px; height: fit-content"
-            alt="fetes"
-        />
+        {% if offre.img == "0" %}
+            <img
+                class="rounded-start-4"
+                src = "{{url_for('static', filename='img/fetes.svg')}}"
+                style="width: fit-content; height: fit-content"
+                alt="fetes"
+            />
+        {% else %}
+            <img
+                class="rounded-start-4"
+                src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}"
+                style="width: fit-content; height: fit-content"
+                alt="fetes"
+            />
+        {% endif %}
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
             <div class="d-flex flex-column align-items-center justify-content-center m-4">
                 <h2>{{ offre.nom_offre}}</h2>

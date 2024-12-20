@@ -12,7 +12,7 @@ class OffreForm(FlaskForm):
     cotisation_min = FloatField("Cotisation minimal", validators=[DataRequired()])
     capacite_min = IntegerField('Capacité minimal', validators=[DataRequired()])
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
-    img = FileField("Image de l'offre", validators=[DataRequired()])
+    img = FileField("Image de l'offre")
     genre = SelectField('Genre', coerce=int)
     reseau = SelectField('Réseaux', coerce=int)
     nom_loc = StringField('Localisation', validators=[DataRequired()])

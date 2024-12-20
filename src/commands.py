@@ -45,7 +45,7 @@ def loaddb(filename):
                 id_utilisateur=elem["id_utilisateur"],
                 nom_utilisateur=elem["nom_utilisateur"],
                 prenom_utilisateur=elem["prenom_utilisateur"],
-                mdp_utilisateur=sha256(elem["mdp_utilisateur"]),
+                mdp_utilisateur=sha256(str(elem["mdp_utilisateur"]).encode()).hexdigest(),
                 email_utilisateur=elem["email_utilisateur"],
                 img_utilisateur=elem["img_utilisateur"],
                 role_id=elem["role_id"]

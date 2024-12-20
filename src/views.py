@@ -21,9 +21,11 @@ from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 from werkzeug.utils import secure_filename
+from werkzeug.datastructures import FileStorage
 import os
 from functools import wraps
 from flask import abort
+
 
 def roles(*roles):
     """Vérifie si l'utilisateur a un rôle parmi ceux passés en paramètre
@@ -160,10 +162,13 @@ def les_offres():
 @app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def details_offre(id_offre):
+    verif = True
     o = Offre.query.get(id_offre)
     if not o:
         return redirect(url_for("home"))
-    return render_template('details_offre.html', offre=o)
+    if not o.img:
+        verif = False
+    return render_template('details_offre.html',verif=verif, offre=o)
 
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
@@ -306,7 +311,6 @@ def get_documents(id_d, id_o):
     documents_folder = os.path.join("static", "Documents")
     file_name = Document.query.filter_by(id_doc=id_d).first()
     new_filename = f"{file_name.nom_doc}"
-    print(file_name.nom_doc)
     return send_from_directory(
         documents_folder,
         str(id_d)+"-"+str(id_o),
@@ -360,26 +364,29 @@ def creation_offre():
         o.date_deb = f.date_deb.data
         o.date_fin = f.date_fin.data
         o.id_utilisateur = current_user.id_utilisateur
+        file_o = f.img.data
         db.session.add(o)
         db.session.commit()
         id_offre = o.id_offre
-        o.img = id_offre
-
-        d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
-        file = f.documents.data
-        filename = secure_filename(file.filename)
-        d.nom_doc = filename
-        file = f.documents.data
-        d.id_offre = id_offre
-        db.session.add(d)
+        if not file_o:
+            o.img = "0"
+        else:
+            file_path = os.path.join("src/static/img/offre", str(id_offre))
+            file_o.save(file_path)
+            o.img = id_offre
         db.session.commit()
+        file = f.documents.data
         if file:
+            d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
+            filename = secure_filename(file.filename)
+            d.nom_doc = filename
+            d.id_offre = id_offre
+            db.session.add(d)
+            db.session.commit()
             file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
             file.save(file_path)
-        
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
-        
         g_o = Genre_Offre()
         g_o.id_genre = g.id_genre
         g_o.id_offre = id_offre
@@ -410,11 +417,14 @@ def mes_offres():
 @app.route('/home/offre_personnel/<int:id_offre>')
 @login_required
 def offre_personnel(id_offre):
-    f = ReponseForm()
+    verif = True
     o = Offre.query.get(id_offre)
+    f = ReponseForm(o)
     if not o:
         return redirect(url_for("home"))
-    return render_template('visualiser-offre-personnel.html', offre=o, form=f)
+    if not o.img:
+        verif = False
+    return render_template('visualiser-offre-personnel.html',verif=verif, offre=o, form=f)
 
 @app.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_reponses_offre(id_offre):
@@ -423,10 +433,14 @@ def visualiser_reponses_offre(id_offre):
     Returns:
         visualiser-reponses-offre.html: Une page de visualisation des réponses aux offres
     """
+    verif = True
     les_reponses = Reponse.query.filter_by(id_offre=id_offre)
     if not les_reponses:
         return render_template('visualiser-reponses-offre.html', None)    
-    return render_template('visualiser-reponses-offre.html', reponses=les_reponses)
+    o = Offre.query.get(id_offre)
+    if not o.img:
+        verif = False
+    return render_template('visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)
 
 @app.route('/home/mes-offres/mes-reponses')
 def mes_reponses():
