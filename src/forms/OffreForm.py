@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, FileField, SelectField, DateField, FloatField, IntegerField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, ValidationError
 from datetime import date
 
 class OffreForm(FlaskForm):
@@ -64,7 +64,7 @@ class OffreForm(FlaskForm):
 class ReponseForm(FlaskForm):
     id = HiddenField('id')
     
-    cotisation_apportee = IntegerField("Cotisation apportée", validators=[DataRequired()])
+    cotisation_apportee = FloatField("Cotisation apportée", validators=[DataRequired()])
     autre_rep = TextAreaField('Autres', validators=[DataRequired()])
     date_debut = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])
@@ -73,10 +73,15 @@ class ReponseForm(FlaskForm):
     
     def __init__(self, offre):
         super(ReponseForm, self).__init__()
-        self.cotisation_apportee.render_kw = {'min': offre.cotisation_min,'step': 0.01}
-        self.date_debut.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
-        self.date_fin.render_kw = {'min': offre.date_deb,'max': offre.date_fin}
+        self.cotisation_min = offre.cotisation_min
+        self.cotisation_apportee.render_kw = {'min': offre.cotisation_min, 'step': 0.01}
+        self.date_debut.render_kw = {'min': offre.date_deb, 'max': offre.date_fin}
+        self.date_fin.render_kw = {'min': offre.date_deb, 'max': offre.date_fin}
         self.cap_salle.render_kw = {'min': offre.capacite_min}
+
+    def validate_cotisation_apportee(self, field):
+        if field.data < self.cotisation_min:  # cotisation_min doit être défini dans votre formulaire
+            raise ValidationError(f"La cotisation apportée ne peut pas être inférieure à {self.cotisation_min}.")
     
     #def validate(self, extra_validators = None):
     #    if not FlaskForm.validate(self, extra_validators = extra_validators):
