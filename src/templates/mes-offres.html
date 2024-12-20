@@ -66,7 +66,7 @@
 
                     {% for offre in offres%}
                     <div>
-                        {% include 'offre-personnel.html' %}
+                        {% include 'offre.html' %}
                         <div class="d-flex justify-content-around" >
                             
                             <a href="{{url_for('definir_etat', id_offre=offre.id_offre)}}">
