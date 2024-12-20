@@ -158,10 +158,9 @@ def home():
 @app.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def details_offre(id_offre):
-    verif = True
     o = Offre.query.get(id_offre)
+
     commentaireForm = CommentaireForm()
-    verif = False
     if commentaireForm.validate_on_submit():
         c = Commentaire()
         c.texte_commentaire = commentaireForm.texte_commentaire.data
@@ -171,11 +170,14 @@ def details_offre(id_offre):
         db.session.add(c)
         db.session.commit()
         return redirect(url_for('details_offre', id_offre=id_offre))
+    verif = 1
     if not o:
         return redirect(url_for("home"))
-
     if Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first():
-        verif = True
+        
+        verif = 2
+    elif o.utilisateur == current_user or current_user.role_id == 2:
+        verif = 3
     return render_template('details-offre.html', offre=o, verif=verif, commentaireForm=commentaireForm)
 
 @app.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
@@ -599,18 +601,6 @@ def les_offres():
     
 
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
-
-@app.route('/home/offre_personnel/<int:id_offre>')
-@login_required
-def offre_personnel(id_offre):
-    verif = True
-    o = Offre.query.get(id_offre)
-    f = ReponseForm(o)
-    if not o:
-        return redirect(url_for("home"))
-    if not o.img:
-        verif = False
-    return render_template('visualiser-offre-personnel.html',verif=verif, offre=o, form=f)
 
 @app.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_reponses_offre(id_offre):

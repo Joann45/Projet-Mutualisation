@@ -4,8 +4,8 @@
 <div class="d-flex flex-column align-items-center my-5">
     <div class="d-flex flex-nowrap mb-3" style="width: 65%;">
 
-        <img style="width: 40em; max-width: 100%;" src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}"
-            alt="fetes">
+        <img style="width: 400px; max-width: 100%; height:400px"
+            src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}" alt="fetes">
         <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
 
             <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%;">
@@ -21,15 +21,20 @@
                 <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
                 <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
 
-                {% if verif %}
+                {% if verif == 1 %}
+                <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+                    <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
+                        name="repondre" id="repondre" value="Répondre">
+                </a>
+                {% elif verif == 2 %}
                 <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
                     <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
                         name="repondre" id="repondre" value="Modifier réponse">
                 </a>
-                {% else %}
-                <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+                {% elif verif == 3 %}
+                <a href="{{url_for('visualiser_reponses_offre', id_offre=offre.id_offre)}}">
                     <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
-                        name="repondre" id="repondre" value="Répondre">
+                        name="repondre" id="repondre" value="Visualiser les réponses">
                 </a>
                 {% endif %}
             </div>
@@ -43,6 +48,7 @@
             Voir les documents associés à l'offre
         </a>
     </div>
+
     <div class="mb-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
         <div class="d-flex justify-content-between align-items-center" id="documents">
             <h1>Documents</h1>
@@ -61,6 +67,7 @@
         </a>
         {% endfor %}
     </div>
+
     <div class="my-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
 
         <div class="d-flex justify-content-between align-items-center">
@@ -75,7 +82,6 @@
                 {{ commentaireForm.texte_commentaire(size=50) }}
                 <button type="submit" class="btn btn-dark fw-bolder">Ajouter un commentaire</button>
             </form>
-
         </div>
         <div class="w-100 h-30 d-inline-block overflow-auto">
             {% for commentaire in offre.les_commentaires %}
@@ -88,4 +94,5 @@
             {% endfor %}
         </div>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
