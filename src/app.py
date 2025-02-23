@@ -30,19 +30,23 @@ def home():
     les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
     return render_template('home.html', offres=les_offres)
 
-login_manager.init_app(app)
-
-login_manager.login_view = 'auth.login'
-
-bootstrap = Bootstrap5(app)
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return Utilisateur.query.get(int(user_id))
-
 # Import des routes
 
 app.register_blueprint(auth_bp, url_prefix='/auth')
 user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)
 security = Security(app, user_datastore)
 
+login_manager.init_app(app)
+
+login_manager.login_view = 'auth.login'
+login_manager.login_url = "/auth/login"  # Forcer Flask-Login à utiliser l’URL correcte
+
+bootstrap = Bootstrap5(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return Utilisateur.query.get(int(user_id))
+
+
+#Afficher les routes
+print(app.url_map)
 

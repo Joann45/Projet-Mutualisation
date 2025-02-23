@@ -7,7 +7,8 @@ from hashlib import sha256
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role, roles
-from src.extensions import db
+from src.extensions import db, login_manager
+# from src.app import app # ! Corriger l'importation circulaire
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
