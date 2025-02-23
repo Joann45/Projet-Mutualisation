@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Reponse (table d'association)
 class Reponse(db.Model):

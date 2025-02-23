@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Reseau
 class Reseau(db.Model):
