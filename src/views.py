@@ -150,7 +150,10 @@ def home():
     Returns:
         home.html: Une page d'accueil
     """
-    les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
+    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
+    les_offres = [] #! A modifier plus tard pour trier par les plus populaires
+    for res in les_reseaux:
+        les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
     return render_template('home.html', offres=les_offres)
 
 
