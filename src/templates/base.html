@@ -29,7 +29,7 @@
                 </div>
 
                 <div>
-                    <a class="mb-5" href="{{url_for('views.les_offres')}}">
+                    <a class="mb-5" href="{{url_for('offre.les_offres')}}">
                         <input
                             class="btn btn-dark p-3"
                             type="button"
@@ -40,10 +40,9 @@
                     </a>
                 </div>
 
-
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
-                    <a class="btn btn-default" href="{{url_for('views.mes_reseaux')}}">
+                    <a class="btn btn-default" href="{{url_for('reseaux.mes_reseaux')}}">
                         Mes réseaux
 
                         <img
@@ -58,7 +57,7 @@
                 <div>
                     <!-- créer route vers mes offres -->
 
-                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('views.mes_offres')}}">
+                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('offre.mes_offres')}}">
                         Mes offres
                         <img
                             src="{{url_for('static', filename='../../static/static/img/icon_dossier.svg')}}"
@@ -69,9 +68,13 @@
                 </div>
                 {% endif %} {% if not current_user.is_admin() %}
                 <div>
-                    <a class="btn btn-base mx-3" href="{{url_for('views.creation_offre')}}">
+                    <a class="btn btn-base mx-3" href="{{url_for('offre.creation_offre')}}">
                         Créer une offre
-                        <img src="{{url_for('static', filename='../../static/static/img/icon_plus.svg')}}" alt="icone plus" class="ms-2" />
+                        <img
+                            src="{{url_for('static', filename='../../static/static/img/icon_plus.svg')}}"
+                            alt="icone plus"
+                            class="ms-2"
+                        />
                     </a>
                 </div>
                 {% endif %}

@@ -1,4 +1,4 @@
-from .app import db
+from src.app import db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword

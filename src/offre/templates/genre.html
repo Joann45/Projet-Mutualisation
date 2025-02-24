@@ -9,7 +9,7 @@
     <body>
         <h1>Ajouter un genre</h1>
 
-        <form action="" method="post" action="{{ url_for('views.creation_offre') }}">
+        <form action="" method="post" action="{{ url_for('offre.creation_offre') }}">
             {{ form.hidden_tag() }} {{ form.nom_genre.label }} {{ form.nom_genre(size=50, placeholder="Nom du genre") }}
             <button type="submit">Ajouter un genre</button>
         </form>

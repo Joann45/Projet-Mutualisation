@@ -7,6 +7,7 @@ from src.auth.auth import auth_bp
 from src.reseaux.reseaux import reseaux_bp
 from src.reponse_offre.reponse_offre import reponse_bp
 from src.views import views_bp
+from src.offre.offre import offre_bp
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.models.Utilisateur import Utilisateur
 from src.models.Role import Role
@@ -30,6 +31,7 @@ def create_app(config_object='src.config'):
     app.register_blueprint(reseaux_bp)
     app.register_blueprint(reponse_bp)
     app.register_blueprint(views_bp)
+    app.register_blueprint(offre_bp)
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
     
