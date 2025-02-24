@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
 <div>
-    <form method="post" action="{{ url_for('views.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
+    <form method="post" action="{{ url_for('reseaux.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
         {{ form.hidden_tag() }}
         <div class="form-group">
             {{ form.utilisateur.label(class="form-label") }} {{ form.utilisateur(class="form-control") }} {% for error

@@ -1,4 +1,4 @@
-from .app import db
+from src.extensions import db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
@@ -30,9 +30,9 @@ import os
 from functools import wraps
 from flask import abort
 
-views_bp = Blueprint('views', __name__, template_folder='templates')
+reponse_bp = Blueprint('reponses', __name__, template_folder='templates')
 
-@views_bp.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@reponse_bp.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_reponses_offre(id_offre):
     """Renvoie la page de visualisation des réponses aux offres
 
@@ -46,7 +46,7 @@ def visualiser_reponses_offre(id_offre):
     o = Offre.query.get(id_offre)
     if not o.img:
         verif = False
-    return render_template('offre/visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)  
+    return render_template('reponse_offre/visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)  
 
 def filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses):
     rep_voulu = set()
@@ -58,7 +58,7 @@ def filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses):
     return list(rep_voulu)
 
 
-@views_bp.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
+@reponse_bp.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
 
@@ -100,7 +100,7 @@ def mes_reponses():
     
 
 
-@views_bp.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
+@reponse_bp.route('/home/repondre-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def repondre_offre(id_offre):
     o = Offre.query.get(id_offre)

@@ -30,10 +30,10 @@ import os
 from functools import wraps
 from flask import abort
 
-views_bp = Blueprint('views', __name__, template_folder='templates')
+offre_bp = Blueprint('offre', __name__, template_folder='templates')
 
 
-@views_bp.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
+@offre_bp.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def details_offre(id_offre):
     o = Offre.query.get(id_offre)
@@ -59,7 +59,7 @@ def details_offre(id_offre):
     return render_template('offre/details-offre.html', offre=o, verif=verif, commentaireForm=commentaireForm)
 
 
-@views_bp.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
+@offre_bp.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
 def suppression_offre(id_offre):
     """Supprime une offre
 
@@ -80,7 +80,7 @@ def suppression_offre(id_offre):
 
 
  
-@views_bp.route('/home/creation-offre', methods=['GET','POST'])
+@offre_bp.route('/home/creation-offre', methods=['GET','POST'])
 @login_required
 def creation_offre():
     """Renvoie la page de création d'une offre
@@ -146,7 +146,7 @@ def creation_offre():
         return redirect(url_for('views.mes_offres'))
     return render_template('offre/creation-offre.html', form=f)
 
-@views_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
     """Renvoie la page de visualisation des réponses aux offres
 
@@ -160,7 +160,7 @@ def visualiser_offre():
 
 
 
-@views_bp.route('/home/mes-offres', methods=["POST","GET"])
+@offre_bp.route('/home/mes-offres', methods=["POST","GET"])
 @login_required
 def mes_offres():
     """Renvoie la page des offres de l'utilisateur
@@ -211,7 +211,7 @@ def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
                 offre_voulu.add(offre)
     return list(offre_voulu)
 
-@views_bp.route('/home/les-offres', methods=["POST","GET"])
+@offre_bp.route('/home/les-offres', methods=["POST","GET"])
 def les_offres():
     """Renvoie la page des offres
 

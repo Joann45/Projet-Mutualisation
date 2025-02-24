@@ -1,15 +1,14 @@
 import click
-
 from .models.Utilisateur import Utilisateur
 from .models.Role import Role
 from .models.Genre import Genre
 from .models.Reseau import Reseau
 from hashlib import sha256
 
-from .app import create_app, db
+from .app import db
+from flask.cli import with_appcontext
+from . import app
 
-# Créer l'application
-app = create_app()
 
 @app.cli.command()
 @click.argument('filename')
@@ -22,7 +21,7 @@ def loaddb(filename):
     # Import des modèles
     import src.models as md
     import yaml
-    
+
     with open(filename, 'r') as file:
         data = yaml.safe_load(file)
 
@@ -183,8 +182,10 @@ def loaddb(filename):
         g3 = Genre(nom_genre="Reggae")
         g4 = Genre(nom_genre="Classique")
 
+
     db.session.add_all([g, g1, g2, g3, g4])
     db.session.commit()
+    print("Base de données chargée avec succès.")
 
 @app.cli.command()
 def syncdb():
