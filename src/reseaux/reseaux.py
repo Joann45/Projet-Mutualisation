@@ -1,4 +1,4 @@
-from .app import db
+from src.extensions import db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
@@ -30,9 +30,9 @@ import os
 from functools import wraps
 from flask import abort
 
-views_bp = Blueprint('views', __name__, template_folder='templates')
+reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
-@views_bp.route('/home/mes-reseaux', methods=['GET', 'POST'])
+@reseaux_bp.route('/home/mes-reseaux', methods=['GET', 'POST'])
 def mes_reseaux():
     """Renvoie la page des réseaux administrateur
 
@@ -107,7 +107,7 @@ def add_new_reseau(form):
     db.session.add(r)
     db.session.commit()
 
-@views_bp.route('/home/suppression_reseau/<int:id_reseau>', methods=['GET'])
+@reseaux_bp.route('/home/suppression_reseau/<int:id_reseau>', methods=['GET'])
 def suppression_reseau(id_reseau):
     """Supprime un réseau
     Args:
@@ -122,7 +122,7 @@ def suppression_reseau(id_reseau):
     return redirect(url_for('mes_reseaux'))
 
 
-@views_bp.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
+@reseaux_bp.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     """Supprime un utilisateur d'un réseau
     Args:
@@ -137,7 +137,7 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
         db.session.commit()
     return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
 
-@views_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
+@reseaux_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
     """Ajoute un utilisateur à un réseau
     Args:

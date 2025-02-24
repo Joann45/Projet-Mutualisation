@@ -5,7 +5,7 @@
 
         <div class="my-3">
             
-            <form action="{{ url_for('views.mes_reponses') }}" method="post">
+            <form action="{{ url_for('reponse_offre.mes_reponses') }}" method="post">
                 <h2>Réseaux</h2>
                 {{ form.hidden_tag() }} {{ form.reseaux() }}
                 <h2>Date d'expiration</h2>

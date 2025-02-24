@@ -4,11 +4,13 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap5
 from src.extensions import db, login_manager
 from src.auth.auth import auth_bp
+from src.reseaux.reseaux import reseaux_bp
+from src.reponse_offre.reponse_offre import reponse_bp
+from src.views import views_bp
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.models.Utilisateur import Utilisateur
 from src.models.Role import Role
 from flask import render_template
-from src.views import views_bp
 import uuid
 import src.config as config
 
@@ -26,7 +28,10 @@ def create_app(config_object='src.config'):
     Bootstrap5(app)
     
     # Enregistrer les Blueprints
+    app.register_blueprint(reseaux_bp)
+    app.register_blueprint(reponse_bp)
     app.register_blueprint(views_bp)
+
     app.register_blueprint(auth_bp, url_prefix='/auth')
     
     user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)

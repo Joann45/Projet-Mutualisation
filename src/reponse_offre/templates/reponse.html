@@ -1,11 +1,11 @@
 <div class="my-5 w-75">
     <a
         class="d-flex flex-nowrap text-decoration-none w-100"
-        href="{{url_for('views.details_offre', id_offre=reponse.offre.id_offre)}}"
+        href="{{url_for('reponse_offre.details_offre', id_offre=reponse.offre.id_offre)}}"
     >
         <img
             class="rounded-start-4"
-            src="{{url_for('static', filename='../../static/static/img/offre/' ~ reponse.offre.id_offre)}}"
+            src="{{url_for('static', filename='../../../static/static/img/offre/' ~ reponse.offre.id_offre)}}"
             style="width: 261px; height: fit-content"
             alt="fetes"
         />
