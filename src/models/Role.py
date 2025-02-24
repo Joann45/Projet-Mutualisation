@@ -1,5 +1,5 @@
 from src.extensions import db
-from flask_security import RoleMixin
+from flask_security import RoleMixin, current_user
 from functools import wraps
 from flask import abort
 

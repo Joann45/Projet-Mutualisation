@@ -1,12 +1,15 @@
 import click
-from .app import app
-from .app import db
+
 from .models.Utilisateur import Utilisateur
 from .models.Role import Role
 from .models.Genre import Genre
 from .models.Reseau import Reseau
 from hashlib import sha256
 
+from .app import create_app, db
+
+# Créer l'application
+app = create_app()
 
 @app.cli.command()
 @click.argument('filename')

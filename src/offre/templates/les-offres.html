@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+
+
+    <div class="d-flex vh-100">
+        {% include 'offre/filtrage_les_offres.html' %}
+
+    
+        <div class="d-flex justify-content-center bg-color-gris flex-grow-1 p-5">
+
+            <div>
+                <h2 class="fw-bolder display-5">Les offres</h2>
+
+                <div>
+                    {% for offre in offres %}
+                        {% include 'offre.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+
+{% endblock %}
