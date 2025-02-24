@@ -20,7 +20,7 @@ def login():
         connexion.html : Une page de connexion
     """
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('views.home'))
     f = ConnexionForm()
     if f.validate_on_submit():
         u = f.get_authenticated_user()
