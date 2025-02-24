@@ -21,24 +21,31 @@
                         <div class="d-flex justify-content-around" >
                             
                             <a href="{{url_for('definir_etat', id_offre=offre.id_offre)}}">
-                                <button class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" onclick="changerTexte(event)">Publier</button>
-                            </a>
-
-                            <script defer>
+                                 
+                                <button id = "btnPubli" class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" >Publier</button>
+                                {% if offre.etat=="publiée"  %}
+                                <script defer>
                                
-                                function changerTexte(event) {
-                                    event.preventDefault(); 
-                                    const button = event.target; 
-                                    button.textContent = 'Publiée';
-                                    button.className= 'btn btn-green rounded-4 px-4 fs-5';
-                                }
-                            </script>
-                            
+                                    function changerTexte() {
+                                        const button = document.getElementById("btnPubli");
+                                        console.log((document.getElementsByName("offre")) );
+                                        
+                                        button.textContent = 'Publiée';
+                                        button.className= 'btn btn-green rounded-4 px-4 fs-5';
+                                    }
+                                    changerTexte()
+                                </script>
+                                {% endif %}
+
+                            </a>
+     
+                            <a href="{{url_for('creation_offre', id_offre=offre.id_offre)}}">
                             <input class= "btn btn-dark rounded-4 px-4 fw-bolder fs-5" 
                             type="button" 
                             name="modifier" 
                             id="modifier" 
                             value="Modifier">
+                            </a>
                         
                     
                     
