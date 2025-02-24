@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Genre_Offre (table d'association)
 class Genre_Offre(db.Model):

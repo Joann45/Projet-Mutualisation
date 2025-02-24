@@ -1,41 +1,52 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required
 from flask_bootstrap import Bootstrap5
-
-import os.path
-
+from src.extensions import db, login_manager
+from src.auth.auth import auth_bp
+from flask_security import Security, SQLAlchemySessionUserDatastore
+from src.models.Utilisateur import Utilisateur
+from src.models.Offre import Offre
+from src.models.Role import Role, roles
+from flask import render_template
 
 app = Flask(__name__)
 
-def mkpath(p):
-    return os.path.normpath(
-        os.path.join(
-            os.path.dirname(__file__),
-            p))
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'sqlite:///' + mkpath('../testdb.db'))
-app.url_map.strict_slashes = False
-app.config['SECRET_KEY'] = 'e9767196-4490-415a-8d42-1b16d2ad2a24'
-app.config['SECURITY_DEFAULT_REMEMBER_ME'] = False
-app.config['SECURITY_REGISTERABLE'] = False
-app.config['SECURITY_RECOVERABLE'] = False
-app.config['SECURITY_TRACKABLE'] = False
-app.config['SECURITY_CONFIRMABLE'] = False
-app.config['SECURITY_CHANGEABLE'] = False
-db = SQLAlchemy()
+import src.config as config
+
 db.init_app(app)
-login_manager = LoginManager()
+
+# Route de app
+@app.route('/home', methods=['GET','POST'])
+@app.route('/', methods=['GET','POST'])
+@login_required
+@roles("Administrateur","Organisateur") #! A modifier pour les rôles
+def home():
+    """Renvoie la page d'accueil
+
+    Returns:
+        home.html: Une page d'accueil
+    """
+    les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
+    return render_template('home.html', offres=les_offres)
+
+# Import des routes
+
+app.register_blueprint(auth_bp, url_prefix='/auth')
+user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)
+security = Security(app, user_datastore)
+
 login_manager.init_app(app)
-login_manager.login_view = "login"
 
-app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+login_manager.login_view = 'auth.login'
+login_manager.login_url = "/auth/login"  # Forcer Flask-Login à utiliser l’URL correcte
+
 bootstrap = Bootstrap5(app)
-
-from src.models.Utilisateur import Utilisateur
-from src.models.Role import Role
-
-
 @login_manager.user_loader
 def load_user(user_id):
     return Utilisateur.query.get(int(user_id))
+
+
+#Afficher les routes
+print(app.url_map)
+

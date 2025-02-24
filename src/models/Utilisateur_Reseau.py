@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Utilisateur_Reseau (table d'association)
 class Utilisateur_Reseau(db.Model):

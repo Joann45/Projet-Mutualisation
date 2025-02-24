@@ -1,15 +1,19 @@
 import click
-from .app import app, db
+from .app import app
+from .app import db
 from .models.Utilisateur import Utilisateur
 from .models.Role import Role
 from .models.Genre import Genre
 from .models.Reseau import Reseau
+from hashlib import sha256
+
 
 @app.cli.command()
 @click.argument('filename')
 def loaddb(filename):
     '''Creates the tables and populates them with data.'''
     # Création de toutes les tables
+    db.drop_all()
     db.create_all()
     
     # Import des modèles
@@ -42,7 +46,7 @@ def loaddb(filename):
                 id_utilisateur=elem["id_utilisateur"],
                 nom_utilisateur=elem["nom_utilisateur"],
                 prenom_utilisateur=elem["prenom_utilisateur"],
-                mdp_utilisateur=elem["mdp_utilisateur"],
+                mdp_utilisateur=sha256(str(elem["mdp_utilisateur"]).encode()).hexdigest(),
                 email_utilisateur=elem["email_utilisateur"],
                 img_utilisateur=elem["img_utilisateur"],
                 role_id=elem["role_id"]
@@ -170,7 +174,13 @@ def loaddb(filename):
             )
             elements["reponse"][(elem["id_utilisateur"], elem["id_offre"])] = reponse
             db.session.add(reponse)
+        g = Genre(nom_genre="Rock")
+        g1 = Genre(nom_genre="Pop")
+        g2 = Genre(nom_genre="Rap")
+        g3 = Genre(nom_genre="Reggae")
+        g4 = Genre(nom_genre="Classique")
 
+    db.session.add_all([g, g1, g2, g3, g4])
     db.session.commit()
 
 @app.cli.command()
@@ -194,3 +204,5 @@ def syncdb():
     db.session.add(res)
     db.session.add(g)
     db.session.commit()
+
+

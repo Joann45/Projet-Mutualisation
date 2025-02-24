@@ -1,4 +1,4 @@
-from src.app import db, login_manager
+from src.extensions import db, login_manager
 from flask_security import UserMixin
 import uuid
 
@@ -20,4 +20,18 @@ class Utilisateur(db.Model, UserMixin):
     les_notifs = db.relationship('Notification_Utilisateur', back_populates='utilisateur', lazy=True) 
     les_offres = db.relationship('Offre', back_populates='utilisateur', lazy=True)
     les_reponses_offre = db.relationship('Reponse', back_populates='utilisateur', lazy=True)
-    les_reseaux = db.relationship('Utilisateur_Reseau', back_populates='orga', lazy=True)
+    les_reseaux = db.relationship('Utilisateur_Reseau', back_populates='orga', lazy=True,  cascade="all, delete-orphan")
+    les_commentaires = db.relationship('Commentaire', back_populates='utilisateur', lazy=True, cascade="all, delete-orphan")
+    
+    def is_admin(self):
+        return self.role_id == 2
+
+
+    def get_last_id():
+        id = 0
+        users = Utilisateur.query.all()
+        for user in users:
+            if user.id_utilisateur > id:
+                id = user.id_utilisateur
+        return id
+
