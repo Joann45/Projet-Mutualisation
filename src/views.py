@@ -688,7 +688,7 @@ def genre():
             g.nom_genre = f.nom_genre.data
             db.session.add(g)
             db.session.commit()
-            return redirect(url_for('genre'))
+            return redirect(url_for('creation_offre'))
     return render_template('genre.html', form=f, genres=les_genres)
 
 @app.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
