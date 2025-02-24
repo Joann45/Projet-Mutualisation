@@ -95,12 +95,12 @@
           {{ form.description(size=50, class_="form-control") }} 
         </div>
 
-        <div>
-            <label class="m-3 color_white fs-5" for="etat">  {{ form.reseau.label }} </label>
-            {{ form.reseau }} 
+        <div class="color_white">
+          Reseau
+          {{ form_reseaux.reseaux() }}
         </div>
 
-                <div class="d-flex justify-content-center mt-3">
+        <div class="d-flex justify-content-center mt-3">
             <input class="btn btn-base fw-bolder" type="submit" name="enregistrer" id="enregister" value="Enregistrer">
         </div>
       </div>

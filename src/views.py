@@ -423,7 +423,14 @@ def creation_offre():
     """
     f = OffreForm()
     f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
-    f.reseau.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+
+    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur = current_user.id_utilisateur)]
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
+
     if f.validate_on_submit(): # and f.validate(): # ! A implémenter quand on affiche les erreurs dans le formulaire
         o = Offre()
         o.nom_offre = f.nom_offre.data
@@ -467,17 +474,18 @@ def creation_offre():
         g_o.id_offre = id_offre
         db.session.add(g_o)
         db.session.commit()
+
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
             
-        # for res in f.reseau.data(): # ! pour l'instant il n'y a qu'un reseau par offre. Si ça marche pas, remplacer f.reseau.data par list(f.reseau.data) ou [f.reseau.data]
-        r = Reseau.query.get(f.reseau.data)
-        
-        o_r = Offre_Reseau()
-        o_r.id_reseau = r.id_reseau
-        o_r.id_offre = id_offre
-        db.session.add(o_r)
-        db.session.commit()
+        for r in les_reseaux_elu:
+            o_r = Offre_Reseau()
+            o_r.id_reseau = r
+            o_r.id_offre = id_offre
+            db.session.add(o_r)
+            db.session.commit()
         return redirect(url_for('mes_offres'))
-    return render_template('creation-offre.html', form=f)
+    return render_template('creation-offre.html',reseaux=les_reseaux, form=f, form_reseaux=f_select_reseau)
 
 @app.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
