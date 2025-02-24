@@ -1,0 +1,86 @@
+{%extends 'base.html'%} {%block content%}
+<div id="resau_view" class="row">
+    <div class="col-sm">
+        <h1>Voir mes réseaux</h1>
+        <div>
+            <div>
+                <img src="{{ url_for('static', filename='img/humaaan1.svg') }}" alt="social" />
+            </div>
+
+            <div>
+                <form method="post" action="{{ url_for('mes_reseaux') }}">
+                <div class="input-group">
+                    {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
+                    <input
+                        class="btn btn-dark"
+                        type="submit"
+                        name="voir_membres_admin"
+                        id="voir_membres_admin"
+                        value="Voir les membres"
+                    />
+                </form>
+                {% if current_user.is_admin() %}
+
+                <input
+                    class="btn btn-dark popup-btn-open"
+                    type="button"
+                    name="creer_reseau"
+                    value="Créer un réseau"
+                    data-popup="creer_reseau"
+
+                />
+                <input
+                    class="btn btn-dark popup-btn-open"
+                    type="button"
+                    name="ajouter_membre"
+                    value="Ajouter un membre"
+                    data-popup="ajouter_membre"
+                />
+                <a href="{{ url_for('suppression_reseau', id_reseau=reseau.id_reseau) }}">
+                <input
+                    class="btn btn-dark"
+                    type="button"
+                    name="supprimer_reseau"
+                    id="supprimer_reseau"
+                    value="Supprimer un réseau"
+                />
+                </a>
+                {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <img src="{{ url_for('static', filename='img/humaaan2.svg') }}" alt="social" />
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">{% for offre in offres%} {%include 'offre.html'%} {% endfor %}</div>
+    <div class="col-sm">{% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}</div>
+</div>
+{% if current_user.is_admin() %}
+<div id="creer_reseau" class="popup">
+    <h1>Créer un réseau</h1>
+    <form method="post" action="{{url_for('mes_reseaux')}}">
+        <div>{{ add_form.hidden_tag() }} {{ add_form.nom_reseau.label }} {{ add_form.nom_reseau() }}</div>
+    </form>
+    <button class="btn btn-primary" type="submit">Créer</button>
+    <button class="btn btn-primary popup-btn-close" type="button" data-popup="creer_reseau">Fermer</button>
+</div>
+
+<div class="popup" id="ajouter_membre">
+<h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
+<div>
+    <form method="post" action="{{ url_for('ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
+        {{ add_user_form.hidden_tag() }}
+        <div class="form-group">
+            {{ add_user_form.utilisateur.label(class="form-label") }} {{ add_user_form.utilisateur(class="form-control") }} {% for error
+            in add_user_form.utilisateur.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+    <button class="btn btn-primary popup-btn-close" type="button" data-popup="ajouter_membre">Fermer</button>
+</div>
+</div>
+{% endif %} {% endblock %}

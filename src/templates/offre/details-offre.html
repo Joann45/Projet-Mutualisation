@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+{%extends 'base.html'%}
+{%block content%}
+<div class="d-flex flex-column align-items-center my-5">
+    <div class="d-flex flex-nowrap mb-3" style="width: 65%;">
+
+        <img style="width: 400px; max-width: 100%; height:400px"
+            src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}" alt="fetes">
+        <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
+
+            <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%;">
+                <div class="d-flex flex-nowrap justify-content-between align-items-center">
+                    <h1>{{ offre.nom_offre}}</h1>
+                    <p>fermeture de l'offre: {{offre.date_limite}}</p>
+                </div>
+                <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+            </div>
+
+            <div class="d-flex flex-column w-100">
+                <p>{{offre.description}}</p>
+                <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
+                <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
+
+                {% if verif == 1 %}
+                <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+                    <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
+                        name="repondre" id="repondre" value="Répondre">
+                </a>
+                {% elif verif == 2 %}
+                <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
+                    <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
+                        name="repondre" id="repondre" value="Modifier réponse">
+                </a>
+                {% elif verif == 3 %}
+                <a href="{{url_for('visualiser_reponses_offre', id_offre=offre.id_offre)}}">
+                    <input class="btn btn-base w-100 py-3 fw-bolder" style="font-size: 1.5em;" type="button"
+                        name="repondre" id="repondre" value="Visualiser les réponses">
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-end mb-3" style="width: 65%;">
+        <a class="text-dark fw-bolder" style="justify-self: end;" href="#documents">
+            Voir les documents associés à l'offre
+        </a>
+    </div>
+
+    <div class="mb-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
+        <div class="d-flex justify-content-between align-items-center" id="documents">
+            <h1>Documents</h1>
+
+            <a href="">
+                <img src="{{url_for('static', filename='img/plus.svg')}}" alt="plus">
+            </a>
+        </div>
+
+        {% for document in offre.les_documents %}
+        <a class="fw-bolder" style="color: grey;"
+            href="{{ url_for('static', filename='Documents/' ~ document.id_doc ~ '-' ~ offre.id_offre) }}"
+            download="test.png">
+            <img src="{{ url_for('static', filename='img/icon_download.svg') }}" alt="icon_download" />
+            {{ document.nom_doc }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="my-5 pt-2" style="width: 65%; border-top: grey solid 1px;">
+
+        <div class="d-flex justify-content-between align-items-center">
+            <h1>Commentaires</h1>
+            <a href="">
+                <img src="{{url_for('static', filename='img/moins.svg')}}" alt="moins">
+            </a>
+        </div>
+        <div class="d-flex flex-column my-2 py-3">
+            <form action=" {{ url_for('details_offre', id_offre=offre.id_offre)}}" method="POST">
+                {{ commentaireForm.hidden_tag() }}
+                {{ commentaireForm.texte_commentaire(size=50) }}
+                <button type="submit" class="btn btn-dark fw-bolder">Ajouter un commentaire</button>
+            </form>
+        </div>
+        <div class="w-100 h-30 d-inline-block overflow-auto">
+            {% for commentaire in offre.les_commentaires %}
+            <div class="d-flex flex-column my-2 border-bottom">
+                <p><strong>De {{ commentaire.utilisateur.prenom_utilisateur }} {{
+                        commentaire.utilisateur.nom_utilisateur }}, le
+                        {{ commentaire.date_commentaire.date() }}</p></strong>
+                <p>{{ commentaire.texte_commentaire }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
