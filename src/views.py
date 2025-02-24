@@ -515,7 +515,6 @@ def definir_etat(id_offre):
     """
 
     o = Offre.query.get(id_offre)
-    print(o)
     if o :
         if o.etat == "publiée" : 
             o.etat = "brouillon"
@@ -536,6 +535,7 @@ def mes_offres():
     """
     
 
+    #for r in get_reseaux_for_user(current_user):
 
     les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
@@ -568,6 +568,11 @@ def mes_offres():
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+    else:
+        
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
+        offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]]
+        les_offres = offres
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
 def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
@@ -616,6 +621,8 @@ def les_offres():
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+    else: 
+        les_offres = filtrage_des_offrres_par_reseux(les_reseaux, les_offres)
 
     
 
@@ -676,6 +683,8 @@ def mes_reponses():
 
     if les_reseaux_elu != []:
         les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
+    else:
+        les_reponses = filtrage_des_reponses_par_reseux(les_reseaux, les_reponses)
 
     return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
     
@@ -687,7 +696,6 @@ def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
     rep_voulu = set()
     for rep in les_reponses:
         for reseux_off in rep.offre.les_reseaux:
-            print(reseux_off.id_reseau)
             if reseux_off.id_reseau in les_reseaux_elu:
                 rep_voulu.add(rep)
     return list(rep_voulu)
