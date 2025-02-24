@@ -14,7 +14,6 @@ from flask import render_template
 import uuid
 import src.config as config
 
-
 login_manager = LoginManager()
 
 def create_app(config_object='src.config'):

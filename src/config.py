@@ -18,3 +18,4 @@ def init_app(app):
     app.config['SECURITY_CONFIRMABLE'] = False
     app.config['SECURITY_CHANGEABLE'] = False
     app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+    app.config['SECURITY_LOGIN_URL'] = '/auth/login'

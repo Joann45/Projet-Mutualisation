@@ -24,11 +24,11 @@ from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
 from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité
 from werkzeug.utils import secure_filename
-from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import os
 from functools import wraps
 from flask import abort
+from src.extensions import db, login_manager
 
 # Définir un Blueprint pour les vues
 views_bp = Blueprint('views', __name__)

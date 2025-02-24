@@ -9,6 +9,7 @@ from src.models.Reseau import Reseau
 from src.models.Role import Role, roles
 from src.extensions import db, login_manager
 
+
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
