@@ -14,10 +14,12 @@
         
         <div class =" mx-auto d-flex flex-column m-4 w-50">
 
-        
-          <div>
-              <label class="m-3 color_white fs-5" for="genre">{{ form.genre.label }}</label>
-              {{ form.genre(size=2, class_="input-group border rounded-3 back-white") }}
+          <div class="d-flex flex-column">
+            <label class="m-3 color_white fs-5" for="genre">{{ form.genre.label }}</label>
+            <div class="d-flex flex-nowrap justify-content-evenly">
+                {{ form.genre(class_="input-group border rounded-3 back-white") }}
+                <a href="{{url_for('genre')}}"><input type="button" value="Ajouter un genre"></a>
+            </div>
           </div>
 
         </div>
@@ -40,9 +42,7 @@
                       {{ form.date_deb(size=50, class_ ="color-white form-control rounded-3 mb-3") }}
                     </div>
                     <div >
-
-                  
-                      <label class="color_white fs-5" for="date_fin" {{ form.date_fin.label}}> </label>
+                      <label class="color_white fs-5" for="date_fin" {{ form.date_fin.label}}></label>
                       {{ form.date_fin(size=50, class_ ="form-control rounded-3") }}
                     </div>
                 </div>

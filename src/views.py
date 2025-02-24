@@ -506,8 +506,12 @@ def definir_etat(id_offre):
     """
 
     o = Offre.query.get(id_offre)
+    print(o)
     if o :
-        o.etat = "publiée"
+        if o.etat == "publiée" : 
+            o.etat = "brouillon"
+        else : 
+            o.etat = "publiée"
         db.session.commit()
     return redirect(url_for('mes_offres'))
 
@@ -522,6 +526,7 @@ def mes_offres():
         mes-offres.html: Une page des offres de l'utilisateur
     """
     
+
 
     les_reseaux = Reseau.query.all()
     f_select_reseau = SelectRechercheOffreForm()
@@ -590,14 +595,14 @@ def les_offres():
     
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
         else:
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin.desc()).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin.desc()).all()
 
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
     else:
-        les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+        les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
 
 
     if les_reseaux_elu != []:
@@ -693,7 +698,7 @@ def genre():
             g.nom_genre = f.nom_genre.data
             db.session.add(g)
             db.session.commit()
-            return redirect(url_for('genre'))
+            return redirect(url_for('creation_offre'))
     return render_template('genre.html', form=f, genres=les_genres)
 
 @app.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
