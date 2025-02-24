@@ -523,7 +523,7 @@ def mes_offres():
     
 
 
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -571,7 +571,7 @@ def les_offres():
     Returns:
         les-offres.html: Une page des offres
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -632,7 +632,7 @@ def mes_reponses():
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
