@@ -14,7 +14,6 @@ class OffreForm(FlaskForm):
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
     img = FileField("Image de l'offre")
     genre = SelectField('Genre', coerce=int)
-    reseau = SelectField('Réseaux', coerce=int)
     etat = StringField('Etat')
     nom_loc = StringField('Localisation', validators=[DataRequired()])
     date_deb = DateField('Date de début', validators=[DataRequired()])
