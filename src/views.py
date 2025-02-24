@@ -150,8 +150,11 @@ def home():
     Returns:
         home.html: Une page d'accueil
     """
-    les_offres = Offre.query.all()[:3] #! A modifier plus tard pour trier par les plus populaires
-    return render_template('home.html', offres=les_offres)
+    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
+    les_offres = [] #! A modifier plus tard pour trier par les plus populaires
+    for res in les_reseaux:
+        les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
+    return render_template('home.html', offres=les_offres[:3])
 
 
 
@@ -430,7 +433,7 @@ def creation_offre():
 
     id_reseaux_elu =  f_select_reseau.reseaux.data
     les_reseaux_elu = []
-
+    
     if f.validate_on_submit(): # and f.validate(): # ! A implémenter quand on affiche les erreurs dans le formulaire
         o = Offre()
         o.nom_offre = f.nom_offre.data
@@ -467,6 +470,9 @@ def creation_offre():
             db.session.commit()
             file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
             file.save(file_path)
+            o.docs = True
+        else:
+            o.docs = False
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
         g_o = Genre_Offre()
@@ -509,8 +515,12 @@ def definir_etat(id_offre):
     """
 
     o = Offre.query.get(id_offre)
+    print(o)
     if o :
-        o.etat = "publiée"
+        if o.etat == "publiée" : 
+            o.etat = "brouillon"
+        else : 
+            o.etat = "publiée"
         db.session.commit()
     return redirect(url_for('mes_offres'))
 
@@ -526,7 +536,8 @@ def mes_offres():
     """
     
 
-    les_reseaux = Reseau.query.all()
+
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -574,7 +585,7 @@ def les_offres():
     Returns:
         les-offres.html: Une page des offres
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -593,14 +604,14 @@ def les_offres():
     
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
         else:
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin.desc()).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin.desc()).all()
 
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
     else:
-        les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+        les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
 
 
     if les_reseaux_elu != []:
@@ -635,7 +646,7 @@ def mes_reponses():
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
