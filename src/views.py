@@ -423,7 +423,9 @@ def creation_offre():
     """
     f = OffreForm()
     f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
-    f.reseau.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+    reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
+    print(reseaux)
+    f.reseau.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in reseaux]
     if f.validate_on_submit(): # and f.validate(): # ! A implémenter quand on affiche les erreurs dans le formulaire
         o = Offre()
         o.nom_offre = f.nom_offre.data
@@ -460,6 +462,9 @@ def creation_offre():
             db.session.commit()
             file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
             file.save(file_path)
+            o.docs = True
+        else:
+            o.docs = False
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
         g_o = Genre_Offre()

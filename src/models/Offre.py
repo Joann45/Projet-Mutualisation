@@ -18,6 +18,7 @@ class Offre(db.Model):
     date_deb = db.Column(db.Date)
     date_fin = db.Column(db.Date)
     img = db.Column(db.Text)
+    docs = db.Column(db.Boolean)
 
     id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'))
 
