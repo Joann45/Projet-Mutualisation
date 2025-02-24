@@ -154,7 +154,7 @@ def home():
     les_offres = [] #! A modifier plus tard pour trier par les plus populaires
     for res in les_reseaux:
         les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
-    return render_template('home.html', offres=les_offres)
+    return render_template('home.html', offres=les_offres[:3])
 
 
 
