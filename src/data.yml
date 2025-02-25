@@ -78,6 +78,15 @@
   id_reseau: 5
 
 - type: utilisateur
+  id_utilisateur: 0
+  nom_utilisateur: "a"
+  prenom_utilisateur: "a"
+  mdp_utilisateur: "a"
+  email_utilisateur: "a"
+  img_utilisateur: "a"
+  role_id: 1
+
+- type: utilisateur
   id_utilisateur: 2
   nom_utilisateur: "Utilisateur_2"
   prenom_utilisateur: "Prenom_2"
