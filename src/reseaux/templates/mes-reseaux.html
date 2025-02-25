@@ -1,0 +1,48 @@
+{%extends 'base.html'%} {%block content%}
+<div class="container py-5">
+    <h1 class="text-center fw-bold my-4">Voir mes réseaux</h1>
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center my-3">
+            <img class="img-fluid" src="{{ url_for('static', filename='../static/img/humaaan1.svg')}}" alt="social" />
+        </div>
+        <div class="col-md-4 my-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form action="/home/" method="post" class="mb-4">
+                        {{ select_form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ select_form.reseaux.label }} {{ select_form.reseaux(class="form-select") }}
+                            <input
+                                class="btn btn-primary fw-bold"
+                                type="button"
+                                name="voir_membres"
+                                id="voir_membres"
+                                value="Voir les membres"
+                                type="submit"
+                            />
+                        </div>
+                        <div class="mb-3">
+                            {% for choix in select_form.reseaux %} {{ choix(onchange="this.form.submit()",
+                            class="form-check-input me-2") }} {% endfor %}
+                        </div>
+                    </form>
+                    <div class="d-grid gap-3">
+                        <input
+                            class="btn btn-primary fw-bold"
+                            type="button"
+                            name="creer_un_reseau"
+                            id="creer_reseau"
+                            value="Créer un réseau"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-center my-3">
+            <img class="img-fluid" src="{{ url_for('static', filename='../static/img/humaaan2.svg') }}" alt="social" />
+        </div>
+    </div>
+    <div id="myModal" class="modal fade">{% include 'membres-reseaux.html' %}</div>
+</div>
+<!-- Pop up en AJAX à implémenter -->
+{% endblock %}

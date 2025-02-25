@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Document
 class Document(db.Model):

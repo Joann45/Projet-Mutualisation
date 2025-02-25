@@ -2,40 +2,58 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap5
-
-import os.path
-
-
-app = Flask(__name__)
-
-def mkpath(p):
-    return os.path.normpath(
-        os.path.join(
-            os.path.dirname(__file__),
-            p))
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    'sqlite:///' + mkpath('../testdb.db'))
-app.url_map.strict_slashes = False
-app.config['SECRET_KEY'] = 'e9767196-4490-415a-8d42-1b16d2ad2a24'
-app.config['SECURITY_DEFAULT_REMEMBER_ME'] = False
-app.config['SECURITY_REGISTERABLE'] = False
-app.config['SECURITY_RECOVERABLE'] = False
-app.config['SECURITY_TRACKABLE'] = False
-app.config['SECURITY_CONFIRMABLE'] = False
-app.config['SECURITY_CHANGEABLE'] = False
-db = SQLAlchemy()
-db.init_app(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login"
-
-app.config['BOOTSTRAP_SERVE_LOCAL'] = True
-bootstrap = Bootstrap5(app)
-
+from src.extensions import db, login_manager
+from src.auth.auth import auth_bp
+from src.reseaux.reseaux import reseaux_bp
+from src.reponse_offre.reponse_offre import reponse_bp
+from src.views import views_bp
+from src.offre.offre import offre_bp
+from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.models.Utilisateur import Utilisateur
 from src.models.Role import Role
+from flask import render_template
+import uuid
+import src.config as config
 
+login_manager = LoginManager()
+
+def create_app(config_object='src.config'):
+    app = Flask(__name__)
+    
+    config.init_app(app)
+    
+    # Initialiser les extensions
+    db.init_app(app)
+    login_manager.init_app(app)
+    Bootstrap5(app)
+    
+    # Enregistrer les Blueprints
+    app.register_blueprint(reseaux_bp)
+    app.register_blueprint(reponse_bp)
+    app.register_blueprint(views_bp)
+    app.register_blueprint(offre_bp)
+
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    
+    user_datastore = SQLAlchemySessionUserDatastore(db.session, Utilisateur, Role)
+    security = Security(app, user_datastore)
+
+    login_manager.login_view = 'auth.login'
+    login_manager.login_url = "/auth/login"
+
+    return app
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Utilisateur.query.get(int(user_id))
+    if not user_id:
+        return None
+    try:
+        if isinstance(user_id, uuid.UUID):
+            user_id = str(user_id)
+        return Utilisateur.query.filter_by(fs_uniquifier=user_id).first()
+    except Exception as e:
+        print(f"Erreur: {e}")
+        return None
+
+
+

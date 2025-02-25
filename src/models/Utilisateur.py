@@ -1,4 +1,4 @@
-from src.app import db, login_manager
+from src.extensions import db, login_manager
 from flask_security import UserMixin
 import uuid
 
