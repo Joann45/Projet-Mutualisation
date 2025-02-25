@@ -122,6 +122,15 @@ def rechercher():
         _type_: _description_
     """
 
+@views_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+def visualiser_offre():
+    """Renvoie la page de visualisation des réponses aux offres
+
+    Returns:
+        visualiser-reponses-offres.html: Une page de visualisation des réponses aux offres
+    """
+    
+    return render_template('visualiser-reponses-offres.html')
 
 @views_bp.route('/home/mes-offres/publication/<int:id_offre>', methods=['GET','POST'])
 @login_required
