@@ -22,19 +22,14 @@
                             
                             <a href="{{url_for('views.definir_etat', id_offre=offre.id_offre)}}">
                                  
-                                <button id = "btnPubli" class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" >Publier</button>
+                                
                                 {% if offre.etat=="publiée"  %}
-                                <script defer>
+                                    <button id = "btnPubli" class="btn btn-green rounded-4 px-4 fs-5" >Publiée</button>
                                
-                                    function changerTexte() {
-                                        const button = document.getElementById("btnPubli");
-                                        console.log((document.getElementsByName("offre")) );
-                                        
-                                        button.textContent = 'Publiée';
-                                        button.className= 'btn btn-green rounded-4 px-4 fs-5';
-                                    }
-                                    changerTexte()
-                                </script>
+                                
+                                {% else %}
+                                    <button id = "btnPubli" class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" >Publier</button>
+                                
                                 {% endif %}
 
                             </a>

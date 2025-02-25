@@ -48,23 +48,7 @@ def visualiser_reponses_offre(id_offre):
         verif = False
     return render_template('visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)  
 
-def filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses):
-    rep_voulu = set()
-    for rep in les_reponses:
-        for reseux_off in rep.offre.les_reseaux:
-            print(reseux_off.id_reseau)
-            if reseux_off.id_reseau in les_reseaux_elu:
-                rep_voulu.add(rep)
-    return list(rep_voulu)
 
-def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
-    rep_voulu = set()
-    for rep in les_reponses:
-        for reseux_off in rep.offre.les_reseaux:
-            print(reseux_off.id_reseau)
-            if reseux_off.id_reseau in les_reseaux_elu:
-                rep_voulu.add(rep)
-    return list(rep_voulu)
 
 def get_reseaux_for_user(user):
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
@@ -96,21 +80,41 @@ def mes_reponses():
     les_reseaux_elu = []
     
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
-        if proxi_elu == "Plus Proche": 
-                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-        else:
-                les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+        
 
-        for r in id_reseaux_elu:
-            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
-    else:
-        les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+        for id_r in id_reseaux_elu:
+            les_reseaux_elu.append(Reseau.query.get(id_r))
+    
 
 
     if les_reseaux_elu != []:
-        les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
+        offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]]
+        les_reponses = []
+        
+        
+        if proxi_elu == "Plus Proche":
+            les_rep = [Reponse.query.filter_by(id_offre=offre.id_offre, id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin).all() for offre in offres]
+            for offre in les_rep:
+                les_reponses += offre 
+                
+        else:
+            les_rep = [Reponse.query.filter_by(id_offre=offre.id_offre, id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin.desc()).all() for offre in offres]
+            for offre in les_rep:
+                les_reponses += offre 
+                
+
+        
+        
+
+    else: 
+        if proxi_elu == "Plus Proche":
+            les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin.desc()).all()
+        else: 
+            les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin).all()
 
     return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
+
     
 
 
