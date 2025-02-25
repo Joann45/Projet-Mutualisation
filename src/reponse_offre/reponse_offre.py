@@ -72,6 +72,23 @@ def get_reseaux_for_user(user):
         return Reseau.query.all()
     return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
 
+@reponse_bp.route('/home/mes-offres/mes-reponses/suppression-reponse/<int:id_utilisateur>/<int:id_offre>', methods=['GET', 'POST'])
+def suppression_reponse(id_utilisateur, id_offre):
+    """Supprime une réponse a une offre
+
+    Args:
+        id_reponse (int): L'identifiant de la réponse à supprimer
+
+    Returns:
+        mes-reponses.html: Une page des réponses de l'utilisateur
+    """
+    r = Reponse.query.filter_by(id_utilisateur=id_utilisateur,id_offre=id_offre).first()
+    if r:
+        Reponse.query.filter_by(id_utilisateur=id_utilisateur,id_offre=id_offre).delete()
+        db.session.delete(r)
+        db.session.commit()
+    return redirect(url_for('reponses.mes_reponses'))
+
 @reponse_bp.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
