@@ -204,20 +204,26 @@ def mes_offres():
 
     if les_reseaux_elu != []: #Si des reseux était choixi par utilisateur
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
-        offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]] 
-        les_offres = offres  
+        offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
+        les_offres = offres
+        print(les_offres)
 
     else: #Si aucun choit était fait 
         
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
-        offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]]
+        offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
 
         les_offres = offres #intersection des offres de utlisateur et les offres présante dans ces reseau
+
+    liste_offres = les_offres
+    les_offres = []
+    for offre in liste_offres:
+        les_offres+=offre
 
     if proxi_elu == "Plus Proche":
         les_offres.sort(key=lambda o:o.date_limite)
     else: 
-        les_offres.sort(reverse=True,key=lambda o:o.date_limite)   
+        les_offres.sort(reverse=True,key=lambda o:o.date_limite)
 
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
