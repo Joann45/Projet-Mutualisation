@@ -146,8 +146,6 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
 
 
-from flask import flash
-
 def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
     try:
         msg = Message(subject,
@@ -159,10 +157,8 @@ def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
         print("✅ E-mail envoyé avec succès !")
     except socket.timeout:
         print("❌ Timeout dépassé pour l'envoi de l'email")
-        flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé dans le délai imparti.", "warning")
     except Exception as e:
         print(f"❌ Erreur lors de l'envoi de l'e-mail: {e}")
-        flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé.", "warning")
 
 @reseaux_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
@@ -186,7 +182,9 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_id = form.utilisateur.data
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
+        
         notification = Notification(type_operation="ajout", date_notification=datetime.now(),expediteur=current_user.nom_utilisateur)
+        
         db.session.add(notification)
         db.session.flush()  # Permet d'attribuer un id à notification
 
@@ -194,6 +192,7 @@ def ajout_utilisateur_reseau(id_reseau):
             id_utilisateur=utilisateur_id,
             id_notif=notification.id_notif  # Cet id n'est plus None après le flush
         )
+
         db.session.add(notification_utilisateur)
         db.session.commit()
         try:
@@ -203,7 +202,6 @@ def ajout_utilisateur_reseau(id_reseau):
            
         except Exception as e:
             print(f"❌ Erreur lors de l'envoi de l'e-mail: {e}")
-            flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé.", "warning")
 
         return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
 
