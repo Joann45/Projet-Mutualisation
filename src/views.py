@@ -177,24 +177,24 @@ from flask_mail import Message
 
 @views_bp.route('/home/boite-reception')
 def boite_reception():
-    """Renvoie la page de la boite de réception"""
-
-    try:
-        recipient = "stageflow45@gmail.com"
-
-        msg = Message("Sujet de l'e-mail",
-              sender=current_app.config['MAIL_DEFAULT_SENDER'],  # ✅ Ajout du sender
-              recipients=[recipient]) 
-
-                     
-        msg.body = "Ceci est un e-mail envoyé depuis Flask-Mail !"
-        msg.html = "<b>Ceci est un e-mail envoyé depuis Flask-Mail !</b>"
-        
-        mail.send(msg)
-        
-        print("E-mail envoyé avec succès !")
-    except Exception as e:
-        print(f"Erreur lors de l'envoi de l'e-mail: {str(e)}")
-        traceback.print_exc()  # Pour avoir plus de détails sur l'erreur
-    
+#    """Renvoie la page de la boite de réception"""
+#
+#    try:
+#        recipient = "stageflow45@gmail.com"
+#
+#        msg = Message("Sujet de l'e-mail",
+#              sender=current_app.config['MAIL_DEFAULT_SENDER'],  
+#              recipients=[recipient]) 
+#
+#                     
+#        msg.body = "Ceci est un e-mail envoyé depuis Flask-Mail !"
+#        msg.html = "<b>Ceci est un e-mail envoyé depuis Flask-Mail !</b>"
+#        
+#        mail.send(msg)
+#        
+#        print("E-mail envoyé avec succès !")
+#    except Exception as e:
+#        print(f"Erreur lors de l'envoi de l'e-mail: {str(e)}")
+#        traceback.print_exc() 
+#    
     return render_template('boite-reception.html')

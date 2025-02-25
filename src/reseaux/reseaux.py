@@ -29,6 +29,11 @@ from werkzeug.datastructures import FileStorage
 import os
 from functools import wraps
 from flask import abort
+from flask_mail import Message, Mail
+from src.config import mail
+from flask import render_template, current_app
+from flask_mail import Message
+
 
 reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
@@ -157,5 +162,18 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
         db.session.commit()
+        mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
+        msg = Message("Sujet de l'e-mail",
+              sender=current_app.config['MAIL_DEFAULT_SENDER'],
+              recipients= [mail_dest_utilisateur]) 
+
+                     
+        msg.body = "2Ceci est un e-mail envoyé depuis Flask-Mail !"
+        msg.html = "<b>Vous avez été ajouté à un réseau </b>"
+        
+        mail.send(msg)
+        
+        print("E-mail envoyé avec succès !")
+
         return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
     return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)
