@@ -135,7 +135,7 @@ def repondre_offre(id_offre):
             reponse.date_fin = f.date_fin.data
             reponse.capacite_salle = f.cap_salle.data
             db.session.commit()
-            return redirect(url_for('mes_reponses'))
+            return redirect(url_for('reponses.mes_reponses'))
         f.autre_rep.data = reponse.desc_rep
         f.cotisation_apportee.data = reponse.budget
         f.date_debut.data = reponse.date_debut
@@ -153,7 +153,7 @@ def repondre_offre(id_offre):
             r.id_offre = o.id_offre
             db.session.add(r)
             db.session.commit()
-            return redirect(url_for('mes_reponses'))
+            return redirect(url_for('reponses.mes_reponses'))
         f.cotisation_apportee.data = o.cotisation_min
         f.cap_salle.data = o.capacite_min
     return render_template('repondre-offre.html', offre=o, form=f)

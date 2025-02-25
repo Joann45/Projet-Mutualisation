@@ -175,7 +175,7 @@ def mes_offres():
         mes-offres.html: Une page des offres de l'utilisateur
     """
     
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 

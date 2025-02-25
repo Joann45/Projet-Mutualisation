@@ -9,7 +9,7 @@ class Offre(db.Model):
     nom_offre = db.Column(db.Text)
     description = db.Column(db.Text)
     date_limite = db.Column(db.Date)
-    budget = db.Column(db.Numeric)
+    budget = db.Column(db.Float)
     cotisation_min = db.Column(db.Float)
     capacite_min = db.Column(db.Integer)
     capacite_max = db.Column(db.Integer)

@@ -156,7 +156,7 @@ def genre():
             db.session.add(g)
             db.session.commit()
             return redirect(url_for('genre'))
-    return render_template('offre/genre.html', form=f, genres=les_genres)
+    return render_template('genre.html', form=f, genres=les_genres)
 
 @views_bp.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
 def suppression_genre(id_genre):
@@ -172,7 +172,7 @@ def suppression_genre(id_genre):
     if g:
         db.session.delete(g)
         db.session.commit()
-    return redirect(url_for('genre'))
+    return redirect(url_for('views.genre'))
 
 
 @views_bp.route('/home/boite-reception')
