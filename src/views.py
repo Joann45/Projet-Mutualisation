@@ -507,7 +507,7 @@ def visualiser_offre():
 @login_required
 def definir_etat(id_offre):
     """
-    Définit l'état d'un objet Offre à l'état spécifié.
+    Change l'état d'un objet Offre à l'état spécifié.
     Args:
         id_offre (int): L'identifiant de l'offre à mettre à jour.
     Returns:
@@ -554,10 +554,7 @@ def mes_offres():
 
    
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
-        if proxi_elu == "Plus Proche":  #Si date plus proche 
-                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin.desc()).all()
-        else: #Si date moins proche
-                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+        
 
         for id_r in id_reseaux_elu:
             les_reseaux_elu.append(Reseau.query.get(id_r))
@@ -574,7 +571,12 @@ def mes_offres():
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
         offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]]
 
-        les_offres = list(set(les_offres) & set(offres)) #intersection des offres de utlisateur et les offres présante dans ces reseau
+        les_offres = offres #intersection des offres de utlisateur et les offres présante dans ces reseau
+
+    if proxi_elu == "Plus Proche":
+        les_offres.sort(key=lambda o:o.date_limite)
+    else: 
+        les_offres.sort(reverse=True,key=lambda o:o.date_limite)   
 
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
@@ -606,11 +608,6 @@ def les_offres():
     
         
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
-        if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin.desc()).all()
-        else:
-                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
-
         for id_r in id_reseaux_elu:
             print(Reseau.query.get(id_r))
             les_reseaux_elu.append(Reseau.query.get(id_r))
@@ -621,19 +618,24 @@ def les_offres():
     if les_reseaux_elu != []:
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau,).all() for reseau in les_reseaux_elu]
         offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]] 
-        les_offres = list(set(les_offres) & set(offres))
+        les_offres = offres
     else: 
         
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
             
         if len(offre_reseau) != 0:
             offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]] 
-            les_offres = list(set(les_offres) & set(offres)) #intersection des offres publiée et la liste des offres présante dans les reseaux de l'utilisateur current   
-
-
+            les_offres = offres #intersection des offres publiée et la liste des offres présante dans les reseaux de l'utilisateur current   
     
+    if proxi_elu == "Plus Proche":
+        les_offres.sort(key=lambda o:o.date_limite)
+    else: 
+        les_offres.sort(reverse=True,key=lambda o:o.date_limite)
+
 
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+
+
 
 @app.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_reponses_offre(id_offre):
@@ -708,8 +710,7 @@ def mes_reponses():
         if proxi_elu == "Plus Proche":
             les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin.desc()).all()
         else: 
-            les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin.desc()).all()
-    
+            les_reponses = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Reponse.date_fin).all()
 
     return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
     
