@@ -24,6 +24,7 @@
                 <p>{{offre.description}}</p>
                 <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
                 <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
+                <p class="fw-bolder">Cotisation actuelle: {{offre.cotisation}} €/{{offre.budget}} €</p>
 
                 {% if verif == 1 %}
                 <a href="{{url_for('repondre_offre', id_offre=offre.id_offre)}}">
