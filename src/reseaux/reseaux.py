@@ -6,6 +6,7 @@ from flask import render_template, redirect, url_for, request, send_from_directo
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm, CommentaireForm
 from src.forms.GenreForm import GenreForm
+from src.models import Notification, Notification_Utilisateur
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role
@@ -161,6 +162,8 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_id = form.utilisateur.data
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
+        notification = Notification(type_operation="Ajout d'un utilisateur à un réseau", date_notification=datetime.now())
+        db.session.add(notification)
         db.session.commit()
         mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
         msg = Message("Sujet de l'e-mail",
