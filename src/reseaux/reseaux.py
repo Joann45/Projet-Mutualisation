@@ -157,8 +157,6 @@ def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
         msg.html = html
         mail.send(msg)
         print("✅ E-mail envoyé avec succès !")
-
-
     except socket.timeout:
         print("❌ Timeout dépassé pour l'envoi de l'email")
         flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé dans le délai imparti.", "warning")
@@ -188,10 +186,16 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_id = form.utilisateur.data
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
-        notification = Notification(type_operation="Ajout d'un utilisateur à un réseau", date_notification=datetime.now())
+        notification = Notification(type_operation="ajout", date_notification=datetime.now(),expediteur=current_user.nom_utilisateur)
         db.session.add(notification)
-        db.session.commit()
+        db.session.flush()  # Permet d'attribuer un id à notification
 
+        notification_utilisateur = Notification_Utilisateur(
+            id_utilisateur=utilisateur_id,
+            id_notif=notification.id_notif  # Cet id n'est plus None après le flush
+        )
+        db.session.add(notification_utilisateur)
+        db.session.commit()
         try:
             mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
             send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté à un réseau.", "<b>Vous avez été ajouté à un réseau.</b>")

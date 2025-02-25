@@ -1,3 +1,4 @@
+from src.models import Notification, Notification_Utilisateur
 from .app import db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
@@ -169,32 +170,9 @@ def suppression_genre(id_genre):
         db.session.delete(g)
         db.session.commit()
 
-
-import traceback
-
-from flask import render_template, current_app
-from flask_mail import Message
-
 @views_bp.route('/home/boite-reception')
 def boite_reception():
-#    """Renvoie la page de la boite de réception"""
-#
-#    try:
-#        recipient = "stageflow45@gmail.com"
-#
-#        msg = Message("Sujet de l'e-mail",
-#              sender=current_app.config['MAIL_DEFAULT_SENDER'],  
-#              recipients=[recipient]) 
-#
-#                     
-#        msg.body = "Ceci est un e-mail envoyé depuis Flask-Mail !"
-#        msg.html = "<b>Ceci est un e-mail envoyé depuis Flask-Mail !</b>"
-#        
-#        mail.send(msg)
-#        
-#        print("E-mail envoyé avec succès !")
-#    except Exception as e:
-#        print(f"Erreur lors de l'envoi de l'e-mail: {str(e)}")
-#        traceback.print_exc() 
-#    
-    return render_template('boite-reception.html')
+    """Renvoie la page de la boite de réception"""
+    les_notifs_utilisateurs = Notification_Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    les_notifs = Notification.query.filter(Notification.id_notif.in_([notif.id_notif for notif in les_notifs_utilisateurs])).all()
+    return render_template('boite-reception.html', les_notifs = les_notifs)
