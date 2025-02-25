@@ -34,12 +34,12 @@ def init_app(app):
 
     # Configuration du serveur SMTP
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465  # Pour SSL (recommandé) OU 587 pour TLS
-    app.config['MAIL_USE_TLS'] = False  # Désactiver TLS si SSL est utilisé
-    app.config['MAIL_USE_SSL'] = True   # Activer SSL
+    app.config['MAIL_PORT'] = 465 
+    app.config['MAIL_USE_TLS'] = False  
+    app.config['MAIL_USE_SSL'] = True 
 
-    app.config['MAIL_USERNAME'] = 'stageflow45@gmail.com'  # Adresse email
-    app.config['MAIL_PASSWORD'] = 'cpeo uxwo lajr wwqd'  # Mot de passe (Note: Pour Gmail vous aurez besoin d'un mot de passe d'application)
+    app.config['MAIL_USERNAME'] = 'stageflow45@gmail.com'  
+    app.config['MAIL_PASSWORD'] = 'cpeo uxwo lajr wwqd' 
     app.config['MAIL_DEFAULT_SENDER'] = 'stageflow45@gmail.com'  # Expéditeur par défaut
     mail.init_app(app)
 
