@@ -202,7 +202,7 @@ def creation_offre(id_offre=None):
                 o_r.id_offre = id_offre
                 db.session.add(o_r)
                 db.session.commit()
-            return redirect(url_for('mes_offres'))
+            return redirect(url_for('offre.mes_offres'))
         else:
             o.nom_offre = f.nom_offre.data
             o.description = f.description.data
@@ -255,7 +255,7 @@ def creation_offre(id_offre=None):
                 o_r.id_offre = id_offre
                 db.session.commit()
             print("azeazeaze")
-            return redirect(url_for('mes_offres'))
+            return redirect(url_for('offre.mes_offres'))
     if o:
         f.nom_offre.data = o.nom_offre
         f.description.data = o.description
