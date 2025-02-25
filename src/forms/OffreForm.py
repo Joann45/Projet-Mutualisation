@@ -6,7 +6,7 @@ from datetime import date
 class OffreForm(FlaskForm):
     id = HiddenField('id')
     nom_offre = StringField("Nom de l'offre", validators=[DataRequired()])
-    description = TextAreaField('Description', validators=[DataRequired()])
+    description = TextAreaField('Description')
     date_limite = DateField("Date limite", validators=[DataRequired()])
     budget = FloatField("Budget Estimatif", validators=[DataRequired()])
     cotisation_min = FloatField("Cotisation minimal", validators=[DataRequired()])
@@ -14,13 +14,12 @@ class OffreForm(FlaskForm):
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
     img = FileField("Image de l'offre")
     genre = SelectField('Genre', coerce=int)
-    reseau = SelectField('Réseaux', coerce=int)
     etat = StringField('Etat')
     nom_loc = StringField('Localisation', validators=[DataRequired()])
     date_deb = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])
-    liens = TextAreaField('Lien vers des ressources promotionnelles', validators=[DataRequired()])
-    documents = FileField("Ajouter les documents liés à l'offre", validators=[DataRequired()])
+    liens = TextAreaField('Lien vers des ressources promotionnelles')
+    documents = FileField("Ajouter les documents liés à l'offre")
 
     # def validate(self, extra_validators=None):
     #     if not FlaskForm.validate(self, extra_validators=extra_validators):

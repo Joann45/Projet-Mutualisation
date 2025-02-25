@@ -77,8 +77,6 @@ def suppression_offre(id_offre):
     return redirect(url_for('offre.mes_offres'))
 
 
-
- 
 @offre_bp.route('/home/creation-offre', methods=['GET','POST'])
 @login_required
 def creation_offre():
@@ -89,7 +87,13 @@ def creation_offre():
     """
     f = OffreForm()
     f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
-    f.reseau.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in Reseau.query.all()]
+
+    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur = current_user.id_utilisateur)]
+    f_select_reseau = SelectRechercheOffreForm()
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+
+    id_reseaux_elu =  f_select_reseau.reseaux.data
+    les_reseaux_elu = []
     if f.validate_on_submit(): # and f.validate(): # ! A implémenter quand on affiche les erreurs dans le formulaire
         o = Offre()
         o.nom_offre = f.nom_offre.data
@@ -136,16 +140,17 @@ def creation_offre():
         db.session.add(g_o)
         db.session.commit()
             
-        # for res in f.reseau.data(): # ! pour l'instant il n'y a qu'un reseau par offre. Si ça marche pas, remplacer f.reseau.data par list(f.reseau.data) ou [f.reseau.data]
-        r = Reseau.query.get(f.reseau.data)
-        
-        o_r = Offre_Reseau()
-        o_r.id_reseau = r.id_reseau
-        o_r.id_offre = id_offre
-        db.session.add(o_r)
-        db.session.commit()
+        for r in id_reseaux_elu:
+            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+            
+        for r in les_reseaux_elu:
+            o_r = Offre_Reseau()
+            o_r.id_reseau = r
+            o_r.id_offre = id_offre
+            db.session.add(o_r)
+            db.session.commit()
         return redirect(url_for('offre.mes_offres'))
-    return render_template('creation-offre.html', form=f)
+    return render_template('creation-offre.html',reseaux=les_reseaux, form=f, form_reseaux=f_select_reseau)
 
 @offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
@@ -170,8 +175,7 @@ def mes_offres():
         mes-offres.html: Une page des offres de l'utilisateur
     """
     
-
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -212,6 +216,12 @@ def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
                 offre_voulu.add(offre)
     return list(offre_voulu)
 
+def get_reseaux_for_user(user):
+    """Récupère les réseaux en fonction du rôle de l'utilisateur."""
+    if user.is_admin():
+        return Reseau.query.all()
+    return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
+
 @offre_bp.route('/home/les-offres', methods=["POST","GET"])
 def les_offres():
     """Renvoie la page des offres
@@ -219,7 +229,7 @@ def les_offres():
     Returns:
         les-offres.html: Une page des offres
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -238,19 +248,16 @@ def les_offres():
     
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
         else:
-                les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin.desc()).all()
+                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin.desc()).all()
 
         for r in id_reseaux_elu:
             les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
     else:
-        les_offres = Offre.query.filter_by(etat="publiee").order_by(Offre.date_fin).all()
+        les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
 
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
-
-    
-
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)

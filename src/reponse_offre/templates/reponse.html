@@ -1,14 +1,23 @@
 <div class="my-5 w-75">
     <a
         class="d-flex flex-nowrap text-decoration-none w-100"
-        href="{{url_for('reponse_offre.details_offre', id_offre=reponse.offre.id_offre)}}"
+        href="{{url_for('offre.details_offre', id_offre=reponse.offre.id_offre)}}"
     >
+        {% if reponse.offre.img == "0" %}
         <img
             class="rounded-start-4"
-            src="{{url_for('static', filename='../../static/img/offre/' ~ reponse.offre.id_offre)}}"
+            src="{{url_for('static', filename='img/fetes.svg')}}"
             style="width: 261px; height: fit-content"
             alt="fetes"
         />
+        {% else %}
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='img/offre/' ~ reponse.offre.id_offre)}}"
+            style="width: 261px; height: fit-content"
+            alt="fetes"
+        />
+        {% endif %}
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
             <div class="d-flex flex-column align-items-center justify-content-center m-4">
                 <h2>{{ reponse.offre.nom_offre}}</h2>

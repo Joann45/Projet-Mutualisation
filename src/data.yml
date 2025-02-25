@@ -34,12 +34,43 @@
 
 - type: utilisateur
   id_utilisateur: 1
-  nom_utilisateur: "Utilisateur_1"
-  prenom_utilisateur: "Prenom_1"
-  mdp_utilisateur: "password_1"
-  email_utilisateur: "utilisateur1@example.com"
-  img_utilisateur: "img_utilisateur_1.jpg"
+  nom_utilisateur: "a"
+  prenom_utilisateur: "a"
+  mdp_utilisateur: "a"
+  email_utilisateur: "a"
+  img_utilisateur: "1"
   role_id: 2
+
+
+- type: utilisateur
+  id_utilisateur: 2
+  nom_utilisateur: "o"
+  prenom_utilisateur: "o"
+  mdp_utilisateur: "o"
+  email_utilisateur: "o"
+  img_utilisateur: "1"
+  role_id: 1
+
+- type: utilisateur_reseau
+  id_utilisateur: 2
+  id_reseau: 1
+
+- type: utilisateur_reseau
+  id_utilisateur: 2
+  id_reseau: 2
+
+- type: utilisateur
+  id_utilisateur: 3
+  nom_utilisateur: "oo"
+  prenom_utilisateur: "oo"
+  mdp_utilisateur: "oo"
+  email_utilisateur: "oo"
+  img_utilisateur: "1"
+  role_id: 1
+
+- type: utilisateur_reseau
+  id_utilisateur: 3
+  id_reseau: 1
 
 - type: offre
   id_offre: 1
@@ -54,7 +85,7 @@
   nom_loc: "stade de france"
   date_deb: 2026-06-19
   date_fin: 2026-06-21
-  img: "image.png"
+  img: "0"
   id_utilisateur: 1
 
 - type: utilisateur_reseau
@@ -76,41 +107,6 @@
 - type: utilisateur_reseau
   id_utilisateur: 1
   id_reseau: 5
-
-- type: utilisateur
-  id_utilisateur: 0
-  nom_utilisateur: "a"
-  prenom_utilisateur: "a"
-  mdp_utilisateur: "a"
-  email_utilisateur: "a"
-  img_utilisateur: "a"
-  role_id: 1
-
-- type: utilisateur
-  id_utilisateur: 2
-  nom_utilisateur: "Utilisateur_2"
-  prenom_utilisateur: "Prenom_2"
-  mdp_utilisateur: "password_2"
-  email_utilisateur: "utilisateur2@example.com"
-  img_utilisateur: "img_utilisateur_2.jpg"
-  role_id: 1
-
-- type: utilisateur_reseau
-  id_utilisateur: 2
-  id_reseau: 1
-
-- type: utilisateur
-  id_utilisateur: 3
-  nom_utilisateur: "Utilisateur_3"
-  prenom_utilisateur: "Prenom_3"
-  mdp_utilisateur: "password_3"
-  email_utilisateur: "utilisateur3@example.com"
-  img_utilisateur: "img_utilisateur_3.jpg"
-  role_id: 1
-
-- type: utilisateur_reseau
-  id_utilisateur: 3
-  id_reseau: 1
 
 - type: utilisateur
   id_utilisateur: 4

@@ -18,7 +18,7 @@
         <ul>
             {% for genre in genres %}
             <li>{{ genre.nom_genre }}</li>
-            <a href="{{ url_for('suppression_genre', id_genre=genre.id_genre) }}">Supprimer</a>
+            <a href="{{ url_for('views.suppression_genre', id_genre=genre.id_genre) }}">Supprimer</a>
             {% endfor %}
         </ul>
     </body>

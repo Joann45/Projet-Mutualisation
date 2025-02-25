@@ -66,8 +66,11 @@ def roles(*roles):
 @roles("Administrateur", "Organisateur")  # A modifier pour les rôles
 def home():
     """Renvoie la page d'accueil"""
-    les_offres = Offre.query.all()[:3]  # A modifier plus tard pour trier par les plus populaires
-    return render_template('home.html', offres=les_offres)
+    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
+    les_offres = [] #! A modifier plus tard pour trier par les plus populaires
+    for res in les_reseaux:
+        les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
+    return render_template('home.html', offres=les_offres[:3])
 
 
 @views_bp.route('/home/profil', methods=['GET','POST'])
@@ -132,10 +135,14 @@ def definir_etat(id_offre):
     """
 
     o = Offre.query.get(id_offre)
+    print(o)
     if o :
-        o.etat = "publiée"
+        if o.etat == "publiée" : 
+            o.etat = "brouillon"
+        else : 
+            o.etat = "publiée"
         db.session.commit()
-    return redirect(url_for('mes_offres'))
+    return redirect(url_for('offre.mes_offres'))
 
 @views_bp.route('/home/genre', methods=['GET','POST'])
 def genre():
@@ -153,7 +160,7 @@ def genre():
             db.session.add(g)
             db.session.commit()
             return redirect(url_for('genre'))
-    return render_template('offre/genre.html', form=f, genres=les_genres)
+    return render_template('genre.html', form=f, genres=les_genres)
 
 @views_bp.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
 def suppression_genre(id_genre):
@@ -169,6 +176,8 @@ def suppression_genre(id_genre):
     if g:
         db.session.delete(g)
         db.session.commit()
+
+    return redirect(url_for('views.genre'))
 
 @views_bp.route('/home/boite-reception')
 def boite_reception():

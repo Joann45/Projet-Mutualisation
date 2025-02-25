@@ -35,7 +35,7 @@
                             type="button"
                             name="offres"
                             id="offres"
-                            value="Afficher plus d'offres"
+                            value="Les Offres"
                         />
                     </a>
                 </div>
@@ -77,8 +77,19 @@
                         />
                     </a>
                 </div>
+                {% endif %} {% if current_user.is_admin() %}
+                <div>
+                    <a class="mb-5" href="{{url_for('auth.signin')}}">
+                        <input
+                            class="btn btn-dark p-3"
+                            type="button"
+                            name="offres"
+                            id="offres"
+                            value="Ajouter un utilisateur"
+                        />
+                    </a>
+                </div>
                 {% endif %}
-
                 <div>
                     <!-- créer la route vers notification -->
                     <a href="{{url_for('views.boite_reception')}}" class="btn">

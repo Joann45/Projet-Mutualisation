@@ -3,6 +3,11 @@
     color: #FFFFFF !important ;
 }
 
+.btn-green{
+    background-color: #00A651 !important ;
+    color: #FFFFFF !important ;
+}
+
 .btn-dark{
     background-color: #050B25 !important;
     color: #FFFFFF !important ;
@@ -67,4 +72,12 @@ nav {
 }
 .border-darkflow{
     border-color: #050B25 !important;
+}
+
+.taille-min-55{
+    min-width: 55%;
+}
+
+.taille-min-60{
+    min-width: 60%;
 }
