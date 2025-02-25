@@ -33,7 +33,8 @@ from flask_mail import Message, Mail
 from src.config import mail
 from flask import render_template, current_app
 from flask_mail import Message
-
+import socket
+socket.setdefaulttimeout(3)
 
 reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
@@ -143,6 +144,27 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
         db.session.commit()
     return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
 
+
+from flask import flash
+
+def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
+    try:
+        msg = Message(subject,
+                      sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                      recipients=[mail_dest_utilisateur])
+        msg.body = body
+        msg.html = html
+        mail.send(msg)
+        print("✅ E-mail envoyé avec succès !")
+
+
+    except socket.timeout:
+        print("❌ Timeout dépassé pour l'envoi de l'email")
+        flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé dans le délai imparti.", "warning")
+    except Exception as e:
+        print(f"❌ Erreur lors de l'envoi de l'e-mail: {e}")
+        flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé.", "warning")
+
 @reseaux_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
     """Ajoute un utilisateur à un réseau
@@ -154,26 +176,28 @@ def ajout_utilisateur_reseau(id_reseau):
     reseau = Reseau.query.get(id_reseau)
     if not reseau:
         return redirect(url_for('reseaux.mes_reseaux'))
+
     form = AddUtilisateurReseauForm()
     liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
-    form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
+    form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) 
+                                for utilisateur in Utilisateur.query.all() 
+                                if utilisateur.id_utilisateur not in liste_utilisateurs]
+    
     if form.validate_on_submit():
         utilisateur_id = form.utilisateur.data
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
         db.session.commit()
-        mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
-        msg = Message("Sujet de l'e-mail",
-              sender=current_app.config['MAIL_DEFAULT_SENDER'],
-              recipients= [mail_dest_utilisateur]) 
 
-                     
-        msg.body = "2Ceci est un e-mail envoyé depuis Flask-Mail !"
-        msg.html = "<b>Vous avez été ajouté à un réseau </b>"
-        
-        mail.send(msg)
-        
-        print("E-mail envoyé avec succès !")
+        try:
+            mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
+            send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté à un réseau.", "<b>Vous avez été ajouté à un réseau.</b>")
+    
+           
+        except Exception as e:
+            print(f"❌ Erreur lors de l'envoi de l'e-mail: {e}")
+            flash("L'utilisateur a été ajouté, mais l'e-mail n'a pas pu être envoyé.", "warning")
 
         return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
+
     return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)

@@ -1,6 +1,13 @@
 {% extends 'base.html' %} {% block content %}
 <h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
 <div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <form method="post" action="{{ url_for('reseaux.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
         {{ form.hidden_tag() }}
         <div class="form-group">
