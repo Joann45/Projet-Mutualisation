@@ -46,7 +46,7 @@ def visualiser_reponses_offre(id_offre):
     o = Offre.query.get(id_offre)
     if not o.img:
         verif = False
-    return render_template('reponse_offre/visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)  
+    return render_template('visualiser-reponses-offre.html',verif=verif, offre=o, reponses=les_reponses)  
 
 def filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses):
     rep_voulu = set()
@@ -96,7 +96,7 @@ def mes_reponses():
     if les_reseaux_elu != []:
         les_reponses = filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses)
 
-    return render_template('reponse_offre/mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
+    return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
     
 
 
@@ -137,4 +137,4 @@ def repondre_offre(id_offre):
             return redirect(url_for('mes_reponses'))
         f.cotisation_apportee.data = o.cotisation_min
         f.cap_salle.data = o.capacite_min
-    return render_template('reponse_offre/repondre-offre.html', offre=o, form=f)
+    return render_template('repondre-offre.html', offre=o, form=f)

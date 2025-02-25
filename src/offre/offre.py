@@ -46,7 +46,7 @@ def details_offre(id_offre):
         c.date_commentaire = datetime.now()
         db.session.add(c)
         db.session.commit()
-        return redirect(url_for('details_offre', id_offre=id_offre))
+        return redirect(url_for('offre.details_offre', id_offre=id_offre))
     verif = 1
     if not o:
         return redirect(url_for("home"))
@@ -74,7 +74,7 @@ def suppression_offre(id_offre):
         Genre_Offre.query.filter_by(id_offre=id_offre).delete()
         db.session.delete(o)
         db.session.commit()
-    return redirect(url_for('views.mes_offres'))
+    return redirect(url_for('offre.mes_offres'))
 
 
 
@@ -112,7 +112,7 @@ def creation_offre():
         if not file_o:
             o.img = "0"
         else:
-            file_path = os.path.join("src/static/static/img/offre", str(id_offre))
+            file_path = os.path.join("src/static/img/offre", str(id_offre))
             file_o.save(file_path)
             o.img = id_offre
         db.session.commit()
@@ -124,7 +124,9 @@ def creation_offre():
             d.id_offre = id_offre
             db.session.add(d)
             db.session.commit()
-            file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
+            if not os.path.exists("src/static/Documents"):
+                os.makedirs("src/static/Documents")
+            file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre))
             file.save(file_path)
         # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
         g = Genre.query.get(f.genre.data)
@@ -142,7 +144,7 @@ def creation_offre():
         o_r.id_offre = id_offre
         db.session.add(o_r)
         db.session.commit()
-        return redirect(url_for('views.mes_offres'))
+        return redirect(url_for('offre.mes_offres'))
     return render_template('creation-offre.html', form=f)
 
 @offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE

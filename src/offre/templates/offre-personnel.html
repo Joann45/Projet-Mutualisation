@@ -3,14 +3,14 @@
         {% if offre.img == "0" %}
             <img
                 class="rounded-start-4"
-                src = "{{url_for('static', filename='../../static/static/img/fetes.svg')}}"
+                src = "{{url_for('static', filename='../static/img/fetes.svg')}}"
                 style="width: fit-content; height: fit-content"
                 alt="fetes"
             />
         {% else %}
             <img
                 class="rounded-start-4"
-                src="{{url_for('static', filename='../../static/static/img/offre/' ~ offre.id_offre)}}"
+                src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
                 style="width: fit-content; height: fit-content"
                 alt="fetes"
             />

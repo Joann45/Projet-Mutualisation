@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <title>StageFlow</title>
-        <link rel="icon" type="image/png" sizes="16x16" href="../../static/static/img/logo.svg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="../static/img/logo.svg" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
         <link rel="stylesheet" href="{{ url_for('static',filename='../static/style.css')}}" />
@@ -20,7 +20,7 @@
                 <div class="d-flex align-items-center">
                     <a class="btn pe-1 d-flex align-items-center" href="{{url_for('views.home')}}"
                         ><img
-                            src="{{ url_for('static', filename='../../static/static/img/logo.svg')}}"
+                            src="{{ url_for('static', filename='../static/img/logo.svg')}}"
                             alt="logo de StageFlow"
                             class="mx-3 ml-4"
                         />
@@ -46,7 +46,7 @@
                         Mes réseaux
 
                         <img
-                            src="{{url_for('static', filename='../../static/static/img/icon_reseau.svg')}}"
+                            src="{{url_for('static', filename='../static/img/icon_reseau.svg')}}"
                             alt="icone réseaux"
                             class="ms-3"
                         />
@@ -60,7 +60,7 @@
                     <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('offre.mes_offres')}}">
                         Mes offres
                         <img
-                            src="{{url_for('static', filename='../../static/static/img/icon_dossier.svg')}}"
+                            src="{{url_for('static', filename='../static/img/icon_dossier.svg')}}"
                             alt="icone dossier"
                             class="ms-3"
                         />
@@ -71,7 +71,7 @@
                     <a class="btn btn-base mx-3" href="{{url_for('offre.creation_offre')}}">
                         Créer une offre
                         <img
-                            src="{{url_for('static', filename='../../static/static/img/icon_plus.svg')}}"
+                            src="{{url_for('static', filename='../static/img/icon_plus.svg')}}"
                             alt="icone plus"
                             class="ms-2"
                         />
@@ -83,7 +83,7 @@
                     <!-- créer la route vers notification -->
                     <a href="{{url_for('views.boite_reception')}}" class="btn">
                         <img
-                            src="{{ url_for('static', filename='../../static/static/img/boite_reception.svg') }}"
+                            src="{{ url_for('static', filename='../static/img/boite_reception.svg') }}"
                             alt="boite de réception"
                         />
                     </a>
@@ -93,7 +93,7 @@
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
                     <a class="btn" href="{{url_for('views.modifier_profil')}}">
                         <img
-                            src="{{ url_for('static', filename='../../static/static/img/profil/' ~ current_user.img_utilisateur)
+                            src="{{ url_for('static', filename='../static/img/profil/' ~ current_user.img_utilisateur)
                         }}"
                             alt="profil"
                             class="img-fluid rounded-circle"
