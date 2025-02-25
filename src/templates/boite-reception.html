@@ -9,7 +9,7 @@
         {%for message in les_notifs%}
         <div class="mt-5">
             <div class="d-flex flex-row back-white rounded-4">
-                <img src="{{ url_for('static', filename='../static/img/profil/images.jpg') }}" alt="offre">
+                <img src="{{ url_for('static', filename='../static/img/profil/101') }}" alt="offre">
                 <div class="d-flex flex-column mx-5">
                 
 
@@ -19,11 +19,17 @@
                     </div>
                     <div>
                         {% if message.type_operation == "ajout" %}
-                            <p>Vous avez reçu une invitation pour rejoindre son réseau</p>
+                            <p  class="d-flex flex-nowrap justify-content-around w-100">
+                                Vous avez reçu une invitation pour rejoindre son réseau
+                            </p>
                         {% endif %}
-                        <p  class="d-flex flex-nowrap justify-content-around w-100">
-                            
-                        </p>
+                        {%if message.type_operation == "bienvenue" %}
+                            <p  class="d-flex flex-nowrap justify-content-around w-100">
+                                Vous avez reçu une invitation pour rejoindre son réseau
+                            </p>
+                        {%endif%}
+
+                        
                     </div>
                 </div>
 
