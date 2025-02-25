@@ -6,7 +6,7 @@
             <form action="{{ url_for('offre.mes_offres') }}" method="post">
                 <h2>Réseaux</h2>
                 {{ form.hidden_tag() }} {{ form.reseaux() }}
-                <h2>Date d'expiration</h2>
+                <h2>Date limite de participation</h2>
                 {{ formd.hidden_tag() }} {{ formd.proxi() }}
                 <button type="submit" class="btn btn-base rounded-3">Rechercher</button>
             </form>

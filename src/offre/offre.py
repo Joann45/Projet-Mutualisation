@@ -175,46 +175,54 @@ def mes_offres():
         mes-offres.html: Une page des offres de l'utilisateur
     """
     
-    les_reseaux = get_reseaux_for_user(current_user)
+
+    les_reseaux = get_reseaux_for_user(current_user) #les reseaux de l'utilisateur currrent 
     f_select_reseau = SelectRechercheOffreForm()
-    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux] #affichage  des reseaux de l'utilisateur currrent 
 
     proximité_date = SelectDateProximité()
-    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
+    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"] #afficage  de filtre de date d'expiration
 
-    if proximité_date.proxi.data == None :
+    if proximité_date.proxi.data == None : #Si pas de choix la choix de base est plus proche pour la date d'expiration
         proximité_date.proxi.default = "Plus Proche"
         proximité_date.process()
 
-    id_reseaux_elu =  f_select_reseau.reseaux.data
+    id_reseaux_elu =  f_select_reseau.reseaux.data #recupere l'information des reseaux choisi 
     les_reseaux_elu = []
 
 
-    proxi_elu = proximité_date.proxi.data
+    proxi_elu = proximité_date.proxi.data #recupere l'information de date d'expiration
 
    
-    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
-        if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
-        else:
-                les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin.desc()).all()
+    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
+        
 
-        for r in id_reseaux_elu:
-            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
-    else:
-        les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+        for id_r in id_reseaux_elu:
+            les_reseaux_elu.append(Reseau.query.get(id_r))
+    
 
-    if les_reseaux_elu != []:
-        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+    if les_reseaux_elu != []: #Si des reseux était choixi par utilisateur
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
+       
+        
+
+    else: #Si aucun choit était fait 
+        
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
+        
+    offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
+    les_offres = []
+    for offre in offres:
+        les_offres+=offre
+
+    if proxi_elu == "Plus Proche":
+        les_offres.sort(key=lambda o:o.date_limite)
+    else: 
+        les_offres.sort(reverse=True,key=lambda o:o.date_limite)
+
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
-def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
-    offre_voulu = set()
-    for offre in les_offres:
-        for reseux_off in offre.les_reseaux:
-            if reseux_off.id_reseau in les_reseaux_elu:
-                offre_voulu.add(offre)
-    return list(offre_voulu)
+
 
 def get_reseaux_for_user(user):
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
@@ -246,18 +254,32 @@ def les_offres():
     les_reseaux_elu = []
     
     
+        
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
-        if proxi_elu == "Plus Proche": 
-                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
-        else:
-                les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin.desc()).all()
-
-        for r in id_reseaux_elu:
-            les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
-    else:
-        les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
+        for id_r in id_reseaux_elu:
+            print(Reseau.query.get(id_r))
+            les_reseaux_elu.append(Reseau.query.get(id_r))
+    
 
 
     if les_reseaux_elu != []:
-        les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau,).all() for reseau in les_reseaux_elu]
+        
+    else: 
+        
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
+             
+               
+    if len(offre_reseau) != 0: 
+        offres = [Offre.query.filter_by(id_offre=o.id_offre, etat="publiée").all() for o in offre_reseau[0]]
+    les_offres = []
+    for offre in offres:
+        les_offres+=offre
+
+    if proxi_elu == "Plus Proche":
+        les_offres.sort(key=lambda o:o.date_limite)
+    else: 
+        les_offres.sort(reverse=True,key=lambda o:o.date_limite)
+
+
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
