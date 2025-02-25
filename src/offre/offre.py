@@ -199,25 +199,20 @@ def mes_offres():
 
         for id_r in id_reseaux_elu:
             les_reseaux_elu.append(Reseau.query.get(id_r))
-    else: 
-        les_offres = Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).order_by(Offre.date_fin).all()
+    
 
     if les_reseaux_elu != []: #Si des reseux était choixi par utilisateur
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
-        offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
-        les_offres = offres
-        print(les_offres)
+       
+        
 
     else: #Si aucun choit était fait 
         
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
-        offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
-
-        les_offres = offres #intersection des offres de utlisateur et les offres présante dans ces reseau
-
-    liste_offres = les_offres
+        
+    offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
     les_offres = []
-    for offre in liste_offres:
+    for offre in offres:
         les_offres+=offre
 
     if proxi_elu == "Plus Proche":
@@ -264,22 +259,23 @@ def les_offres():
         for id_r in id_reseaux_elu:
             print(Reseau.query.get(id_r))
             les_reseaux_elu.append(Reseau.query.get(id_r))
-    else:
-        les_offres = Offre.query.filter_by(etat="publiée").order_by(Offre.date_fin).all()
+    
 
 
     if les_reseaux_elu != []:
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau,).all() for reseau in les_reseaux_elu]
-        offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]] 
-        les_offres = offres
+        
     else: 
         
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
-            
-        if len(offre_reseau) != 0:
-            offres = [Offre.query.get(o.id_offre) for o in offre_reseau[0]] 
-            les_offres = offres #intersection des offres publiée et la liste des offres présante dans les reseaux de l'utilisateur current   
-    
+             
+               
+    if len(offre_reseau) != 0: 
+        offres = [Offre.query.filter_by(id_offre=o.id_offre, etat="publiée").all() for o in offre_reseau[0]]
+    les_offres = []
+    for offre in offres:
+        les_offres+=offre
+
     if proxi_elu == "Plus Proche":
         les_offres.sort(key=lambda o:o.date_limite)
     else: 
