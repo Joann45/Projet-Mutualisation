@@ -183,7 +183,13 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
         
-        notification = Notification(type_operation="ajout", date_notification=datetime.now(),expediteur=current_user.nom_utilisateur)
+        notification = Notification(
+            type_operation="ajout",
+            date_notification=datetime.now(), 
+            heure_notification=datetime.now().replace(microsecond=0).time(), 
+            expediteur=current_user.nom_utilisateur,
+            nom_reseau=reseau.nom_reseau
+        )
         
         db.session.add(notification)
         db.session.flush()  # Permet d'attribuer un id à notification
@@ -196,8 +202,9 @@ def ajout_utilisateur_reseau(id_reseau):
         db.session.add(notification_utilisateur)
         db.session.commit()
         try:
+            print(reseau.nom_reseau)
             mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
-            send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté à un réseau.", "<b>Vous avez été ajouté à un réseau.</b>")
+            send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté au réseau {reseau.nom_reseau}", "<b>Vous avez été ajouté au réseau {reseau.nom_reseau}</b>")
     
            
         except Exception as e:
