@@ -1,3 +1,4 @@
+from src.models import Notification, Notification_Utilisateur
 from .app import db
 from flask import render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
@@ -29,6 +30,9 @@ import os
 from functools import wraps
 from flask import abort
 from src.extensions import db, login_manager
+from flask_mail import Message, Mail
+from .config import mail
+
 
 # Définir un Blueprint pour les vues
 views_bp = Blueprint('views', __name__)
@@ -172,15 +176,12 @@ def suppression_genre(id_genre):
     if g:
         db.session.delete(g)
         db.session.commit()
-    return redirect(url_for('views.genre'))
 
+    return redirect(url_for('views.genre'))
 
 @views_bp.route('/home/boite-reception')
 def boite_reception():
-    """Renvoie la page de la boite de réception
-
-    Returns:
-        boite-reception.html: Une page de la boite de réception
-    """
-    return render_template('boite-reception.html')
-
+    """Renvoie la page de la boite de réception"""
+    les_notifs_utilisateurs = Notification_Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    les_notifs = Notification.query.filter(Notification.id_notif.in_([notif.id_notif for notif in les_notifs_utilisateurs])).all()
+    return render_template('boite-reception.html', les_notifs = les_notifs)
