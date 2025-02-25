@@ -6,13 +6,13 @@
     <div class="input-group border rounded-pill">
         <input class="form-control rounded-pill rounded-end" type="search" id="zone-search" name="zone-search" />
         <button class="btn">
-            <img src="{{ url_for('static', filename='../../static/static/img/search.svg') }}" alt="icone de recherche" />
+            <img src="{{ url_for('static', filename='../static/img/search.svg') }}" alt="icone de recherche" />
         </button>
     </div>
 
     {% for m in membre %}
     <div class="d-flex justify-content-around m-4">
-        <img src="{{ url_for('static', filename='../../static/static/img/photo_profil_tom.svg') }}" alt="profil" />
+        <img src="{{ url_for('static', filename='../static/img/photo_profil_tom.svg') }}" alt="profil" />
         <p class="align-self-end">{{m.nom_utilisateur}}</p>
         {% if current_user.is_admin() %}
         <button class="btn btn-dark rounded-4">

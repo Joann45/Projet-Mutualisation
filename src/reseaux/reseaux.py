@@ -34,60 +34,61 @@ reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
 @reseaux_bp.route('/home/mes-reseaux', methods=['GET', 'POST'])
 def mes_reseaux():
-    """Renvoie la page des réseaux administrateur
-
-    Returns:
-        mes-reseaux-admin.html: Une page des réseaux pour un organisateur
-    """
+    """Affiche la page des réseaux."""
     f_select_reseau = SelectReseauForm()
-    f_add_reseau = ReseauForm()
     add_user_form = AddUtilisateurReseauForm()
-
-    # Récupérer les réseaux en fonction du rôle de l'utilisateur
+    add_form = ReseauForm()
     les_reseaux = get_reseaux_for_user(current_user)
-
-    # Si aucun réseau n'est trouvé, afficher une page spécifique
+    
     if not les_reseaux:
-        return render_template('reseaux/pas_reseau.html')
-
-    # Définir les choix pour le formulaire de sélection de réseau
-    f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
-
-    # Gérer la soumission du formulaire de sélection de réseau
-    if f_select_reseau.validate_on_submit():
-        reseau_id = f_select_reseau.reseaux.data
-        return redirect(url_for('mes_reseaux', reseau_id=reseau_id))
+        if not current_user.is_admin():
+            return render_template('pas_reseau.html')
+        return render_template('mes-reseaux-admin.html', reseaux=[], add_form=add_form, select_form=None, membres=[])
 
     # Déterminer le réseau sélectionné
     reseau_id = request.args.get('reseau_id', type=int) or les_reseaux[0].id_reseau
+    # Préparer le formulaire de sélection
+    f_select_reseau.reseaux.choices = [(r.id_reseau, r.nom_reseau) for r in les_reseaux]
     f_select_reseau.reseaux.default = reseau_id
     f_select_reseau.process()
 
-    # Récupérer le réseau sélectionné
+    # Récupérer le réseau sélectionné et définir le formulaire d'ajout d'utilisateur
     reseau = Reseau.query.get(reseau_id)
-
-    # Définir les choix pour le formulaire d'ajout d'utilisateur au réseau
     add_user_form.utilisateur.choices = get_available_users_for_reseau(reseau)
 
-    # Gérer la soumission du formulaire d'ajout de réseau
-    if f_add_reseau.validate_on_submit():
-        add_new_reseau(f_add_reseau)
-        return redirect(url_for('mes_reseaux'))
-
-    # Récupérer les offres associées au réseau sélectionné
+    # Récupérer les offres associées
     les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
 
     return render_template(
         'mes-reseaux-admin.html',
         add_user_form=add_user_form,
+        add_form=add_form,
         reseaux=les_reseaux,
-        add_form=f_add_reseau,
         select_form=f_select_reseau,
         membres=[[membre.orga for membre in reseau.les_utilisateurs]],
         reseau_id=reseau_id,
         offres=les_offres,
         reseau=reseau
     )
+    
+# Route pour traiter la soumission du formulaire de sélection de réseau
+@reseaux_bp.route('/home/mes-reseaux/select', methods=['POST'])
+def select_reseau():
+    f_select_reseau = SelectReseauForm()
+    if f_select_reseau.validate_on_submit():
+        reseau_id = f_select_reseau.reseaux.data
+        return redirect(url_for('reseaux.mes_reseaux', reseau_id=reseau_id))
+    # En cas d'erreur, retourne à la page principale
+    return redirect(url_for('reseaux.mes_reseaux'))
+
+# Route pour traiter la création d'un nouveau réseau
+@reseaux_bp.route('/home/mes-reseaux/ajout', methods=['POST'])
+def ajout_reseau():
+    f_add_reseau = ReseauForm()
+    if f_add_reseau.validate_on_submit():
+        print("Ajout du réseau")
+        add_new_reseau(f_add_reseau)
+    return redirect(url_for('reseaux.mes_reseaux'))
 
 def get_reseaux_for_user(user):
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
@@ -119,7 +120,7 @@ def suppression_reseau(id_reseau):
     if reseau:
         db.session.delete(reseau)
         db.session.commit()
-    return redirect(url_for('mes_reseaux'))
+    return redirect(url_for('reseaux.mes_reseaux'))
 
 
 @reseaux_bp.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
@@ -135,7 +136,7 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     if utilisateur_reseau:
         db.session.delete(utilisateur_reseau)
         db.session.commit()
-    return redirect(url_for('mes_reseaux', reseau_id=id_reseau))
+    return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
 
 @reseaux_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
 def ajout_utilisateur_reseau(id_reseau):
@@ -147,7 +148,7 @@ def ajout_utilisateur_reseau(id_reseau):
     """
     reseau = Reseau.query.get(id_reseau)
     if not reseau:
-        return redirect(url_for('mes_reseaux'))
+        return redirect(url_for('reseaux.mes_reseaux'))
     form = AddUtilisateurReseauForm()
     liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
     form.utilisateur.choices = [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
@@ -156,5 +157,5 @@ def ajout_utilisateur_reseau(id_reseau):
         utilisateur_reseau = Utilisateur_Reseau(id_reseau=id_reseau, id_utilisateur=utilisateur_id)
         db.session.add(utilisateur_reseau)
         db.session.commit()
-        return redirect(url_for('views.mes_reseaux', reseau_id=id_reseau))
-    return render_template('reseaux/add-utilisateur-reseau.html', form=form, reseau=reseau)
+        return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
+    return render_template('add-utilisateur-reseau.html', form=form, reseau=reseau)

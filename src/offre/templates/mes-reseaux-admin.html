@@ -4,11 +4,12 @@
         <h1>Voir mes réseaux</h1>
         <div>
             <div>
-                <img src="{{ url_for('static', filename='../../static/static/img/humaaan1.svg') }}" alt="social" />
+                <img src="{{ url_for('static', filename='../static/img/humaaan1.svg') }}" alt="social" />
             </div>
 
             <div>
-                <form method="post" action="{{ url_for('views.mes_reseaux') }}">
+                {% if reseau %}
+                <form method="post" action="{{ url_for('reseaux.mes_reseaux') }}">
                 <div class="input-group">
                     {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
                     <input
@@ -19,6 +20,7 @@
                         value="Voir les membres"
                     />
                 </form>
+                {% endif %}
                 {% if current_user.is_admin() %}
 
                 <input
@@ -29,6 +31,7 @@
                     data-popup="creer_reseau"
 
                 />
+                {% if reseau%}
                 <input
                     class="btn btn-dark popup-btn-open"
                     type="button"
@@ -36,7 +39,7 @@
                     value="Ajouter un membre"
                     data-popup="ajouter_membre"
                 />
-                <a href="{{ url_for('views.suppression_reseau', id_reseau=reseau.id_reseau) }}">
+                <a href="{{ url_for('reseaux.suppression_reseau', id_reseau=reseau.id_reseau) }}">
                 <input
                     class="btn btn-dark"
                     type="button"
@@ -46,11 +49,12 @@
                 />
                 </a>
                 {% endif %}
+                {% endif %}
                 </div>
             </div>
 
             <div>
-                <img src="{{ url_for('static', filename='../../static/static/img/humaaan2.svg') }}" alt="social" />
+                <img src="{{ url_for('static', filename='../static/img/humaaan2.svg') }}" alt="social" />
             </div>
         </div>
     </div>
@@ -60,17 +64,20 @@
 {% if current_user.is_admin() %}
 <div id="creer_reseau" class="popup">
     <h1>Créer un réseau</h1>
-    <form method="post" action="{{url_for('views.mes_reseaux')}}">
-        <div>{{ add_form.hidden_tag() }} {{ add_form.nom_reseau.label }} {{ add_form.nom_reseau() }}</div>
+    <form method="post" action="{{ url_for('reseaux.ajout_reseau') }}">
+        <div>
+            {{ add_form.hidden_tag() }}
+            {{ add_form.nom_reseau.label }} {{ add_form.nom_reseau() }}
+        </div>
+        <button class="btn btn-primary popup-btn-close" type="submit" name="submit_add">Créer</button>
+        <button class="btn btn-primary popup-btn-close" type="button" data-popup="creer_reseau">Fermer</button>
     </form>
-    <button class="btn btn-primary" type="submit">Créer</button>
-    <button class="btn btn-primary popup-btn-close" type="button" data-popup="creer_reseau">Fermer</button>
 </div>
-
+{% if reseau%}
 <div class="popup" id="ajouter_membre">
 <h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
 <div>
-    <form method="post" action="{{ url_for('views.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
+    <form method="post" action="{{ url_for('reseaux.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
         {{ add_user_form.hidden_tag() }}
         <div class="form-group">
             {{ add_user_form.utilisateur.label(class="form-label") }} {{ add_user_form.utilisateur(class="form-control") }} {% for error
@@ -83,4 +90,5 @@
     <button class="btn btn-primary popup-btn-close" type="button" data-popup="ajouter_membre">Fermer</button>
 </div>
 </div>
+{%endif%}
 {% endif %} {% endblock %}
