@@ -1,22 +1,18 @@
-{% extends 'base.html' %} 
-{% block content %}
-    <div class="d-flex flex-column align-items-center">
-        <h1 class="fw-bolder display-3 my-5"><strong>StageFlow</strong></h1>
-        <h4 class="fst-italic fw-light">Ressentez la simplicité de la collaboration musicale.</h4>
-    </div>
-    <div class="d-flex justify-content-center my-5 mx-5">
-        <img class="mx-5" src="{{ url_for('static', filename='img/saxo.svg') }}" alt="saxo">
+{% extends 'base.html' %} {% block content %}
+<div class="d-flex flex-column align-items-center">
+    <h1 class="fw-bolder display-3 my-5"><strong>StageFlow</strong></h1>
+    <h4 class="fst-italic fw-light">Ressentez la simplicité de la collaboration musicale.</h4>
+</div>
+<div class="d-flex justify-content-center my-5 mx-5">
+    <img class="mx-5" src="{{ url_for('static', filename='../static/img/saxo.svg') }}" alt="saxo" />
 
-    <img class="mx-5" src="{{ url_for('static', filename='img/musicien.svg') }}" alt="musique" />
+    <img class="mx-5" src="{{ url_for('static', filename='../static/img/musicien.svg') }}" alt="musique" />
 </div>
 
- <div class="d-flex flex-column align-items-center bg-color-bleu pt-1">
-    <h2 class="mt-5 text-white fw-bolder"> Les offres les plus populaires</h2>
+<div class="d-flex flex-column align-items-center bg-color-bleu pt-1">
+    <h2 class="mt-5 text-white fw-bolder">Les offres les plus populaires</h2>
 
-    {% for offre in offres %}
-        {% include 'offre.html' %}
-    {% endfor %}
+    {% for offre in offres %} {% include 'offre.html' %} {% endfor %}
 </div>
-
 
 {% endblock %}

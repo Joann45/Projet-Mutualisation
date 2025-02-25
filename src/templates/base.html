@@ -8,7 +8,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="../static/img/logo.svg" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="theme-color" content="#ffffff" />
-        <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}" />
+        <link rel="stylesheet" href="{{ url_for('static',filename='../static/style.css')}}" />
         {% endblock %} {% block styles %}
         <!-- Bootstrap CSS -->
         {{ bootstrap.load_css() }} {% endblock %}
@@ -18,9 +18,9 @@
         <header>
             <nav class="nav navbar border">
                 <div class="d-flex align-items-center">
-                    <a class="btn pe-1 d-flex align-items-center" href="{{url_for('home')}}"
+                    <a class="btn pe-1 d-flex align-items-center" href="{{url_for('views.home')}}"
                         ><img
-                            src="{{ url_for('static', filename='img/logo.svg') }}"
+                            src="{{ url_for('static', filename='../static/img/logo.svg')}}"
                             alt="logo de StageFlow"
                             class="mx-3 ml-4"
                         />
@@ -29,7 +29,7 @@
                 </div>
 
                 <div>
-                    <a class="mb-5" href="{{url_for('les_offres')}}">
+                    <a class="mb-5" href="{{url_for('offre.les_offres')}}">
                         <input
                             class="btn btn-dark p-3"
                             type="button"
@@ -40,30 +40,13 @@
                     </a>
                 </div>
 
-                <!--
-                <form class="input-group border rounded-pill" action="{{url_for('les_offres')}}" method="get">
-                    <input
-                        class="form-control rounded-pill rounded-end"
-                        type="search"
-                        id="zone-search"
-                        name="zone-search"
-                        placeholder="Recherche une offre"
-                    /> 
-                    <button class="btn" type="submit">
-                        <img src="{{ url_for('static', filename='img/search.svg') }}" alt="icone de recherche" />
-                    </button>
-                </form>
-                -->
-
-
-
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
-                    <a class="btn btn-default" href="{{url_for('mes_reseaux')}}">
+                    <a class="btn btn-default" href="{{url_for('reseaux.mes_reseaux')}}">
                         Mes réseaux
 
                         <img
-                            src="{{url_for('static', filename='img/icon_reseau.svg')}}"
+                            src="{{url_for('static', filename='../static/img/icon_reseau.svg')}}"
                             alt="icone réseaux"
                             class="ms-3"
                         />
@@ -74,10 +57,10 @@
                 <div>
                     <!-- créer route vers mes offres -->
 
-                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('mes_offres')}}">
+                    <a class="btn btn-default mx-3 d-flex align-items-center" href="{{url_for('offre.mes_offres')}}">
                         Mes offres
                         <img
-                            src="{{url_for('static', filename='img/icon_dossier.svg')}}"
+                            src="{{url_for('static', filename='../static/img/icon_dossier.svg')}}"
                             alt="icone dossier"
                             class="ms-3"
                         />
@@ -85,18 +68,22 @@
                 </div>
                 {% endif %} {% if not current_user.is_admin() %}
                 <div>
-                    <a class="btn btn-base mx-3" href="{{url_for('creation_offre')}}">
+                    <a class="btn btn-base mx-3" href="{{url_for('offre.creation_offre')}}">
                         Créer une offre
-                        <img src="{{url_for('static', filename='img/icon_plus.svg')}}" alt="icone plus" class="ms-2" />
+                        <img
+                            src="{{url_for('static', filename='../static/img/icon_plus.svg')}}"
+                            alt="icone plus"
+                            class="ms-2"
+                        />
                     </a>
                 </div>
                 {% endif %}
 
                 <div>
                     <!-- créer la route vers notification -->
-                    <a href="{{url_for('boite_reception')}}" class="btn">
+                    <a href="{{url_for('views.boite_reception')}}" class="btn">
                         <img
-                            src="{{ url_for('static', filename='img/boite_reception.svg') }}"
+                            src="{{ url_for('static', filename='../static/img/boite_reception.svg') }}"
                             alt="boite de réception"
                         />
                     </a>
@@ -104,9 +91,9 @@
 
                 <div>
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
-                    <a class="btn" href="{{url_for('modifier_profil')}}">
+                    <a class="btn" href="{{url_for('views.modifier_profil')}}">
                         <img
-                            src="{{ url_for('static', filename='img/profil/' ~ current_user.img_utilisateur)
+                            src="{{ url_for('static', filename='../static/img/profil/' ~ current_user.img_utilisateur)
                         }}"
                             alt="profil"
                             class="img-fluid rounded-circle"

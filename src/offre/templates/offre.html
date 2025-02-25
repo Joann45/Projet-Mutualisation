@@ -1,0 +1,49 @@
+<div class="my-5" style="min-width: 65%">
+    <a
+        class="d-flex flex-nowrap text-decoration-none"
+        href="{{url_for('offre.details_offre', id_offre=offre.id_offre)}}"
+    >
+        {% if offre.img == "0" %}
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../static/img/fetes.svg')}}"
+            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            alt="fetes"
+        />
+        {% else %}
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
+            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            alt="fetes"
+        />
+        {% endif %}
+
+        <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
+            <div class="d-flex flex-column align-items-center justify-content-center m-4">
+                <h2>{{ offre.nom_offre}}</h2>
+                <p>Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+            </div>
+            <div class="d-flex flex-nowrap justify-content-around w-100">
+                <div class="d-flex flex-column align-items-center">
+                    <p>Nombre de participants</p>
+                    <p>{{offre.nb_participants()}}</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <p>Cotisation minimale</p>
+                    <p>{{offre.cotisation_min}} euros</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <p>Temps restant</p>
+                    <p>{{offre.temps_restant()}} jours</p>
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <p>Réseaux</p>
+                    {% for reseau in offre.les_reseaux%}
+                    <p>{{reseau.reseau.nom_reseau}}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

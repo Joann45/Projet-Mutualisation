@@ -8,7 +8,7 @@ from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role, roles
 from src.extensions import db, login_manager
-# from src.app import app # ! Corriger l'importation circulaire
+
 
 auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
@@ -20,13 +20,13 @@ def login():
         connexion.html : Une page de connexion
     """
     if current_user.is_authenticated:
-        return redirect(url_for('app.home'))
+        return redirect(url_for('views.home'))
     f = ConnexionForm()
     if f.validate_on_submit():
         u = f.get_authenticated_user()
         if u:
             login_user(u)
-            return redirect(url_for('app.home'))
+            return redirect(url_for('views.home'))
     return render_template('auth/connexion.html', form=f)
 
 @auth_bp.route('/signin', methods=['GET','POST'])
@@ -61,7 +61,7 @@ def logout():
         login : Redirige vers la page de connexion
     """
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 @auth_bp.route('/mdp-oublie') # TODO : A faire -> le form et les interactions avec la base de données
 def mdp_oublie():
@@ -91,5 +91,5 @@ def mdp_modif():
             user = current_user
             user.mdp_utilisateur = sha256(f.new_password.data.encode()).hexdigest()
             db.session.commit()
-            return redirect(url_for('home'))
+            return redirect(url_for('views.home'))
     return render_template('auth/mdp-modif.html', form = f)
