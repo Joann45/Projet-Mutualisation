@@ -9,16 +9,11 @@
 
             <div>
                 {% if reseau %}
-                <form method="post" action="{{ url_for('reseaux.mes_reseaux') }}">
+                <form method="POST" action="{{ url_for('reseaux.select_reseau') }}">
                 <div class="input-group">
                     {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
-                    <input
-                        class="btn btn-dark"
-                        type="submit"
-                        name="voir_membres_admin"
-                        id="voir_membres_admin"
-                        value="Voir les membres"
-                    />
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Choisir ce réseau</button>
                 </form>
                 {% endif %}
                 {% if current_user.is_admin() %}
@@ -58,7 +53,9 @@
             </div>
         </div>
     </div>
-    <div class="col-sm">{% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}</div>
+    <div class="col-sm">
+        <h1>{{reseau.nom_reseau}}</h1> 
+        {% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}</div>
 </div>
 {% if current_user.is_admin() %}
 <div id="creer_reseau" class="popup">

@@ -39,21 +39,23 @@ socket.setdefaulttimeout(3)
 
 reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
-@reseaux_bp.route('/home/mes-reseaux', methods=['GET', 'POST'])
-def mes_reseaux():
+@reseaux_bp.route('/home/mes-reseaux', methods=['GET'])
+@reseaux_bp.route('/home/mes-reseaux/<int:reseau_id>', methods=['GET'])
+@login_required
+def mes_reseaux(reseau_id=None):
     """Affiche la page des réseaux."""
     f_select_reseau = SelectReseauForm()
     add_user_form = AddUtilisateurReseauForm()
     add_form = ReseauForm()
     les_reseaux = get_reseaux_for_user(current_user)
-    
     if not les_reseaux:
         if not current_user.is_admin():
             return render_template('pas_reseau.html')
         return render_template('mes-reseaux-admin.html', reseaux=[], add_form=add_form, select_form=None, membres=[])
 
     # Déterminer le réseau sélectionné
-    reseau_id = request.args.get('reseau_id', type=int) or les_reseaux[0].id_reseau
+    reseau_id = reseau_id if reseau_id else les_reseaux[0].id_reseau
+    print(f"Réseau sélectionné: {reseau_id}")
     # Préparer le formulaire de sélection
     f_select_reseau.reseaux.choices = [(r.id_reseau, r.nom_reseau) for r in les_reseaux]
     f_select_reseau.reseaux.default = reseau_id
@@ -82,10 +84,14 @@ def mes_reseaux():
 @reseaux_bp.route('/home/mes-reseaux/select', methods=['POST'])
 def select_reseau():
     f_select_reseau = SelectReseauForm()
+    # Récupère la liste des réseaux pour l’utilisateur courant
+    les_reseaux = get_reseaux_for_user(current_user)
+    # Définir les choices pour le champ reseaux
+    f_select_reseau.reseaux.choices = [(r.id_reseau, r.nom_reseau) for r in les_reseaux]
+
     if f_select_reseau.validate_on_submit():
         reseau_id = f_select_reseau.reseaux.data
         return redirect(url_for('reseaux.mes_reseaux', reseau_id=reseau_id))
-    # En cas d'erreur, retourne à la page principale
     return redirect(url_for('reseaux.mes_reseaux'))
 
 # Route pour traiter la création d'un nouveau réseau
