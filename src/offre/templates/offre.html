@@ -7,14 +7,14 @@
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/fetes.svg')}}"
-            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
             alt="fetes"
         />
         {% else %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
-            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
             alt="fetes"
         />
         {% endif %}
