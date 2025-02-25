@@ -57,6 +57,20 @@ def filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses):
                 rep_voulu.add(rep)
     return list(rep_voulu)
 
+def filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses):
+    rep_voulu = set()
+    for rep in les_reponses:
+        for reseux_off in rep.offre.les_reseaux:
+            print(reseux_off.id_reseau)
+            if reseux_off.id_reseau in les_reseaux_elu:
+                rep_voulu.add(rep)
+    return list(rep_voulu)
+
+def get_reseaux_for_user(user):
+    """Récupère les réseaux en fonction du rôle de l'utilisateur."""
+    if user.is_admin():
+        return Reseau.query.all()
+    return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
 
 @reponse_bp.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
 def mes_reponses():
@@ -65,7 +79,7 @@ def mes_reponses():
     Returns:
         mes-reponses.html: Une page des réponses de l'utilisateur
     """
-    les_reseaux = Reseau.query.all()
+    les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
@@ -94,7 +108,7 @@ def mes_reponses():
 
 
     if les_reseaux_elu != []:
-        les_reponses = filtrage_des_reponses_par_reseaux(les_reseaux_elu, les_reponses)
+        les_reponses = filtrage_des_reponses_par_reseux(les_reseaux_elu, les_reponses)
 
     return render_template('mes-reponses.html', reponses=les_reponses, form=f_select_reseau, formd=proximité_date)
     
@@ -108,6 +122,11 @@ def repondre_offre(id_offre):
     if not o:
         return redirect(url_for("home"))
     reponse = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first()
+    cot_tot = 0
+    all_cot = Reponse.query.filter_by(id_offre=o.id_offre).all()
+    for cot in all_cot:
+        cot_tot += cot.budget
+    o.cotisation = cot_tot
     if reponse:
         if f.validate_on_submit():
             reponse.desc_rep = f.autre_rep.data
