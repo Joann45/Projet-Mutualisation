@@ -9,7 +9,7 @@ class Offre(db.Model):
     nom_offre = db.Column(db.Text)
     description = db.Column(db.Text)
     date_limite = db.Column(db.Date)
-    budget = db.Column(db.Numeric)
+    budget = db.Column(db.Float)
     cotisation_min = db.Column(db.Float)
     capacite_min = db.Column(db.Integer)
     capacite_max = db.Column(db.Integer)
@@ -19,6 +19,7 @@ class Offre(db.Model):
     date_fin = db.Column(db.Date)
     img = db.Column(db.Text)
     docs = db.Column(db.Boolean)
+    cotisation = db.Column(db.Float,default=0)
 
     id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'))
 

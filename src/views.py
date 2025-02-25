@@ -191,6 +191,11 @@ def repondre_offre(id_offre):
     if not o:
         return redirect(url_for("home"))
     reponse = Reponse.query.filter_by(id_utilisateur=current_user.id_utilisateur, id_offre=id_offre).first()
+    cot_tot = 0
+    all_cot = Reponse.query.filter_by(id_offre=o.id_offre).all()
+    for cot in all_cot:
+        cot_tot += cot.budget
+    o.cotisation = cot_tot
     if reponse:
         if f.validate_on_submit():
             reponse.desc_rep = f.autre_rep.data
