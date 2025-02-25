@@ -55,7 +55,11 @@ def signin():
 
         mail_dest_utilisateur = u.email_utilisateur
         notification = Notification(
-            type_operation="bienvenue", date_notification=datetime.now(), expediteur=u.nom_utilisateur)
+            type_operation="bienvenue", 
+            date_notification=datetime.now(), 
+            heure_notification=datetime.now().replace(microsecond=0).time(), 
+            expediteur="StageFlow",
+        )
         db.session.add(notification)
         db.session.flush() 
 
