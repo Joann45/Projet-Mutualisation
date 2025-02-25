@@ -6,71 +6,33 @@
         <h1 class ="fw-bolder display-4 m-4 ">Boite de réception</h1>
     </div>
     <div class="d-flex justify-content-center">    
+        {%for message in les_notifs%}
         <div class="mt-5">
             <div class="d-flex flex-row back-white rounded-4">
-                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="offre">
+                <img src="{{ url_for('static', filename='../static/img/profil/images.jpg') }}" alt="offre">
                 <div class="d-flex flex-column mx-5">
                 
 
                     <div class="d-flex justify-content-between align-items-center">
-                        <h3 >Elon Musk</h3>
-                        <p class="fw-bolder">maintenant</p>
+                        <h3>{{message.expediteur}}</h3>
+                        <p class="fw-bolder">{{message.date_notification}}</p>
                     </div>
                     <div>
-                        <p  class="d-flex flex-nowrap justify-content-around w-100">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil, fugiat numquam! 
-                            Consequuntur odio dignissimos  <br>qui voluptatibus quia nostrum beatae, maiores com
-                            modi adipisci maxime dolorem sint quas corporis dolore quae perspiciatis?</p>
+                        {% if message.type_operation == "ajout" %}
+                            <p>Vous avez reçu une invitation pour rejoindre son réseau</p>
+                        {% endif %}
+                        <p  class="d-flex flex-nowrap justify-content-around w-100">
+                            
+                        </p>
                     </div>
-                    <div class ="d-flex justify-content-end">
-                        <button class="btn btn-base fw-bolder rounded-5 mt-2">Appuyer pour en afficher plus<img src ="{{ url_for('static', filename='img/fleche.svg') }}" alt= "fleche" img> </button>   
-                    </div>
-                
                 </div>
+
+            </div>
             
         </div>
-        <div class="mt-5">
-            <div class="d-flex flex-row back-white rounded-4">
-                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="offre">
-                <div class="d-flex flex-column mx-5">
-                
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 >Elon Musk</h3>
-                        <p class="fw-bolder">maintenant</p>
-                    </div>
-                    <div>
-                        <p  class="d-flex flex-nowrap justify-content-around w-100">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil, fugiat numquam! 
-                            Consequuntur odio dignissimos  <br>qui voluptatibus quia nostrum beatae, maiores com
-                            modi adipisci maxime dolorem sint quas corporis dolore quae perspiciatis?</p>
-                    </div>
-                    <div class ="d-flex justify-content-end">
-                        <button class="btn btn-base fw-bolder rounded-5 mt-5">Appuyer pour en afficher plus<img src ="{{ url_for('static', filename='img/fleche.svg') }}" alt= "fleche" img> </button>   
-                    </div>
-                
-                </div>
-            
-        </div>
-        <div class="mt-5">
-            <div class="d-flex flex-row back-white rounded-4">
-                <img src="{{ url_for('static', filename='img/fete_fumee.svg') }}" alt="offre">
-                <div class="d-flex flex-column mx-5">
-                
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h3 >Elon Musk</h3>
-                        <p class="fw-bolder">maintenant</p>
-                    </div>
-                    <div>
-                        <p  class="d-flex flex-nowrap justify-content-around w-100">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nihil, fugiat numquam! 
-                            Consequuntur odio dignissimos  <br>qui voluptatibus quia nostrum beatae, maiores com
-                            modi adipisci maxime dolorem sint quas corporis dolore quae perspiciatis?</p>
-                    </div>
-                    <div class ="d-flex justify-content-end">
-                        <button class="btn btn-base fw-bolder rounded-5 mt-5">Appuyer pour en afficher plus<img src ="{{ url_for('static', filename='img/fleche.svg') }}" alt= "fleche" img> </button>   
-                    </div>
-                
-                </div>
-            
+        {%endfor%}
         </div>
     </div>
 </div>

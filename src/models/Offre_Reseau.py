@@ -1,4 +1,4 @@
-from src.app import db
+from src.extensions import db
 
 # Classe Offre_Reseau (table d'association)
 class Offre_Reseau(db.Model):

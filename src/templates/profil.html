@@ -5,7 +5,7 @@
 </div>
 
 <div class="mx-auto w-25 d-flex flex-column align-items-center div-dark rounded-4 mb-3 p-4">
-    <form class="w-75" method="post" action="{{ url_for('modifier_profil') }}" enctype="multipart/form-data">
+    <form class="w-75" method="post" action="{{ url_for('views.modifier_profil') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="text-center mb-3">
             <img
@@ -36,14 +36,14 @@
             {{ form.email(class_ ="form-control") }}
         </div>
         <div class="mb-3 form-group ">
-            <a href={{url_for('mdp_modif')}} style="text-decoration: none; color: red;">Modifier le mot de passe</a>
+            <a href={{url_for('auth.mdp_modif')}} style="text-decoration: none; color: red;">Modifier le mot de passe</a>
         </div>
         <div class="d-flex justify-content-center mt-4">
             <button class="btn btn-base fw-bolder" type="submit">Enregistrer</button>
         </div>
     </form>
     <button class="btn btn-danger mt-3 fw-bolder">
-        <a href={{url_for('logout')}} style="text-decoration: none; color: inherit;">Se déconnecter</a>
+        <a href={{url_for('auth.logout')}} style="text-decoration: none; color: inherit;">Se déconnecter</a>
     </button>
 </div>
 

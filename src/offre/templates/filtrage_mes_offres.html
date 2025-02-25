@@ -1,0 +1,15 @@
+<div class="w-25 border">
+    <div class="d-flex flex-column m-5">
+        <h1 class="w-100 fw-bolder">Filtrer par</h1>
+
+        <div class="my-3">
+            <form action="{{ url_for('offre.mes_offres') }}" method="post">
+                <h2>Réseaux</h2>
+                {{ form.hidden_tag() }} {{ form.reseaux() }}
+                <h2>Date limite de participation</h2>
+                {{ formd.hidden_tag() }} {{ formd.proxi() }}
+                <button type="submit" class="btn btn-base rounded-3">Rechercher</button>
+            </form>
+        </div>
+    </div>
+</div>
