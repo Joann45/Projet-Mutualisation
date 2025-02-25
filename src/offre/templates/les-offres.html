@@ -2,7 +2,7 @@
 
 
     <div class="d-flex vh-100">
-        {% include 'offre/filtrage_les_offres.html' %}
+        {% include 'filtrage_les_offres.html' %}
 
     
         <div class="d-flex justify-content-center bg-color-gris flex-grow-1 p-5">
@@ -12,7 +12,7 @@
 
                 <div>
                     {% for offre in offres %}
-                        {% include 'offre/offre.html' %}
+                        {% include 'offre.html' %}
                     {% endfor %}
                 </div>
             </div>

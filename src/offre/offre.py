@@ -31,13 +31,12 @@ from functools import wraps
 from flask import abort
 
 offre_bp = Blueprint('offre', __name__, template_folder='templates')
-
+print(os.getcwd())
 
 @offre_bp.route('/home/details-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def details_offre(id_offre):
     o = Offre.query.get(id_offre)
-
     commentaireForm = CommentaireForm()
     if commentaireForm.validate_on_submit():
         c = Commentaire()
@@ -56,7 +55,7 @@ def details_offre(id_offre):
         verif = 2
     elif o.utilisateur == current_user or current_user.role_id == 2:
         verif = 3
-    return render_template('offre/details-offre.html', offre=o, verif=verif, commentaireForm=commentaireForm)
+    return render_template('details-offre.html', offre=o, verif=verif, commentaireForm=commentaireForm)
 
 
 @offre_bp.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
@@ -144,7 +143,7 @@ def creation_offre():
         db.session.add(o_r)
         db.session.commit()
         return redirect(url_for('views.mes_offres'))
-    return render_template('offre/creation-offre.html', form=f)
+    return render_template('creation-offre.html', form=f)
 
 @offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
@@ -201,7 +200,7 @@ def mes_offres():
 
     if les_reseaux_elu != []:
         les_offres = filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres)
-    return render_template('offre/mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
 
 def filtrage_des_offrres_par_reseux(les_reseaux_elu, les_offres):
     offre_voulu = set()
@@ -252,4 +251,4 @@ def les_offres():
 
     
 
-    return render_template('offre/les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)

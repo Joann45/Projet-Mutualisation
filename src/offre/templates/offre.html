@@ -1,11 +1,22 @@
 <div class="my-5" style="min-width: 65%">
-    <a class="d-flex flex-nowrap text-decoration-none" href="{{url_for('views.details_offre', id_offre=offre.id_offre)}}">
+    <a
+        class="d-flex flex-nowrap text-decoration-none"
+        href="{{url_for('offre.details_offre', id_offre=offre.id_offre)}}"
+    >
         {% if offre.img == "0" %}
-        <img class="rounded-start-4" src="{{url_for('static', filename='../../static/static/img/fetes.svg')}}"
-            style="width: fit-content; height: fit-content; min-height: 267px; min-width:276px" alt="fetes" />
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../../static/static/img/fetes.svg')}}"
+            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            alt="fetes"
+        />
         {% else %}
-        <img class="rounded-start-4" src="{{url_for('static', filename='../../static/static/img/offre/' ~ offre.id_offre)}}"
-            style="width: fit-content; height: fit-content; min-height: 267px; min-width:276px" alt="fetes" />
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../../static/static/img/offre/' ~ offre.id_offre)}}"
+            style="width: fit-content; height: fit-content; min-height: 267px; min-width: 276px"
+            alt="fetes"
+        />
         {% endif %}
 
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
@@ -35,5 +46,4 @@
             </div>
         </div>
     </a>
-
 </div>
