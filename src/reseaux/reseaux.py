@@ -41,8 +41,9 @@ reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 
 @reseaux_bp.route('/home/mes-reseaux', methods=['GET'])
 @reseaux_bp.route('/home/mes-reseaux/<int:reseau_id>', methods=['GET'])
+@reseaux_bp.route('/home/mes-reseaux/<int:reseau_id>/<int:page>', methods=['GET'])
 @login_required
-def mes_reseaux(reseau_id=None):
+def mes_reseaux(reseau_id=None, page=1):
     """Affiche la page des réseaux."""
     f_select_reseau = SelectReseauForm()
     add_user_form = AddUtilisateurReseauForm()
@@ -67,14 +68,15 @@ def mes_reseaux(reseau_id=None):
 
     # Récupérer les offres associées
     les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
-
+    # membres = [[membre.orga for membre in reseau.les_utilisateurs]]
+    membres = [db.paginate(Utilisateur.query.filter(Utilisateur.les_reseaux.any(id_reseau=reseau_id)), per_page=10, page=page)]
     return render_template(
         'mes-reseaux-admin.html',
         add_user_form=add_user_form,
         add_form=add_form,
         reseaux=les_reseaux,
         select_form=f_select_reseau,
-        membres=[[membre.orga for membre in reseau.les_utilisateurs]],
+        membres= membres,
         reseau_id=reseau_id,
         offres=les_offres,
         reseau=reseau
@@ -131,6 +133,13 @@ def suppression_reseau(id_reseau):
     """
     reseau = Reseau.query.get(id_reseau)
     if reseau:
+        for offre_reseau in reseau.les_offres:
+            offre = offre_reseau.offre
+            if len(offre.les_reseaux) == 1:
+                offre.etat = "brouillon"
+            db.session.delete(offre_reseau)
+        for utilisateur_reseau in reseau.les_utilisateurs:
+            db.session.delete(utilisateur_reseau)
         db.session.delete(reseau)
         db.session.commit()
     return redirect(url_for('reseaux.mes_reseaux'))
