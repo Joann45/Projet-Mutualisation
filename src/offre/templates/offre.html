@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-center">
-                    <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux" onclick="event.stopPropagation();">
+                    <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux{{offre.id_offre}}" onclick="event.stopPropagation();">
                         Voir les réseaux
                     </button>
                 </div>
@@ -50,21 +50,21 @@
         </div>
     </div>
 
-</div>
+    <div id="voir_reseaux_{{offre.id_offre}}" class="popup">
 
-<div id="voir_reseaux" class="popup">
-
-    <h5 class="fs-3">Réseaux</h5>
-
-    <div class="card-body">
-        <div class="">
-            {% for reseau in offre.les_reseaux%}
-            <p> {{ reseau.reseau.nom_reseau }} </p>
-            {% endfor %}
+        <h5 class="fs-3">Réseaux</h5>
+    
+        <div class="card-body">
+            <div class="">
+                {% for reseau in offre.les_reseaux%}
+                <p> {{ reseau.reseau.nom_reseau }} </p>
+                {% endfor %}
+            </div>
+            <button class="btn btn-secondary popup-btn-close" type="button">
+                Fermer
+            </button>
         </div>
-        <button class="btn btn-secondary popup-btn-close" type="button">
-            Fermer
-        </button>
+    
     </div>
 
 </div>

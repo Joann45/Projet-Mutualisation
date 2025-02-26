@@ -20,9 +20,10 @@
 
           <div class="d-flex flex-column">
             <label class="m-3 color_white fs-5" for="genre">{{ form.genre.label }}</label>
-            <div class="d-flex flex-nowrap justify-content-evenly">
+            <div id="zone_ajout_genre" class="d-flex flex-nowrap justify-content-evenly">
                 {{ form.genre(class_="input-group border rounded-3 back-white") }}
-                <a href="{{url_for('views.genre')}}"><input type="button" value="Ajouter un genre"></a>
+                <input id="ajout_genre" type="button" value="Ajouter un genre">
+                <a href="{{url_for('views.genre')}}"><input type="button" value="Supprimer un genre"></a>
             </div>
           </div>
 

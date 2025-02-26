@@ -150,7 +150,7 @@ def creation_offre(id_offre=None):
             db.session.commit()
 
             for r in id_reseaux_elu:
-                les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
+                les_reseaux_elu.append(Reseau.query.get(r).id_reseau)
 
             for r in les_reseaux_elu:
                 o_r = Offre_Reseau()
