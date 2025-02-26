@@ -51,5 +51,10 @@ class SelectDateProximité(FlaskForm):
     id = HiddenField("id")
     proxi = RadioField("Date d'expiration")
 
+class SelectStatueOffre(FlaskForm):
+
+    id = HiddenField("id")
+    statue = RadioField("Status")
+
 
 

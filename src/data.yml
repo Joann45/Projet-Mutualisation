@@ -41,7 +41,6 @@
   img_utilisateur: "1"
   role_id: 2
 
-
 - type: utilisateur
   id_utilisateur: 2
   nom_utilisateur: "o"
@@ -61,16 +60,20 @@
 
 - type: utilisateur
   id_utilisateur: 3
-  nom_utilisateur: "oo"
-  prenom_utilisateur: "oo"
-  mdp_utilisateur: "oo"
-  email_utilisateur: "oo"
+  nom_utilisateur: "z"
+  prenom_utilisateur: "z"
+  mdp_utilisateur: "z"
+  email_utilisateur: "z"
   img_utilisateur: "1"
   role_id: 1
 
 - type: utilisateur_reseau
   id_utilisateur: 3
   id_reseau: 1
+
+- type: utilisateur_reseau
+  id_utilisateur: 3
+  id_reseau: 3
 
 - type: offre
   id_offre: 1
@@ -81,12 +84,44 @@
   cotisation_min: 50
   capacite_max: 100
   capacite_min: 10
-  etat: NULL
+  etat: 'brouillon'
   nom_loc: "stade de france"
   date_deb: 2026-06-19
   date_fin: 2026-06-21
   img: "0"
-  id_utilisateur: 1
+  id_utilisateur: 2
+
+- type: offre
+  id_offre: 2
+  nom_offre: "offre2"
+  description: "description_offre2"
+  date_limite: 2025-05-21
+  budget: 500
+  cotisation_min: 50
+  capacite_max: 100
+  capacite_min: 10
+  etat: 'brouillon'
+  nom_loc: "stade d'Orléans"
+  date_deb: 2026-06-19
+  date_fin: 2026-06-21
+  img: "0"
+  id_utilisateur: 3
+
+- type: genre_offre
+  id_offre: 1
+  id_genre: 1
+
+- type: genre_offre
+  id_offre: 2
+  id_genre: 3
+
+- type: offre_reseau
+  id_offre: 1
+  id_reseau: 1
+
+- type: offre_reseau
+  id_offre: 2
+  id_reseau: 3
 
 - type: utilisateur_reseau
   id_utilisateur: 1

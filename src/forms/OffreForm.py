@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SelectField, DateField, FloatField, IntegerField, TextAreaField, SubmitField
+from wtforms import StringField, HiddenField, FileField, SelectField, DateField, FloatField, IntegerField, TextAreaField, SubmitField, MultipleFileField
 from wtforms.validators import DataRequired, ValidationError
 from datetime import date
 
@@ -19,7 +19,7 @@ class OffreForm(FlaskForm):
     date_deb = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])
     liens = TextAreaField('Lien vers des ressources promotionnelles')
-    documents = FileField("Ajouter les documents liés à l'offre")
+    documents = MultipleFileField("Ajouter les documents liés à l'offre")
 
     # def validate(self, extra_validators=None):
     #     if not FlaskForm.validate(self, extra_validators=extra_validators):

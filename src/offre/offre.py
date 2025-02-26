@@ -82,7 +82,7 @@ def suppression_offre(id_offre):
 
 
 def create_new_offer(form):
-    """Crée une nouvelle offre à partir des données du formulaire."""
+    """Crée une nouvelle offre à partir du formulaire."""
     o = Offre()
     o.nom_offre = form.nom_offre.data
     o.description = form.description.data
@@ -90,25 +90,25 @@ def create_new_offer(form):
     o.budget = form.budget.data
     o.cotisation_min = form.cotisation_min.data
     o.capacite_max = form.capacite_max.data
-    o.capacite_min = form.capacite_min.data
+    o.capacite_min = form.cotisation_min.data
     o.etat = "brouillon"
     o.nom_loc = form.nom_loc.data
     o.date_deb = form.date_deb.data
     o.date_fin = form.date_fin.data
     o.id_utilisateur = current_user.id_utilisateur
     db.session.add(o)
-    db.session.commit()
+    db.session.commit()  # Pour obtenir l'id_offre généré
     return o
 
 def update_offer(o, form):
-    """Met à jour l'offre existante à partir du formulaire."""
+    """Met à jour l'offre existante avec les valeurs du formulaire."""
     o.nom_offre = form.nom_offre.data
     o.description = form.description.data
     o.date_limite = form.date_limite.data
     o.budget = form.budget.data
     o.cotisation_min = form.cotisation_min.data
     o.capacite_max = form.capacite_max.data
-    o.capacite_min = form.capacite_min.data
+    o.capacite_min = form.cotisation_min.data
     o.etat = "brouillon"
     o.nom_loc = form.nom_loc.data
     o.date_deb = form.date_deb.data
@@ -118,7 +118,7 @@ def update_offer(o, form):
     return o
 
 def process_offer_image(o, form):
-    """Traite l'image (sauvegarde ou définit la valeur par défaut)."""
+    """Traite l'image de l'offre (sauvegarde ou valeur par défaut)."""
     file_o = form.img.data
     if not file_o:
         o.img = "0"
@@ -129,25 +129,28 @@ def process_offer_image(o, form):
     db.session.commit()
 
 def process_offer_document(o, form):
-    """Traite le document associé à l'offre, s'il existe."""
+    """Traite le(s) document(s) attaché(s) à l'offre."""
     file = form.documents.data
     if file:
-        d = Document()
-        filename = secure_filename(file.filename)
-        d.nom_doc = filename
-        d.id_offre = o.id_offre
-        db.session.add(d)
-        db.session.commit()
-        file_path = os.path.join("src/static/Documents", f"{d.id_doc}-{o.id_offre}")
-        file.save(file_path)
-        o.docs = True
+        # Ici on considère qu'il y a éventuellement plusieurs documents
+        for doc in file:
+            d = Document()
+            filename = secure_filename(doc.filename)
+            d.nom_doc = filename
+            d.id_offre = o.id_offre
+            db.session.add(d)
+            db.session.commit()
+            file_path = os.path.join("src/static/Documents", f"{d.id_doc}-{o.id_offre}")
+            doc.save(file_path)
+            o.docs = True
     else:
         o.docs = False
     db.session.commit()
 
 def process_offer_genre(o, form):
-    """Traite le genre sélectionné et associe l'offre au genre."""
+    """Associe l'offre au genre sélectionné."""
     g = Genre.query.get(form.genre.data)
+    # Pour la création, on ajoute un nouveau lien, sinon on met à jour le lien existant
     g_o = Genre_Offre.query.filter_by(id_offre=o.id_offre).first()
     if not g_o:
         g_o = Genre_Offre()
@@ -158,7 +161,7 @@ def process_offer_genre(o, form):
 
 def process_offer_reseaux(o, form_reseaux):
     """Réassocie les réseaux sélectionnés à l'offre."""
-    # Suppression des associations existantes
+    # Suppression des anciennes associations
     Offre_Reseau.query.filter_by(id_offre=o.id_offre).delete()
     db.session.commit()
     for r in form_reseaux.reseaux.data:
@@ -168,32 +171,32 @@ def process_offer_reseaux(o, form_reseaux):
         db.session.add(o_r)
         db.session.commit()
 
-def populate_offer_form(o, f, f_select_reseau):
-    """Préremplit le formulaire à partir de l'offre existante."""
-    f.nom_offre.data = o.nom_offre
-    f.description.data = o.description
-    f.date_limite.data = o.date_limite
-    f.budget.data = o.budget
-    f.cotisation_min.data = o.cotisation_min
-    f.capacite_max.data = o.capacite_max
-    f.capacite_min.data = o.capacite_min
-    f.nom_loc.data = o.nom_loc
-    f.date_deb.data = o.date_deb
-    f.date_fin.data = o.date_fin
+def populate_offer_form(o, form, form_reseaux):
+    """Préremplit les formulaires avec les valeurs de l'offre existante."""
+    form.nom_offre.data = o.nom_offre
+    form.description.data = o.description
+    form.date_limite.data = o.date_limite
+    form.budget.data = o.budget
+    form.cotisation_min.data = o.cotisation_min
+    form.capacite_max.data = o.capacite_max
+    form.capacite_min.data = o.capacite_min
+    form.nom_loc.data = o.nom_loc
+    form.date_deb.data = o.date_deb
+    form.date_fin.data = o.date_fin
     if o.les_genres:
-        f.genre.data = o.les_genres[0].id_genre
+        form.genre.data = o.les_genres[0].id_genre
+    # Récupération des réseaux déjà associés
     reseaux_selected = Offre_Reseau.query.filter_by(id_offre=o.id_offre).all()
-    f_select_reseau.reseaux.default = [r.id_reseau for r in reseaux_selected]
-    f_select_reseau.process()
-    f.img.data = o.img
+    form_reseaux.reseaux.default = [r.id_reseau for r in reseaux_selected]
+    form_reseaux.process()
+    form.img.data = o.img
 
-@offre_bp.route('/home/creation-offre', defaults={'id_offre': None}, methods=['GET','POST'])    
+@offre_bp.route('/home/creation-offre', defaults={'id_offre': None}, methods=['GET','POST'])
 @offre_bp.route('/home/creation-offre/<int:id_offre>', methods=['GET','POST'])
 @login_required
 def creation_offre(id_offre=None):
-    """
-    Renvoie la page de création d'une offre.
-    Si un id_offre est passé, l'offre est modifiée.
+    """Renvoie la page de création d'une offre.
+       Si id_offre est fourni, l'offre est modifiée.
     """
     o = Offre.query.get(id_offre) if id_offre else None
 
@@ -206,13 +209,12 @@ def creation_offre(id_offre=None):
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
 
     if f.validate_on_submit():
-        # Création ou mise à jour
+        # Création ou mise à jour de l'offre
         if o is None:
             o = create_new_offer(f)
         else:
             o = update_offer(o, f)
 
-        # Traitement de l'image et du document
         process_offer_image(o, f)
         process_offer_document(o, f)
         process_offer_genre(o, f)
