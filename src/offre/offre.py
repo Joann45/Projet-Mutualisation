@@ -22,13 +22,14 @@ from datetime import datetime
 from hashlib import sha256
 from flask_security import Security, SQLAlchemySessionUserDatastore
 from src.forms.ReseauForm import SelectReseauForm
-from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectDateProximité
+from src.forms.RechercheOffreForm import SelectRechercheOffreForm, SelectStatueOffre, SelectDateProximité
 from werkzeug.utils import secure_filename
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 import os
 from functools import wraps
 from flask import abort
+import datetime as dt
 
 offre_bp = Blueprint('offre', __name__, template_folder='templates')
 print(os.getcwd())
@@ -262,15 +263,24 @@ def mes_offres():
     proximité_date = SelectDateProximité()
     proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"] #afficage  de filtre de date d'expiration
 
+    statue_offre = SelectStatueOffre()
+    statue_offre.statue.choices = ["À venir","En cours","Expiré"] #affichage de filtre des status 
+
     if proximité_date.proxi.data == None : #Si pas de choix la choix de base est plus proche pour la date d'expiration
         proximité_date.proxi.default = "Plus Proche"
         proximité_date.process()
+
+    if statue_offre.statue.data == None : #Si pas de choix insi que choix par default est à venir
+        statue_offre.statue.default = "À venir"
+        statue_offre.process()
 
     id_reseaux_elu =  f_select_reseau.reseaux.data #recupere l'information des reseaux choisi 
     les_reseaux_elu = []
 
 
     proxi_elu = proximité_date.proxi.data #recupere l'information de date d'expiration
+
+    statue_elu = statue_offre.statue.data #recupere l'infomration de statue choisi
 
    
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
@@ -290,16 +300,35 @@ def mes_offres():
         offre_reseau = [Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
         
     offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
-    les_offres = []
-    for offre in offres:
-        les_offres+=offre
+    les_offres = []       
 
-    if proxi_elu == "Plus Proche":
+    current_date = dt.date.today()
+
+    for offre in offres:
+        of = offre[0]
+        if statue_elu == statue_offre.statue.choices[0]:#cas de à venir d'etre choisi
+            print(of.date_limite>=current_date) #date de limite apres la date currant
+            if of.date_limite>=current_date:
+                les_offres+=offre
+
+        elif statue_elu == statue_offre.statue.choices[1]:#cas de en cours 
+            print(of.date_limite<=current_date and of.date_deb < current_date < of.date_fin) 
+            if of.date_limite<=current_date and of.date_deb < current_date < of.date_fin:
+                les_offres+=offre
+
+        elif statue_elu == statue_offre.statue.choices[2]: #case de expiré 
+            print(of.date_fin<=current_date)
+            if of.date_fin<=current_date:
+                les_offres+=offre
+        
+
+    if proxi_elu == "Plus Proche": #cas de plus proche d'etre choisi
         les_offres.sort(key=lambda o:o.date_limite)
-    else: 
+    else: #cas de moins proche d'etre choisi
         les_offres.sort(reverse=True,key=lambda o:o.date_limite)
 
-    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date,formstatue=statue_offre)
 
 
 
