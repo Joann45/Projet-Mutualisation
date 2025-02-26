@@ -70,11 +70,12 @@ def suppression_offre(id_offre):
     """
     o = Offre.query.get(id_offre)
     if o:
-        Reponse.query.filter_by(id_offre=id_offre).delete()
-        Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
-        Genre_Offre.query.filter_by(id_offre=id_offre).delete()
-        db.session.delete(o)
-        db.session.commit()
+        if o.etat == "brouillon":
+            Reponse.query.filter_by(id_offre=id_offre).delete()
+            Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
+            Genre_Offre.query.filter_by(id_offre=id_offre).delete()
+            db.session.delete(o)
+            db.session.commit()
     return redirect(url_for('offre.mes_offres'))
 
 
