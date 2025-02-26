@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 {%extends 'base.html'%} {%block content%}
+<style>
+    #btnPubli{
+        background-color: green;
+        color: aliceblue;
+    }
+    #btnPubli:hover{
+        background-color: brown;
+    }
+    #btnPubli:after       { content:'Publiée'; }
+    #btnPubli:hover:after { content:'Depublier'; }
+</style>
 <div class="d-flex flex-column align-items-center my-5">
     <div class="d-flex flex-nowrap mb-3" style="width: 65%">
         {% if offre.img == "0" %}
@@ -64,9 +75,49 @@
                     />
                 </a>
                 {% endif %}
+                
             </div>
+            
         </div>
+        
     </div>
+    {% if verif == 3 %}
+    <div class="d-flex justify-content-around" >
+                            
+        <a href="{{url_for('views.definir_etat', id_offre=offre.id_offre)}}">
+             
+            
+            {% if offre.etat=="publiée"  %}
+                <button id = "btnPubli" class="btn rounded-4 mx-5 px-4 fs-5"></button>
+                
+
+            
+            {% else %}
+                <button id = "btnNonPubli" class="btn btn-dark rounded-4 mx-5 px-4 fw-bolder fs-5" >Publier</button>
+            
+            {% endif %}
+
+        </a>
+
+        <a href="{{url_for('offre.creation_offre', id_offre=offre.id_offre)}}">
+            <input class= "btn btn-dark rounded-4 px-4 mx-5 fw-bolder fs-5" 
+            type="button" 
+            name="modifier" 
+            id="modifier" 
+            value="Modifier">
+        </a>
+
+        <a href="{{url_for('offre.suppression_offre', id_offre=offre.id_offre)}}">
+            <input class="btn btn-dark rounded-4 px-4 mx-5 fw-bolder fs-5" 
+            type="button" 
+            name="supprimer_offre" 
+            id="supprimer_offre" 
+            value="Supprimer"
+            />
+        </a>         
+                  
+    </div>
+    {% endif %}
     {% if offre.docs %}
     <div class="d-flex justify-content-end mb-3" style="width: 65%">
         <a class="text-dark fw-bolder" style="justify-self: end" href="#documents">
@@ -143,5 +194,6 @@
             {% endfor %}
         </div>
     </div>
+    
 </div>
 {% endblock %}

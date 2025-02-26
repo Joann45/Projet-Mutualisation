@@ -18,41 +18,6 @@
                     {% for offre in offres%}
                     <div>
                         {% include 'offre.html' %}
-                        <div class="d-flex justify-content-around" >
-                            
-                            <a href="{{url_for('views.definir_etat', id_offre=offre.id_offre)}}">
-                                 
-                                
-                                {% if offre.etat=="publiée"  %}
-                                    <button id = "btnPubli" class="btn btn-green rounded-4 px-4 fs-5" >Publiée</button>
-                               
-                                
-                                {% else %}
-                                    <button id = "btnPubli" class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" >Publier</button>
-                                
-                                {% endif %}
-
-                            </a>
-     
-                            <a href="{{url_for('offre.creation_offre', id_offre=offre.id_offre)}}">
-                                <input class= "btn btn-dark rounded-4 px-4 fw-bolder fs-5" 
-                                type="button" 
-                                name="modifier" 
-                                id="modifier" 
-                                value="Modifier">
-                            </a>
-                    
-                            <a href="{{url_for('offre.suppression_offre', id_offre=offre.id_offre)}}">
-                                <input class="btn btn-dark rounded-4 px-4 fw-bolder fs-5" 
-                                type="button" 
-                                name="supprimer_offre" 
-                                id="supprimer_offre" 
-                                value="Supprimer"
-                                />
-                            </a>         
-                                      
-                        </div>
-                    </div>
                     {% endfor %}
                     
 
