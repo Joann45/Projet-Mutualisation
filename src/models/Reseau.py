@@ -8,4 +8,4 @@ class Reseau(db.Model):
     nom_reseau = db.Column(db.Text)
 
     les_offres = db.relationship('Offre_Reseau', back_populates='reseau', lazy=True, cascade="all, delete-orphan")
-    les_utilisateurs = db.relationship('Utilisateur_Reseau', back_populates='reseau', lazy=True,  cascade="all, delete-orphan")
+    les_utilisateurs = db.relationship('Utilisateur_Reseau', back_populates='reseau', lazy=True, cascade="all, delete-orphan")

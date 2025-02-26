@@ -86,7 +86,7 @@
                         />
                     </a>
                 </div>
-                {% endif %}
+                {% endif %} {% if not current_user.is_admin() %}
                 <div>
                     <!-- créer la route vers notification -->
                     <a href="{{url_for('views.boite_reception')}}" class="btn">
@@ -96,6 +96,7 @@
                         />
                     </a>
                 </div>
+                {% endif %}
                 <div>
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
                     <a class="btn" href="{{url_for('views.modifier_profil')}}">
