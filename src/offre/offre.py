@@ -271,14 +271,14 @@ def mes_offres():
     proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"] #afficage  de filtre de date d'expiration
 
     statue_offre = SelectStatueOffre()
-    statue_offre.statue.choices = ["À venir","En cours","Expiré"] #affichage de filtre des status 
+    statue_offre.statue.choices = ["Tous","À venir","En cours","Expiré"] #affichage de filtre des status 
 
     if proximité_date.proxi.data == None : #Si pas de choix la choix de base est plus proche pour la date d'expiration
         proximité_date.proxi.default = "Plus Proche"
         proximité_date.process()
 
     if statue_offre.statue.data == None : #Si pas de choix insi que choix par default est à venir
-        statue_offre.statue.default = "À venir"
+        statue_offre.statue.default = "Tous"
         statue_offre.process()
 
     id_reseaux_elu =  f_select_reseau.reseaux.data #recupere l'information des reseaux choisi 
@@ -313,19 +313,21 @@ def mes_offres():
 
     for offre in offres:
         of = offre[0]
-        if statue_elu == statue_offre.statue.choices[0]:#cas de à venir d'etre choisi
-            print(of.date_limite>=current_date) #date de limite apres la date currant
-            if of.date_limite>=current_date:
+        if statue_elu == statue_offre.statue.choices[0]:
+            les_offres+=offre
+        elif statue_elu == statue_offre.statue.choices[1]:#cas de à venir d'etre choisi
+             
+            if of.date_limite>=current_date: #date de limite apres la date currant
                 les_offres+=offre
 
-        elif statue_elu == statue_offre.statue.choices[1]:#cas de en cours 
-            print(of.date_limite<=current_date and of.date_deb < current_date < of.date_fin) 
-            if of.date_limite<=current_date and of.date_deb < current_date < of.date_fin:
+        elif statue_elu == statue_offre.statue.choices[2]:#cas de en cours 
+            
+            if of.date_deb <= current_date <= of.date_fin: #date de debut déja passé et  l'offre n'est pas encore dini  
                 les_offres+=offre
 
-        elif statue_elu == statue_offre.statue.choices[2]: #case de expiré 
-            print(of.date_fin<=current_date)
-            if of.date_fin<=current_date:
+        elif statue_elu == statue_offre.statue.choices[3]: #case de expiré 
+            
+            if of.date_fin<current_date:
                 les_offres+=offre
         
 
