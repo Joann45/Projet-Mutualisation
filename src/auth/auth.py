@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
+from src.forms.MotDePasseForm import SendMailResetForm
 import os
 from hashlib import sha256
 from src.models import Notification, Notification_Utilisateur
@@ -93,22 +94,27 @@ def logout():
     logout_user()
     return redirect(url_for('auth.login'))
 
-@auth_bp.route('/mdp-oublie') # TODO : A faire -> le form et les interactions avec la base de données
+@auth_bp.route('/mdp-oublie',methods=['GET','POST'])
 def mdp_oublie():
     """Renvoie la page du mot de passe oublié
 
     Returns:
         mdp-oublie.html : Une page demandant de rentrer son adresse mail pour réinitialiser le mot de passe
     """
-    return render_template('auth/mdp-oublie.html')
+    f = SendMailResetForm()
+    if f.validate():
+        mail_dest_utilisateur = f.adress_mail
+        send_email_with_timeout(mail_dest_utilisateur, "Réinitialisation du mot de passe", "Réinitialisation de votre mot de passe", "<b>Cliquez sur le lien pour réinitialiser votre mot de passe</b> <br> <a href='http://127.0.0.1:5000/auth/mdp-reset?email="+mail_dest_utilisateur+"'> Réinitialiser votre mot de passe </a>")
+    return render_template('auth/mdp-oublie.html',form= f)
 
-@auth_bp.route('/mdp-reset') # TODO : A faire -> le form et les interactions avec la base de données
+@auth_bp.route('/mdp-reset',methods=['GET','POST'])
 def mdp_reset():
     """Renvoie la page de réinitialisation du mot de passe
 
     Returns:
         mdp-reset.html: Une page pour réinitialiser le mot de passe
     """
+   
     return render_template('auth/mdp-reset.html')
 
 @auth_bp.route('/mdp-modif', methods=['GET','POST'])
@@ -122,4 +128,5 @@ def mdp_modif():
             user.mdp_utilisateur = sha256(f.new_password.data.encode()).hexdigest()
             db.session.commit()
             return redirect(url_for('views.home'))
-    return render_template('auth/mdp-modif.html', form = f)
+    return render_template('mdp-modif.html', form = f)
+
