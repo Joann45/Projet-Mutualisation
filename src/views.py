@@ -151,7 +151,7 @@ def definir_etat(id_offre):
         else : 
             o.etat = "publiée"
         db.session.commit()
-    return redirect(url_for('offre.mes_offres'))
+    return redirect(url_for('offre.details_offre',id_offre=id_offre))
 
 @views_bp.route('/home/genre', methods=['GET','POST'])
 def genre():
