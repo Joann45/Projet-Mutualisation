@@ -11,6 +11,9 @@
         <link rel="stylesheet" href="{{ url_for('static',filename='../static/style.css')}}" />
         {% endblock %} {% block styles %}
         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+        <!-- Include HTMX library -->
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org/dist/htmx.min.js"></script>
         {{ bootstrap.load_css() }} {% endblock %}
     </head>
 
@@ -30,13 +33,7 @@
 
                 <div>
                     <a class="mb-5" href="{{url_for('offre.les_offres')}}">
-                        <input
-                            class="btn btn-dark p-3"
-                            type="button"
-                            name="offres"
-                            id="offres"
-                            value="Les Offres"
-                        />
+                        <input class="btn btn-dark p-3" type="button" name="offres" id="offres" value="Les Offres" />
                     </a>
                 </div>
 

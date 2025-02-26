@@ -1,90 +1,97 @@
-{%extends 'base.html'%} {%block content%}
-<div id="resau_view" class="row">
-    <div class="col-sm">
-        <h1>Voir mes réseaux</h1>
-        <div>
-            <div>
-                <img src="{{ url_for('static', filename='../static/img/humaaan1.svg') }}" alt="social" />
+{%extends 'base.html' %} {%block content%}
+<div id="resau_view" class="container-fluid my-4">
+    <div class="row">
+        <!-- Colonne de gauche : Sélection des réseaux et actions principales -->
+        <div class="col-lg-4">
+            <h1 class="mb-3">Mes réseaux</h1>
+            <div class="list-group">
+                {% for r in reseaux %}
+                <a
+                    href="{{ url_for('reseaux.mes_reseaux', reseau_id=r.id_reseau) }}"
+                    class="list-group-item list-group-item-action {{ 'active' if r.id_reseau == reseau_id else '' }}"
+                >
+                    {{ r.nom_reseau }}
+                </a>
+                {% endfor %}
             </div>
-
-            <div>
+            {% if current_user.is_admin() %}
+            <div class="btn-group mt-3 d-grid" role="group">
+                <button class="btn btn-dark popup-btn-open" type="button" data-popup="creer_reseau">
+                    Créer un réseau
+                </button>
                 {% if reseau %}
-                <form method="POST" action="{{ url_for('reseaux.select_reseau') }}">
-                <div class="input-group">
-                    {{ select_form.hidden_tag() }} {{ select_form.reseaux.label }} {{ select_form.reseaux() }}
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Choisir ce réseau</button>
-                </form>
-                {% endif %}
-                {% if current_user.is_admin() %}
-
-                <input
-                    class="btn btn-dark popup-btn-open"
-                    type="button"
-                    name="creer_reseau"
-                    value="Créer un réseau"
-                    data-popup="creer_reseau"
-
-                />
-                {% if reseau%}
-                <input
-                    class="btn btn-dark popup-btn-open"
-                    type="button"
-                    name="ajouter_membre"
-                    value="Ajouter un membre"
-                    data-popup="ajouter_membre"
-                />
-                <a href="{{ url_for('reseaux.suppression_reseau', id_reseau=reseau.id_reseau) }}">
-                <input
-                    class="btn btn-dark"
-                    type="button"
-                    name="supprimer_reseau"
-                    id="supprimer_reseau"
-                    value="Supprimer un réseau"
-                />
+                <a href="{{ url_for('reseaux.suppression_reseau', id_reseau=reseau.id_reseau) }}" class="btn btn-dark">
+                    Supprimer un réseau
                 </a>
                 {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <!-- Colonne de droite : Affichage des membres -->
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="mb-0">{{ reseau.nom_reseau }}</h1>
+                {% if current_user.is_admin() and reseau %}
+                <button class="btn btn-dark popup-btn-open" type="button" data-popup="ajouter_membre">
+                    Ajouter un membre
+                </button>
                 {% endif %}
-                </div>
             </div>
-
-            <div>
-                <img src="{{ url_for('static', filename='../static/img/humaaan2.svg') }}" alt="social" />
-            </div>
+            {% for membre in membres%} {% include 'membres-reseaux.html' %} {% endfor %}
         </div>
     </div>
-    <div class="col-sm">
-        <h1>{{reseau.nom_reseau}}</h1> 
-        {% for membre in membres%} {%include 'membres-reseaux.html'%} {% endfor %}</div>
 </div>
+
 {% if current_user.is_admin() %}
+<!-- Popup : Créer un réseau -->
 <div id="creer_reseau" class="popup">
-    <h1>Créer un réseau</h1>
-    <form method="post" action="{{ url_for('reseaux.ajout_reseau') }}">
-        <div>
-            {{ add_form.hidden_tag() }}
-            {{ add_form.nom_reseau.label }} {{ add_form.nom_reseau() }}
+    <div class="card">
+        <div class="card-header">
+            <h5>Créer un réseau</h5>
         </div>
-        <button class="btn btn-primary popup-btn-close" type="submit" name="submit_add">Créer</button>
-        <button class="btn btn-primary popup-btn-close" type="button" data-popup="creer_reseau">Fermer</button>
-    </form>
-</div>
-{% if reseau%}
-<div class="popup" id="ajouter_membre">
-<h1>Ajouter un utilisateur au réseau : {{reseau.nom_reseau}}</h1>
-<div>
-    <form method="post" action="{{ url_for('reseaux.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
-        {{ add_user_form.hidden_tag() }}
-        <div class="form-group">
-            {{ add_user_form.utilisateur.label(class="form-label") }} {{ add_user_form.utilisateur(class="form-control") }} {% for error
-            in add_user_form.utilisateur.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
+        <div class="card-body">
+            <form method="post" action="{{ url_for('reseaux.ajout_reseau') }}">
+                <div class="mb-3">
+                    {{ add_form.hidden_tag() }} {{ add_form.nom_reseau.label(class="form-label") }} {{
+                    add_form.nom_reseau(class="form-control") }}
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary me-2 popup-btn-close" type="submit" name="submit_add">Créer</button>
+                    <button class="btn btn-secondary popup-btn-close" type="button" data-popup="creer_reseau">
+                        Fermer
+                    </button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-    </form>
-    <button class="btn btn-primary popup-btn-close" type="button" data-popup="ajouter_membre">Fermer</button>
+    </div>
 </div>
+{% endif %}
+
+<!-- Popup : Ajouter un membre -->
+{% if reseau %}
+<div id="ajouter_membre" class="popup">
+    <div class="card">
+        <div class="card-header">
+            <h5>Ajouter un utilisateur au réseau : {{ reseau.nom_reseau }}</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{{ url_for('reseaux.ajout_utilisateur_reseau', id_reseau=reseau.id_reseau) }}">
+                {{ add_user_form.hidden_tag() }}
+                <div class="form-group mb-3">
+                    {{ add_user_form.utilisateur.label(class="form-label") }} {{
+                    add_user_form.utilisateur(class="form-control") }} {% for error in add_user_form.utilisateur.errors
+                    %}
+                    <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2">Ajouter</button>
+                    <button class="btn btn-secondary popup-btn-close" type="button" data-popup="ajouter_membre">
+                        Fermer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-{%endif%}
-{% endif %} {% endblock %}
+{% endif %} {%endblock%}
