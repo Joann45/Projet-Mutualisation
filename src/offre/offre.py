@@ -364,3 +364,8 @@ def les_offres():
 
 
     return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+
+@offre_bp.route('/home/les-reseaux-de-offre/<int:id_offre>', methods=["POST","GET"])
+def les_reseaux_de_offre(id_offre):
+    reseaux = Offre_Reseau.query.filter_by(id_offre=id_offre).all()
+    return [Reseau.query.get(r.id_reseau) for r in reseaux]
