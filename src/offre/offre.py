@@ -281,7 +281,7 @@ def mes_offres():
         statue_offre.statue.default = "Tous"
         statue_offre.process()
 
-    id_reseaux_elu =  f_select_reseau.reseaux.data #recupere l'information des reseaux choisi 
+  
     les_reseaux_elu = []
 
 
@@ -293,42 +293,54 @@ def mes_offres():
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
         
 
-        for id_r in id_reseaux_elu:
-            les_reseaux_elu.append(Reseau.query.get(id_r))
+        for id_r in f_select_reseau.reseaux.data: #recupere l'information des reseaux choisi
+            les_reseaux_elu+=Reseau.query.filter_by(id_reseau=id_r).all()
+        
     
 
     if les_reseaux_elu != []: #Si des reseux était choixi par utilisateur
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
+        
        
         
 
     else: #Si aucun choit était fait 
         
         offre_reseau = [Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
+    
+    print(les_reseaux_elu)
+    offres = []
+    for ofr in offre_reseau:   
+
+        liste = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in ofr]
+        for ele in liste:
+            offres += ele
+        print(offres)
         
-    offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
+    
+    offres= set(offres)
+    offres = list(offres)
     les_offres = []       
 
     current_date = dt.date.today()
 
     for offre in offres:
-        of = offre[0]
-        if statue_elu == statue_offre.statue.choices[0]:
-            les_offres+=offre
+        if statue_elu == statue_offre.statue.choices[0] or len(offre)==0:
+            les_offres.append(offre)
         elif statue_elu == statue_offre.statue.choices[1]:#cas de à venir d'etre choisi
              
-            if of.date_limite>=current_date: #date de limite apres la date currant
-                les_offres+=offre
+            if offre.date_limite>=current_date: #date de limite apres la date currant
+                les_offres.append(offre)
 
         elif statue_elu == statue_offre.statue.choices[2]:#cas de en cours 
             
-            if of.date_deb <= current_date <= of.date_fin: #date de debut déja passé et  l'offre n'est pas encore dini  
-                les_offres+=offre
+            if offre.date_deb <= current_date <= offre.date_fin: #date de debut déja passé et  l'offre n'est pas encore dini  
+                les_offres.append(offre)
 
         elif statue_elu == statue_offre.statue.choices[3]: #case de expiré 
             
-            if of.date_fin<current_date:
-                les_offres+=offre
+            if offre.date_fin<current_date:
+                les_offres.append(offre)
         
 
     if proxi_elu == "Plus Proche": #cas de plus proche d'etre choisi
