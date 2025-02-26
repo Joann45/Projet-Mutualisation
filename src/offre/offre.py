@@ -200,6 +200,10 @@ def creation_offre(id_offre=None):
             g_o.id_offre = id_offre
             db.session.commit()
 
+            for r in Offre_Reseau.query.filter_by(id_offre=id_offre).all():
+                db.session.delete(r)
+                db.session.commit()
+
             for r in id_reseaux_elu:
                 les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
                 print(les_reseaux_elu)
@@ -208,6 +212,7 @@ def creation_offre(id_offre=None):
                 o_r = Offre_Reseau()
                 o_r.id_reseau = r
                 o_r.id_offre = id_offre
+                db.session.add(o_r)
                 db.session.commit()
             return redirect(url_for('offre.mes_offres'))
     if o:
@@ -223,7 +228,7 @@ def creation_offre(id_offre=None):
         f.date_fin.data = o.date_fin
         f.genre.data = o.les_genres[0].id_genre
         reseaux_selected = Offre_Reseau.query.filter_by(id_offre=id_offre).all()
-        print(reseaux_selected)
+        # print(reseaux_selected)
         f.img.data = o.img
         # f.documents.data = o.les_documents[0].id_doc
     
@@ -285,7 +290,7 @@ def mes_offres():
 
     else: #Si aucun choit était fait 
         
-        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
+        offre_reseau = [Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
         
     offres = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in offre_reseau[0]]
     les_offres = []
