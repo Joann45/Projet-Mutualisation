@@ -130,15 +130,18 @@ def creation_offre(id_offre=None):
             db.session.commit()
             file = f.documents.data
             if file:
-                d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
-                filename = secure_filename(file.filename)
-                d.nom_doc = filename
-                d.id_offre = id_offre
-                db.session.add(d)
-                db.session.commit()
-                file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
-                file.save(file_path)
-                o.docs = True
+                print(file)
+                for doc in file:
+                    d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
+                    filename = secure_filename(doc.filename)
+                    print(filename)
+                    d.nom_doc = filename
+                    d.id_offre = id_offre
+                    db.session.add(d)
+                    db.session.commit()
+                    file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
+                    doc.save(file_path)
+                    o.docs = True
             else:
                 o.docs = False
             # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
@@ -184,14 +187,18 @@ def creation_offre(id_offre=None):
             db.session.commit()
             file = f.documents.data
             if file:
-                d = Document()
-                filename = secure_filename(file.filename)
-                d.nom_doc = filename
-                d.id_offre = id_offre
-                db.session.commit()
-                file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
-                file.save(file_path)
-                o.docs = True
+                for doc in file:
+                    print(file)
+                    d = Document() # ! pour l'instant il n'y a qu'un document par offre. Si ça marche pas, remplacer f.documents.data par list(f.documents.data) ou [f.documents.data]
+                    filename = secure_filename(doc.filename)
+                    print(filename)
+                    d.nom_doc = filename
+                    d.id_offre = id_offre
+                    db.session.add(d)
+                    db.session.commit()
+                    file_path = os.path.join("src/static/Documents", str(d.id_doc)+"-"+str(id_offre)) 
+                    doc.save(file_path)
+                    o.docs = True
             else:
                 o.docs = False
             # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ça marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
