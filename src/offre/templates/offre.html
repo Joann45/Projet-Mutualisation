@@ -1,4 +1,4 @@
-<div class="my-5" style="min-width: 55%; max-width: 1000px;">
+<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px;">
     <a
         class="d-flex flex-nowrap text-decoration-none"
         href="{{url_for('offre.details_offre', id_offre=offre.id_offre)}}"
@@ -14,7 +14,7 @@
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
-            style="width: 350px; height: auto; max-height: 100%; object-fit: cover;"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
             alt="fetes"
         />
         {% endif %}

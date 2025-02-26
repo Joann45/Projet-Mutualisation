@@ -194,22 +194,17 @@ def creation_offre(id_offre=None):
                 o.docs = True
             else:
                 o.docs = False
-            # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ��a marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
+            # for genre in f.genre.data: # ! pour l'instant il n'y a qu'un genre par offre. Si ça marche pas, remplacer f.genre.data par list(f.genre.data) ou [f.genre.data]
             g = Genre.query.get(f.genre.data)
             g_o = Genre_Offre.query.filter_by(id_offre=id_offre).first()
             g_o.id_genre = g.id_genre
             g_o.id_offre = id_offre
             db.session.commit()
 
-            for r in Offre_Reseau.query.filter_by(id_offre=id_offre).all():
-                db.session.delete(r)
-                db.session.commit()
+            Offre_Reseau.query.filter_by(id_offre=id_offre).delete()
+            db.session.commit()
 
-            for r in id_reseaux_elu:
-                les_reseaux_elu.append(f_select_reseau.reseaux.choices[int(r)-1][0])
-                print(les_reseaux_elu)
-
-            for r in les_reseaux_elu:
+            for r in f_select_reseau.reseaux.data:
                 o_r = Offre_Reseau()
                 o_r.id_reseau = r
                 o_r.id_offre = id_offre
@@ -229,11 +224,12 @@ def creation_offre(id_offre=None):
         f.date_fin.data = o.date_fin
         f.genre.data = o.les_genres[0].id_genre
         reseaux_selected = Offre_Reseau.query.filter_by(id_offre=id_offre).all()
-        # print(reseaux_selected)
+        f_select_reseau.reseaux.default = [r.id_reseau for r in reseaux_selected]
+        f_select_reseau.process()
         f.img.data = o.img
         # f.documents.data = o.les_documents[0].id_doc
     
-    return render_template('creation-offre.html',reseaux=les_reseaux, form=f, form_reseaux=f_select_reseau, offre=o)
+    return render_template('creation-offre.html', reseaux=les_reseaux, form=f, form_reseaux=f_select_reseau, offre=o)
 
 @offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
 def visualiser_offre():
@@ -355,6 +351,8 @@ def les_offres():
                
     if len(offre_reseau) != 0: 
         offres = [Offre.query.filter_by(id_offre=o.id_offre, etat="publiée").all() for o in offre_reseau[0]]
+    else:
+        offres = []
     les_offres = []
     for offre in offres:
         les_offres+=offre
