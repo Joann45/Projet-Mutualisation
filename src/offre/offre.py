@@ -384,7 +384,7 @@ def les_offres(page=1):
              
                
     if len(offre_reseau) != 0: 
-        les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r.offre.id_offre for o_r in offre_reseau[0]]))
+        les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r.offre.id_offre for o_r in offre_reseau[0]]), Offre.date_limite > dt.date.today())
     else:
         les_offres = []
     if proxi_elu == "Plus Proche":
