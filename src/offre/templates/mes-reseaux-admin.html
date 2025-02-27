@@ -101,6 +101,7 @@
                 </button>
                 {% endif %}
             </div>
+            <h6> Nombre de membres : {{ nb_utilisateurs }}</h6>
             {% for membre in membres%} {% include 'membres-reseaux.html' %} {{ render_pagination(membre,
             'reseaux.mes_reseaux', reseau_id) }}{% endfor %}
         </div>

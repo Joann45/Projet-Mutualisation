@@ -1,25 +1,30 @@
-{% extends 'connexion-base.html' %}
+{% extends 'auth/connexion-base.html' %}
 
 {% block content %}
-
-    <div>
-        <h1>Réinitialisation du mot de passe</h1>
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="card p-4 shadow" style="max-width: 400px; width: 100%;">
+        <h2 class="text-center mb-4">Réinitialisation <br> du mot de passe</h2>
+        
+        <form method="POST" action="{{ request.path }}">
+            {{ form.hidden_tag() }}
     
-        <form action="{{ url_for('auth.connexion') }}">
+            <!-- Champ caché pour l'email -->
+            <input type="hidden" name="adress_mail" value="{{ form.adress_mail.data }}">
 
-            <label for="email">Adresse e-mail</label>
-            <input type="email" name="email" id="email" placeholder="Entrer votre adresse e-mail">
-
-            <label for="mdp">Nouveau mot de passe</label>
-            <input type="mdp" name="mdp" id="mdp" placeholder="Entrer votre nouveau mot de passe">
-
-            <label for="confirm-mdp">Adresse e-mail</label>
-            <input type="confirm-mdp" name="confirm-mdp" id="confirm-mdp" placeholder="Confirmer votre nouveau mot de passe">
-
-            <button type="submit">Réinitialiser</button>
-
+            <div class="mb-3">
+                {{ form.adress_mail(class="form-control", placeholder="Entrer votre adresse e-mail", disabled=True) }}
+            </div>
+            <div class="mb-3">
+                {{ form.new_password(class="form-control", placeholder="Entrer votre nouveau mot de passe") }}
+            </div>
+            <div class="mb-3">
+                {{ form.confirm_password(class="form-control", placeholder="Confirmer votre nouveau mot de passe") }}
+            </div>
+            <button type="submit" class="btn btn-base w-100">Réinitialiser</button>
         </form>
-
     </div>
+</div>
+
+
 
 {% endblock %}

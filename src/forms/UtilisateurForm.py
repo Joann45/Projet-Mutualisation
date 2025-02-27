@@ -55,6 +55,7 @@ class UpdateUser(FlaskForm):
 
 class UpdatePassword(FlaskForm):
     id = HiddenField('id')
+    adress_mail = StringField("Adresse e-mail")
     current_password = PasswordField('Mot de passe actuel', validators=[DataRequired()])
     new_password = PasswordField('Nouveau mot de passe', validators=[DataRequired()])
     confirm_password = PasswordField('Confirmation mot de passe', validators=[DataRequired()])
@@ -72,5 +73,4 @@ class UpdatePassword(FlaskForm):
             self.new_password.errors.append("Le nouveau mot de passe est le même le l'ancien")
             return False
         return True
-        
-            
+    

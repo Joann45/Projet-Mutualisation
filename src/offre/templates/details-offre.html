@@ -32,9 +32,22 @@
         {% endif %}
         <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
             <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%">
-                <div class="d-flex flex-nowrap justify-content-between align-items-center">
-                    <h1>{{ offre.nom_offre}}</h1>
-                    <p>fermeture de l'offre: {{offre.date_limite}}</p>
+                <div class="mb-4">
+                    <h1 class="mb-3 text-center">{{ offre.nom_offre }}</h1>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-2">
+                            <p class="mb-0 font-weight-bold">Fermeture de l'offre</p>
+                            <p class="text-muted">{{ offre.date_limite }}</p>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <p class="mb-0 font-weight-bold">Début de l'événement</p>
+                            <p class="text-muted">{{ offre.date_deb }}</p>
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <p class="mb-0 font-weight-bold">Fin de l'événement</p>
+                            <p class="text-muted">{{ offre.date_fin }}</p>
+                        </div>
+                    </div>
                 </div>
                 <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=offre.id_utilisateur) }}">
                     <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
@@ -46,8 +59,23 @@
                 <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
                 <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
                 <p class="fw-bolder">Cotisation actuelle: {{offre.cotisation}} €/{{offre.budget}} €</p>
-
-                {% if verif == 1 %}
+                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation / offre.budget * 100)|round %}
+                <div class="progress mt-2" style="height: 20px">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ percentage }}%;"
+                        aria-valuenow="{{offre.cotisation}}"
+                        aria-valuemin="0"
+                        aria-valuemax="{{offre.budget}}"
+                    >
+                        {{ percentage }}%
+                    </div>
+                </div>
+                <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                {% else %}
+                <p>Budget non défini.</p>
+                {% endif %} {% if verif == 1 %}
                 <a href="{{url_for('reponses.repondre_offre', id_offre=offre.id_offre)}}">
                     <input
                         class="btn btn-base w-100 py-3 fw-bolder"
@@ -80,6 +108,7 @@
                         value="Visualiser les réponses"
                     />
                 </a>
+
                 {% endif %}
             </div>
         </div>
@@ -174,7 +203,8 @@
                 <form action="{{ url_for('offre.details_offre', id_offre=offre.id_offre) }}" method="POST">
                     {{ commentaireForm.hidden_tag() }}
                     <div class="mb-3">
-                        {{ commentaireForm.texte_commentaire(class="form-control", placeholder="Écrivez votre commentaire ici...", rows="3") }}
+                        {{ commentaireForm.texte_commentaire(class="form-control", placeholder="Écrivez votre
+                        commentaire ici...", rows="3") }}
                     </div>
                     <button type="submit" class="btn btn-dark fw-bolder">Ajouter un commentaire</button>
                 </form>
