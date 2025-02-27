@@ -1,3 +1,31 @@
+<script>
+    function toggleFavoris(event, button, idOffre) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        let img = button.querySelector("img");
+        let isFavoris = img.getAttribute("src").includes("coeur.svg");
+        let url = isFavoris 
+            ? `/home/offre/delete-favoris/${idOffre}` 
+            : `/home/offre/add-favoris/${idOffre}`;
+
+        fetch(url, { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    img.setAttribute("src", data.favoris 
+                        ? "{{ url_for('static', filename='img/coeur.svg') }}" 
+                        : "{{ url_for('static', filename='img/coeur_vide.svg') }}");
+                } else {
+                    console.error("Erreur :", data.error);
+                }
+            })
+            .catch(error => console.error("Erreur requête:", error));
+    }
+</script>
+
+
+
 <div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px;">
     <div
         class="d-flex flex-nowrap text-decoration-none"
@@ -18,10 +46,19 @@
             style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
             alt="fetes"
         />
+        
         {% endif %}
+        <button onclick="toggleFavoris(event, this, {{ offre.id_offre }})"
+                style="position: absolute; top: 10px; right: 10px; border:none;margin:0;background: transparent;">
+                <img 
+                    src="{{ url_for('static', filename='img/' ~ ('coeur.svg' if offre.favoris else 'coeur_vide.svg')) }}"
+                    alt="favoris"
+                    style="width: 50px; height: 50px;" />
+        </button>
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
-
             <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+                
+
                 <div class="d-flex flex-column align-items-center justify-content-center mt-4">
                     <h2>{{ offre.nom_offre}}</h2>
                     <p>Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
