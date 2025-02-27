@@ -191,7 +191,7 @@ def populate_offer_form(o, form, form_reseaux):
     reseaux_selected = Offre_Reseau.query.filter_by(id_offre=o.id_offre).all()
     form_reseaux.reseaux.default = [r.id_reseau for r in reseaux_selected]
     form_reseaux.process()
-    form.img.data = o.img
+    documents = Document.query.filter_by(id_offre=o.id_offre).all()
 
 @offre_bp.route('/home/creation-offre', defaults={'id_offre': None}, methods=['GET','POST'])
 @offre_bp.route('/home/creation-offre/<int:id_offre>', methods=['GET','POST'])
