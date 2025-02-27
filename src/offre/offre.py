@@ -60,6 +60,7 @@ def details_offre(id_offre):
 
 
 @offre_bp.route('/home/mes-offres/suppression-offre/<int:id_offre>', methods=['GET', 'POST'])
+@login_required
 def suppression_offre(id_offre):
     """Supprime une offre
 
@@ -232,6 +233,7 @@ def creation_offre(id_offre=None):
                            offre=o)
 
 @offre_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@login_required
 def visualiser_offre():
     """Renvoie la page de visualisation des réponses aux offres
 
@@ -343,8 +345,9 @@ def mes_offres():
 
     return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximite_date,formstatue=statue_offre)
 
-
+@login_required
 def get_reseaux_for_user(user):
+    
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
     if user.is_admin():
         return Reseau.query.all()

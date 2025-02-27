@@ -33,6 +33,7 @@ from flask import abort
 reponse_bp = Blueprint('reponses', __name__, template_folder='templates')
 
 @reponse_bp.route('/home/visualiser-reponses-offre/<int:id_offre>') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@login_required
 def visualiser_reponses_offre(id_offre):
     """Renvoie la page de visualisation des réponses aux offres
 
@@ -50,6 +51,7 @@ def visualiser_reponses_offre(id_offre):
 
 
 
+@login_required
 def get_reseaux_for_user(user):
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
     if user.is_admin():
@@ -57,6 +59,7 @@ def get_reseaux_for_user(user):
     return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
 
 @reponse_bp.route('/home/mes-offres/mes-reponses/suppression-reponse/<int:id_utilisateur>/<int:id_offre>', methods=['GET', 'POST'])
+@login_required
 def suppression_reponse(id_utilisateur, id_offre):
     """Supprime une réponse a une offre
 
@@ -74,6 +77,7 @@ def suppression_reponse(id_utilisateur, id_offre):
     return redirect(url_for('reponses.mes_reponses'))
 
 @reponse_bp.route('/home/mes-offres/mes-reponses', methods=["POST","GET"])
+@login_required
 def mes_reponses():
     """Renvoie la page des réponses de l'utilisateur
 

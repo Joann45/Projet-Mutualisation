@@ -74,6 +74,7 @@ def home():
 
 
 @views_bp.route('/home/profil', methods=['GET','POST'])
+@login_required
 def modifier_profil():
     """Renvoie la page de modification du profil
 
@@ -102,6 +103,7 @@ def modifier_profil():
 
 
 @views_bp.route('/static/Documents/<int:id_d>-<int:id_o>', methods=['GET', 'POST'])
+@login_required
 def get_documents(id_d, id_o):
 
     documents_folder = os.path.join("static", "Documents")
@@ -125,6 +127,7 @@ def rechercher():
     """
 
 @views_bp.route('/home/visualiser-reponses-offres') #! A MODIFIER QUAND LA PAGE DE L'OFFRE SERA CREEE
+@login_required
 def visualiser_offre():
     """Renvoie la page de visualisation des réponses aux offres
 
@@ -156,6 +159,7 @@ def definir_etat(id_offre):
     return redirect(url_for('offre.details_offre',id_offre=id_offre))
 
 @views_bp.route('/home/genre', methods=['GET','POST'])
+@login_required
 def genre():
     """Renvoie la page de création d'un genre
 
@@ -174,6 +178,7 @@ def genre():
     return render_template('genre.html', form=f, genres=les_genres)
 
 @views_bp.route('/home/suppression_genre/<int:id_genre>', methods=['POST'])
+@login_required
 def suppression_genre(id_genre):
     """Supprime un genre
 
@@ -191,6 +196,7 @@ def suppression_genre(id_genre):
     return redirect(url_for('views.genre'))
 
 @views_bp.route('/home/boite-reception')
+@login_required
 def boite_reception():
     """Renvoie la page de la boite de réception"""
     les_notifs_utilisateurs = Notification_Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
@@ -198,5 +204,6 @@ def boite_reception():
     return render_template('boite-reception.html', les_notifs = les_notifs)
 
 @views_bp.route('/home/visualiser_profil/<int:id_utilisateur>', methods=['POST','GET'])
+@login_required
 def visualiser_profil(id_utilisateur):
     return render_template('visualiser_profil.html', utilisateur=Utilisateur.query.get(id_utilisateur))

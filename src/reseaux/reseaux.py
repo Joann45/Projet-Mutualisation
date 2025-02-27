@@ -87,6 +87,7 @@ def mes_reseaux(reseau_id=None, page=1):
     
 # Route pour traiter la soumission du formulaire de sélection de réseau
 @reseaux_bp.route('/home/mes-reseaux/select', methods=['POST'])
+@login_required
 def select_reseau():
     f_select_reseau = SelectReseauForm()
     # Récupère la liste des réseaux pour l’utilisateur courant
@@ -101,6 +102,7 @@ def select_reseau():
 
 # Route pour traiter la création d'un nouveau réseau
 @reseaux_bp.route('/home/mes-reseaux/ajout', methods=['POST'])
+@login_required
 def ajout_reseau():
     f_add_reseau = ReseauForm()
     if f_add_reseau.validate_on_submit():
@@ -108,17 +110,20 @@ def ajout_reseau():
         add_new_reseau(f_add_reseau)
     return redirect(url_for('reseaux.mes_reseaux'))
 
+@login_required
 def get_reseaux_for_user(user):
     """Récupère les réseaux en fonction du rôle de l'utilisateur."""
     if user.is_admin():
         return Reseau.query.all()
     return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
 
+@login_required
 def get_available_users_for_reseau(reseau):
     """Récupère les utilisateurs disponibles pour être ajoutés au réseau."""
     liste_utilisateurs = [utilisateur.id_utilisateur for utilisateur in reseau.les_utilisateurs]
     return [(utilisateur.id_utilisateur, utilisateur.nom_utilisateur) for utilisateur in Utilisateur.query.all() if utilisateur.id_utilisateur not in liste_utilisateurs]
 
+@login_required
 def add_new_reseau(form):
     """Ajoute un nouveau réseau à la base de données."""
     r = Reseau()
@@ -127,6 +132,7 @@ def add_new_reseau(form):
     db.session.commit()
 
 @reseaux_bp.route('/home/suppression_reseau/<int:id_reseau>', methods=['GET'])
+@login_required
 def suppression_reseau(id_reseau):
     """Supprime un réseau
     Args:
@@ -149,6 +155,7 @@ def suppression_reseau(id_reseau):
 
 
 @reseaux_bp.route('/home/mes-reseaux-admin/suppression_utilisateur/<int:id_reseau>/<int:id_utilisateur>', methods=['GET', 'POST'])
+@login_required
 def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     """Supprime un utilisateur d'un réseau
     Args:
@@ -164,6 +171,7 @@ def suppression_utilisateur_reseau(id_reseau, id_utilisateur):
     return redirect(url_for('reseaux.mes_reseaux', reseau_id=id_reseau))
 
 
+@login_required
 def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
     try:
         msg = Message(subject,
@@ -179,6 +187,7 @@ def send_email_with_timeout(mail_dest_utilisateur, subject, body, html):
         print(f"❌ Erreur lors de l'envoi de l'e-mail: {e}")
 
 @reseaux_bp.route('/home/mes-reseaux-admin/ajout_utilisateur/<int:id_reseau>', methods=['GET', 'POST'])
+@login_required
 def ajout_utilisateur_reseau(id_reseau):
     """Ajoute un utilisateur à un réseau
     Args:
