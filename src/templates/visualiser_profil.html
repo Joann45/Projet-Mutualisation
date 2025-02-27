@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <a href="javascript:history.back()" class="btn btn-dark">
+            Retour
+        </a>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4">
+                <div class="text-center">
+                    {% if utilisateur.img_utilisateur == utilisateur.id_utilisateur %}
+                        <img
+                            src="{{ url_for('static', filename='img/profil/' ~ utilisateur.id_utilisateur) }}"
+                            alt="image utilisateur" class="rounded-circle mb-3" width="120"
+                        />
+                    {% else %}
+                        <img
+                            src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                            alt="image utilisateur" class="rounded-circle mb-3" width="120"
+                        />
+                    {% endif %}
+                    <h2 class="fw-bolder">{{utilisateur.prenom_utilisateur}} {{ utilisateur.nom_utilisateur }}</h2>
+                </div>
+                <hr>
+                <div class="mt-3">
+                    <h5 class="fw-bold">Informations personnelles</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Prénom:</strong> {{ utilisateur.prenom_utilisateur }}</li>
+                        <li class="list-group-item"><strong>Nom:</strong> {{ utilisateur.nom_utilisateur }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ utilisateur.email_utilisateur }}</li>
+                        <li class="list-group-item"><strong>Rôle:</strong> {{ utilisateur.get_role() | capitalize }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

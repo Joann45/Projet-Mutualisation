@@ -8,12 +8,21 @@
     <form class="w-75" method="post" action="{{ url_for('views.modifier_profil') }}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="text-center mb-3">
+            {% if current_user.img_utilisateur == current_user.id_utilisateur %}
             <img
-                src="{{ url_for('static', filename='img/profil/' ~ current_user.img_utilisateur)}}"
+                src="{{ url_for('static', filename='img/profil/' ~ current_user.id_utilisateur) }}"
                 alt="profil"
                 class="img-fluid rounded-circle"
                 style="width: 150px; height: 150px"
             />
+            {% else %}
+                <img
+                    src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                    alt="profil"
+                    class="img-fluid rounded-circle"
+                    style="width: 150px; height: 150px"
+                />
+            {% endif %}
             <div>
                 <label for="modif_pp" 
                        class="col-md-8 form-group btn btn-outline-light mt-4 fw-bold"

@@ -47,7 +47,7 @@
   prenom_utilisateur: "o"
   mdp_utilisateur: "o"
   email_utilisateur: "o"
-  img_utilisateur: "1"
+  img_utilisateur: "2"
   role_id: 1
 
 - type: utilisateur_reseau
@@ -64,7 +64,7 @@
   prenom_utilisateur: "z"
   mdp_utilisateur: "z"
   email_utilisateur: "z"
-  img_utilisateur: "1"
+  img_utilisateur: "3"
   role_id: 1
 
 - type: utilisateur_reseau

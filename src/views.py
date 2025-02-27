@@ -87,8 +87,10 @@ def modifier_profil():
             user.prenom_utilisateur = f.prenom_user.data
             user.nom_utilisateur = f.nom_user.data
             user.email_utilisateur = f.email.data
+            user.img_utilisateur = "0"
             file = f.img.data
             if file:
+                user.img_utilisateur = user.id_utilisateur
                 file_path = os.path.join("src/static/img/profil", str(current_user.id_utilisateur))
                 file.save(file_path)
             db.session.commit()
@@ -194,3 +196,7 @@ def boite_reception():
     les_notifs_utilisateurs = Notification_Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
     les_notifs = Notification.query.filter(Notification.id_notif.in_([notif.id_notif for notif in les_notifs_utilisateurs])).all()
     return render_template('boite-reception.html', les_notifs = les_notifs)
+
+@views_bp.route('/home/visualiser_profil/<int:id_utilisateur>', methods=['POST','GET'])
+def visualiser_profil(id_utilisateur):
+    return render_template('visualiser_profil.html', utilisateur=Utilisateur.query.get(id_utilisateur))

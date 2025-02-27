@@ -15,7 +15,7 @@ class InscriptionForm(FlaskForm):
     mot_de_passe = PasswordField('Mot de passe', validators=[DataRequired()])
     confirmation_mot_de_passe = PasswordField('Confirmation mot de passe', validators=[DataRequired()])
     email = StringField('Adresse mail', validators=[DataRequired()])
-    img = FileField('Photo de profil', validators=[DataRequired()])
+    img = FileField('Photo de profil')
     role = RadioField('Role', validators=[DataRequired()])
     def validate(self, extra_validators=None):
         if not FlaskForm.validate(self, extra_validators=extra_validators):

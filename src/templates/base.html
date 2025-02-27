@@ -100,13 +100,22 @@
                 <div>
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
                     <a class="btn" href="{{url_for('views.modifier_profil')}}">
+                        {% if current_user.img_utilisateur == current_user.id_utilisateur %}
                         <img
-                            src="{{ url_for('static', filename='../static/img/profil/' ~ current_user.img_utilisateur)
-                        }}"
+                            src="{{ url_for('static', filename='img/profil/' ~ current_user.id_utilisateur) }}"
                             alt="profil"
                             class="img-fluid rounded-circle"
                             style="width: 50px; height: 50px"
                         />
+                        {% else %}
+                        <img
+                            src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                            alt="profil"
+                            class="img-fluid rounded-circle"
+                            style="width: 50px; height: 50px"
+                        />
+                        {% endif %}
+
                         {{current_user.nom_utilisateur}} {{current_user.prenom_utilisateur}} {{current_user.role.name}}
                     </a>
                 </div>

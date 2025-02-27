@@ -13,13 +13,28 @@
         {% for m in membre %}
         <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
             <div class="d-flex align-items-center">
-                <img
-                    src="{{ url_for('static', filename='../static/img/photo_profil_tom.svg') }}"
-                    alt="profil"
-                    class="rounded-circle me-2"
-                    style="width: 40px; height: 40px; object-fit: cover"
-                />
-                <span>{{ m.nom_utilisateur }} {{ m.prenom_utilisateur }}</span>
+                {% if m.img_utilisateur == m.id_utilisateur %}
+                <a href="{{ url_for('views.visualiser_profil', id_utilisateur=m.id_utilisateur) }}">
+                    <img
+                        src="{{ url_for('static', filename='img/profil/' ~ m.id_utilisateur) }}"
+                        alt="profil"
+                        class="rounded-circle me-2"
+                        style="width: 40px; height: 40px; object-fit: cover"
+                    />
+                </a>
+                {% else %}
+                <a href="{{ url_for('views.visualiser_profil', id_utilisateur=m.id_utilisateur) }}"></a>
+                    <img
+                        src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                        alt="profil"
+                        class="rounded-circle me-2"
+                        style="width: 40px; height: 40px; object-fit: cover"
+                    />
+                </a>
+                {% endif %}
+                <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=m.id_utilisateur) }}">
+                    <span>{{ m.nom_utilisateur }} {{ m.prenom_utilisateur }}</span>
+                </a>
             </div>
             {% if current_user.is_admin() %}
             <a
