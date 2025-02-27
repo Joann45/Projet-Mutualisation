@@ -151,14 +151,14 @@ def process_offer_document(o, form):
 
 def process_offer_genre(o, form):
     """Associe l'offre au genre sélectionné."""
-    g = Genre.query.get(form.genre.data)
-    # Pour la création, on ajoute un nouveau lien, sinon on met à jour le lien existant
-    g_o = Genre_Offre.query.filter_by(id_offre=o.id_offre).first()
-    if not g_o:
+    genres = form.genres.data.split(',')
+    print(genres)
+    for genre_id in genres:
+        g = Genre.query.get(genre_id)
         g_o = Genre_Offre()
         g_o.id_offre = o.id_offre
+        g_o.id_genre = g.id_genre
         db.session.add(g_o)
-    g_o.id_genre = g.id_genre
     db.session.commit()
 
 def process_offer_reseaux(o, form_reseaux):
@@ -186,7 +186,7 @@ def populate_offer_form(o, form, form_reseaux):
     form.date_deb.data = o.date_deb
     form.date_fin.data = o.date_fin
     if o.les_genres:
-        form.genre.data = o.les_genres[0].id_genre
+        form.genres.data = ','.join([str(g.id_genre) for g in o.les_genres])
     # Récupération des réseaux déjà associés
     reseaux_selected = Offre_Reseau.query.filter_by(id_offre=o.id_offre).all()
     form_reseaux.reseaux.default = [r.id_reseau for r in reseaux_selected]
@@ -203,7 +203,11 @@ def creation_offre(id_offre=None):
     o = Offre.query.get(id_offre) if id_offre else None
 
     f = OffreForm()
-    f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
+    # f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
+    f.genre.choices= [(("", "Choisissez un genre"))]
+    for genre in Genre.query.all():
+        f.genre.choices.append((genre.id_genre, genre.nom_genre))
+
 
     les_reseaux = [Reseau.query.get(res.id_reseau)
                    for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]

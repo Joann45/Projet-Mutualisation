@@ -21,10 +21,52 @@
           <div class="d-flex flex-column">
             <label class="m-3 color_white fs-5" for="genre">{{ form.genre.label }}</label>
             <div class="d-flex flex-nowrap justify-content-evenly">
-                {{ form.genre(class_="input-group border rounded-3 back-white") }}
-                <a href="{{url_for('views.genre')}}"><input type="button" value="Ajouter un genre"></a>
+                {{ form.genre(class_="input-group border rounded-3 back-white", id_="genre") }}
+                {{ form.genres(class_="input-group border rounded-3 back-white", id_="genres") }}
+                <div id="genres_list" class="d-flex flex-wrap">
+                </div>
             </div>
           </div>
+          <script>
+            let select = document.getElementById('genre');
+            let genres = document.getElementById('genres');
+            let genres_list = document.getElementById('genres_list');
+            document.addEventListener('DOMContentLoaded', function() {
+                let genres_choisis = genres.value.split(',').filter(x => x != '');
+                genres.style.display = 'none';
+                refreshList();
+            });
+            select.addEventListener('change', function() {
+                let genres_choisis = genres.value.split(',').filter(x => x != '');
+                console.log(select.value);
+                if(!genres_choisis.includes(select.value)){
+                    genres.value = genres.value + ","+ select.value;
+                }
+                console.log(genres.value);
+                refreshList();
+            });
+
+            function refreshList(){
+              let genres_choisis = genres.value.split(',').filter(x => x != '');
+              genres.value = genres_choisis.join(',');
+              console.log(genres_choisis);
+              genres_list.innerHTML = '';
+              for (let i = 0; i < genres_choisis.length; i++) {
+                if(genres_choisis[i] != ""){
+                let genre = genres_choisis[i];
+                console.log(genre);
+                let btn = document.createElement('button');
+                btn.classList.add('btn', 'btn-base', 'm-1');
+                btn.textContent = select.options[parseInt(genre)-1].textContent;
+                btn.addEventListener('click', function() {
+                  btn.remove();
+                  genres.value = genres.value.replace(genre, '');
+                  refreshList();
+                });
+                genres_list.appendChild(btn);}
+            }
+            }
+          </script>
 
         </div>
         <div class="d-flex justify-content-around align-items-end mb-3">
