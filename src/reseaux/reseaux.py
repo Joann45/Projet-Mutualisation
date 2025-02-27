@@ -220,7 +220,6 @@ def ajout_utilisateur_reseau(id_reseau):
         db.session.add(notification_utilisateur)
         db.session.commit()
         try:
-            print(reseau.nom_reseau)
             mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
             send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté au réseau {reseau.nom_reseau}", "<b>Vous avez été ajouté au réseau {reseau.nom_reseau}</b>")
     
