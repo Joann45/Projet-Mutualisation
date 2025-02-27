@@ -150,5 +150,5 @@ def mdp_modif():
             user.mdp_utilisateur = sha256(f.new_password.data.encode()).hexdigest()
             db.session.commit()
             return redirect(url_for('views.home'))
-    return render_template('mdp-modif.html', form = f)
+    return render_template('auth/mdp-modif.html', form = f)
 

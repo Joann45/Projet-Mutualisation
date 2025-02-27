@@ -66,10 +66,16 @@ def roles(*roles):
 @roles("Administrateur", "Organisateur")  # A modifier pour les rôles
 def home():
     """Renvoie la page d'accueil"""
-    les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
-    les_offres = [] #! A modifier plus tard pour trier par les plus populaires
-    for res in les_reseaux:
-        les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
+    #les_reseaux = [Reseau.query.get(res.id_reseau) for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
+    # les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r.offre.id_offre for o_r in offre_reseau[0]]), Offre.date_limite > dt.date.today())
+    #for res in les_reseaux:
+    #    les_offres+=[Offre.query.get(offre.id_offre) for offre in Offre_Reseau.query.filter_by(id_reseau=res.id_reseau)]
+    offres = Offre.query.filter(Offre.etat == "publiée", Offre.date_limite > datetime.now()).all()
+    les_reseaux = current_user.les_reseaux
+    les_offres = []
+    for offre in offres:
+        if set(offre.les_reseaux).intersection(set(les_reseaux)) > 0:
+            les_offres.append(offre)
     return render_template('home.html', offres=les_offres[:3])
 
 
