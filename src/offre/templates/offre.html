@@ -21,10 +21,15 @@
         {% endif %}
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
 
-            <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
-                <div class="d-flex flex-column align-items-center justify-content-center mt-4">
-                    <h2>{{ offre.nom_offre}}</h2>
-                    <p>Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+            <div class="d-block flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+                <div class="d-flex flex-column justify-content-center mt-3 ml-5" style="position: relative; top: 13px;">
+                    <p class="m-0">Début {{ offre.date_deb}}</p>
+                    <p class="mb-0">Fin {{offre.date_fin}} </p>
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center ">
+                    <h2 style="position:relative; top: -40px;">{{ offre.nom_offre}}</h2>
+                    <p style="position:relative; top: -40px; margin-bottom: 0px;" >Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                    
                 </div>
                 <div class="d-flex flex-nowrap justify-content-around align-items-center w-100">
                     <div class="d-flex flex-column align-items-center">
@@ -32,8 +37,8 @@
                         <p>{{offre.nb_participants()}}</p>
                     </div>
                     <div class="d-flex flex-column align-items-center">
-                        <p>Cotisation minimale</p>
-                        <p>{{offre.cotisation_min}} euros</p>
+                        <p>Cotisation actuelle</p>
+                        <p>{{offre.cotisation}} € / {{offre.budget}} €</p>
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <p>Temps restant</p>
