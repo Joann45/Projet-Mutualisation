@@ -43,6 +43,7 @@
                     genres.value = genres.value + ","+ select.value;
                 }
                 console.log(genres.value);
+                select.value = '';
                 refreshList();
             });
 
@@ -53,18 +54,25 @@
               genres_list.innerHTML = '';
               for (let i = 0; i < genres_choisis.length; i++) {
                 if(genres_choisis[i] != ""){
-                let genre = genres_choisis[i];
-                console.log(genre);
-                let btn = document.createElement('button');
-                btn.classList.add('btn', 'btn-base', 'm-1');
-                btn.textContent = select.options[parseInt(genre)-1].textContent;
-                btn.addEventListener('click', function() {
-                  btn.remove();
-                  genres.value = genres.value.replace(genre, '');
-                  refreshList();
-                });
-                genres_list.appendChild(btn);}
-            }
+                  let genre = genres_choisis[i];
+                  console.log(genre);
+                  let btn = document.createElement('button');
+                  btn.classList.add('btn', 'btn-base', 'm-1');
+                  // Ajoute le texte suivi d'une croix pour la suppression
+                  btn.innerHTML = select.options[parseInt(genre)].textContent + ' <span style="color:red; font-weight:bold; cursor:pointer;">&times;</span>';
+                  select.options[parseInt(genre)].disabled = true;
+                  btn.addEventListener('click', function() {
+                    btn.remove();
+                    // Supprime la valeur du tag parmi les selections
+                    let newValues = genres.value.split(',').filter(x => x != '' && x !== genre);
+                    genres.value = newValues.join(',');
+                    select.options[parseInt(genre)].disabled = false;
+                    select.value = '';
+                    refreshList();
+                  });
+                  genres_list.appendChild(btn);
+                }
+              }
             }
           </script>
 

@@ -152,7 +152,8 @@ def process_offer_document(o, form):
 def process_offer_genre(o, form):
     """Associe l'offre au genre sélectionné."""
     genres = form.genres.data.split(',')
-    print(genres)
+    Genre_Offre.query.filter_by(id_offre=o.id_offre).delete()
+    db.session.commit()
     for genre_id in genres:
         g = Genre.query.get(genre_id)
         g_o = Genre_Offre()
