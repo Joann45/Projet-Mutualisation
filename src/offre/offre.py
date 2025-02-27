@@ -259,15 +259,15 @@ def mes_offres():
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux] #affichage  des reseaux de l'utilisateur currrent 
 
-    proximité_date = SelectDateProximité()
-    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"] #afficage  de filtre de date d'expiration
+    proximite_date = SelectDateProximité()
+    proximite_date.proxi.choices = ["Plus Proche", "Moins Proche"] #afficage  de filtre de date d'expiration
 
     statue_offre = SelectStatueOffre()
     statue_offre.statue.choices = ["Tous","À venir","En cours","Expiré"] #affichage de filtre des status 
 
-    if proximité_date.proxi.data == None : #Si pas de choix la choix de base est plus proche pour la date d'expiration
-        proximité_date.proxi.default = "Plus Proche"
-        proximité_date.process()
+    if proximite_date.proxi.data == None : #Si pas de choix la choix de base est plus proche pour la date d'expiration
+        proximite_date.proxi.default = "Plus Proche"
+        proximite_date.process()
 
     if statue_offre.statue.data == None : #Si pas de choix insi que choix par default est à venir
         statue_offre.statue.default = "Tous"
@@ -277,12 +277,12 @@ def mes_offres():
     les_reseaux_elu = []
 
 
-    proxi_elu = proximité_date.proxi.data #recupere l'information de date d'expiration
+    proxi_elu = proximite_date.proxi.data #recupere l'information de date d'expiration
 
     statue_elu = statue_offre.statue.data #recupere l'infomration de statue choisi
 
    
-    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
+    if proximite_date.validate_on_submit() or f_select_reseau.validate_on_submit(): #Si Choix fait 
         
 
         for id_r in f_select_reseau.reseaux.data: #recupere l'information des reseaux choisi
@@ -341,7 +341,7 @@ def mes_offres():
         les_offres.sort(reverse=True,key=lambda o:o.date_limite)
 
 
-    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date,formstatue=statue_offre)
+    return render_template('mes-offres.html', offres=les_offres,form=f_select_reseau,formd=proximite_date,formstatue=statue_offre)
 
 
 def get_reseaux_for_user(user):
@@ -351,64 +351,48 @@ def get_reseaux_for_user(user):
     return Reseau.query.filter(Reseau.les_utilisateurs.any(id_utilisateur=user.id_utilisateur)).all()
 
 @offre_bp.route('/home/les-offres', methods=["POST","GET"])
-def les_offres():
+@offre_bp.route('/home/les-offres/<int:page>', methods=["POST","GET"])
+@login_required
+def les_offres(page=1):
     """Renvoie la page des offres
-
     Returns:
         les-offres.html: Une page des offres
     """
     les_reseaux = get_reseaux_for_user(current_user)
     f_select_reseau = SelectRechercheOffreForm()
     f_select_reseau.reseaux.choices = [(reseau.id_reseau, reseau.nom_reseau) for reseau in les_reseaux]
+    proximite_date = SelectDateProximité()
+    proximite_date.proxi.choices = ["Plus Proche", "Moins Proche"]
+    if proximite_date.proxi.data == None :
+        proximite_date.proxi.default = "Plus Proche"
+        proximite_date.process()
 
-    proximité_date = SelectDateProximité()
-    proximité_date.proxi.choices = ["Plus Proche", "Moins Proche"]
-
-    if proximité_date.proxi.data == None :
-        proximité_date.proxi.default = "Plus Proche"
-        proximité_date.process()
-    
-    proxi_elu = proximité_date.proxi.data
+    proxi_elu = proximite_date.proxi.data
 
     id_reseaux_elu =  f_select_reseau.reseaux.data
     les_reseaux_elu = []
-    
-    
-        
-    if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
+
+    if proximite_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         for id_r in id_reseaux_elu:
             print(Reseau.query.get(id_r))
             les_reseaux_elu.append(Reseau.query.get(id_r))
-    
-
-
     if les_reseaux_elu != []:
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau,).all() for reseau in les_reseaux_elu]
-        
     else: 
         
         offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
              
                
     if len(offre_reseau) != 0: 
-        offres = [Offre.query.filter_by(id_offre=o.id_offre, etat="publiée").all() for o in offre_reseau[0]]
+        les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r.offre.id_offre for o_r in offre_reseau[0]]), Offre.date_limite > dt.date.today())
     else:
-        offres = []
-
-    les_offres = []
-    current_date = dt.date.today()
-    for offre in offres:
-        if offre.date_limite>=current_date: #date de limite apres la date currant
-                les_offres.append(offre)
-        les_offres+=offre
-
+        les_offres = []
     if proxi_elu == "Plus Proche":
-        les_offres.sort(key=lambda o:o.date_limite)
+        les_offres.order_by(Offre.date_limite)
     else: 
-        les_offres.sort(reverse=True,key=lambda o:o.date_limite)
-
-
-    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximité_date)
+        les_offres.order_by(Offre.date_limite.desc())
+    les_offres = db.paginate(les_offres, per_page=5, page=page)
+    return render_template('les-offres.html', offres=les_offres,form=f_select_reseau,formd=proximite_date)
 
 @offre_bp.route('/home/details-offre/suppression-commentaire/<int:id_commentaire>', methods=['GET', 'POST'])
 @login_required

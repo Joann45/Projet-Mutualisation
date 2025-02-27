@@ -69,7 +69,7 @@ def mes_reseaux(reseau_id=None, page=1):
     # Récupérer les offres associées
     les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
     # membres = [[membre.orga for membre in reseau.les_utilisateurs]]
-    utilisateurs = Utilisateur.query.filter(Utilisateur.les_reseaux.any(id_reseau=reseau_id).order_by(Utilisateur.nom_utilisateur))
+    utilisateurs = Utilisateur.query.order_by(Utilisateur.nom_utilisateur).filter(Utilisateur.les_reseaux.any(id_reseau=reseau_id))
     nb_utilisateurs = len(utilisateurs.all())
     membres = [db.paginate(utilisateurs, per_page=10, page=page)]
     return render_template(
