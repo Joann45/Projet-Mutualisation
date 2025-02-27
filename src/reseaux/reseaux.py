@@ -52,7 +52,7 @@ def mes_reseaux(reseau_id=None, page=1):
     if not les_reseaux:
         if not current_user.is_admin():
             return render_template('pas_reseau.html')
-        return render_template('mes-reseaux-admin.html', reseaux=[], add_form=add_form, select_form=None, membres=[])
+        return render_template('mes-reseaux-admin.html', reseaux=[], add_form=add_form, select_form=None, membres=[], nb_utilisateurs=0)
 
     # Déterminer le réseau sélectionné
     reseau_id = reseau_id if reseau_id else les_reseaux[0].id_reseau
@@ -69,7 +69,9 @@ def mes_reseaux(reseau_id=None, page=1):
     # Récupérer les offres associées
     les_offres = Offre.query.filter(Offre.les_reseaux.any(id_reseau=reseau_id)).all()
     # membres = [[membre.orga for membre in reseau.les_utilisateurs]]
-    membres = [db.paginate(Utilisateur.query.filter(Utilisateur.les_reseaux.any(id_reseau=reseau_id)), per_page=10, page=page)]
+    utilisateurs = Utilisateur.query.filter(Utilisateur.les_reseaux.any(id_reseau=reseau_id).order_by(Utilisateur.nom_utilisateur))
+    nb_utilisateurs = len(utilisateurs.all())
+    membres = [db.paginate(utilisateurs, per_page=10, page=page)]
     return render_template(
         'mes-reseaux-admin.html',
         add_user_form=add_user_form,
@@ -79,7 +81,8 @@ def mes_reseaux(reseau_id=None, page=1):
         membres= membres,
         reseau_id=reseau_id,
         offres=les_offres,
-        reseau=reseau
+        reseau=reseau,
+        nb_utilisateurs=nb_utilisateurs
     )
     
 # Route pour traiter la soumission du formulaire de sélection de réseau
@@ -217,7 +220,6 @@ def ajout_utilisateur_reseau(id_reseau):
         db.session.add(notification_utilisateur)
         db.session.commit()
         try:
-            print(reseau.nom_reseau)
             mail_dest_utilisateur = Utilisateur.query.filter_by(id_utilisateur=utilisateur_id).first().email_utilisateur
             send_email_with_timeout(mail_dest_utilisateur, "Ajout à un réseau", "Vous avez été ajouté au réseau {reseau.nom_reseau}", "<b>Vous avez été ajouté au réseau {reseau.nom_reseau}</b>")
     
