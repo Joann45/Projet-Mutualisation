@@ -43,10 +43,11 @@ def signin():
         u.prenom_utilisateur = f.prenom_user.data
         u.mdp_utilisateur = sha256(f.mot_de_passe.data.encode()).hexdigest()
         u.email_utilisateur = f.email.data
-        u.img_utilisateur = str(Utilisateur.get_last_id()+1)
+        u.img_utilisateur = 0
         u.role_id = f.role.data
         file = f.img.data
         if file:
+            u.img_utilisateur = Utilisateur.get_last_id()+1
             if not os.path.exists("src/static/img/profil"):
                 os.makedirs("src/static/img/profil")
             file.save(os.path.join("src/static/img/profil", str(Utilisateur.get_last_id()+1)))

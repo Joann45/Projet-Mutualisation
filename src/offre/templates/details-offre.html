@@ -49,6 +49,9 @@
                         </div>
                     </div>
                 </div>
+                <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=offre.id_utilisateur) }}">
+                    <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                </a>
             </div>
 
             <div class="d-flex flex-column w-100">
@@ -212,17 +215,33 @@
             <div class="card mb-3">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <img
-                            src="{{ url_for('static', filename='img/profil/' ~ commentaire.utilisateur.img_utilisateur) }}"
-                            alt="Photo profil"
-                            class="rounded-circle"
-                            style="width: 40px; height: 40px; object-fit: cover"
-                        />
+                            {% if commentaire.utilisateur.img_utilisateur == commentaire.utilisateur.id_utilisateur %}
+                            <a href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}">
+                                <img
+                                    src="{{ url_for('static', filename='img/profil/' ~ commentaire.utilisateur.id_utilisateur) }}"
+                                    alt="Photo profil"
+                                    class="rounded-circle"
+                                    style="width: 40px; height: 40px; object-fit: cover"
+                                />
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.utilisateur.id_utilisateur) }}">
+                                <img
+                                    src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                                    alt="Photo profil"
+                                    class="rounded-circle"
+                                    style="width: 40px; height: 40px; object-fit: cover"
+                                />
+                            </a>
+                            {% endif %}
                         <div class="ms-3">
-                            <strong
-                                >{{ commentaire.utilisateur.prenom_utilisateur }} {{
-                                commentaire.utilisateur.nom_utilisateur }}</strong
-                            ><br />
+                            <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}">
+                                <strong>
+                                    {{ commentaire.utilisateur.prenom_utilisateur }}
+                                    {{ commentaire.utilisateur.nom_utilisateur }}
+                                </strong> 
+                            </a>
+                            <br/>
                             <small class="text-muted">le {{ commentaire.date_commentaire.date() }}</small>
                         </div>
 
