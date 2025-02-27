@@ -120,9 +120,12 @@ def update_offer(o, form):
 
 def process_offer_image(o, form):
     """Traite l'image de l'offre (sauvegarde ou valeur par défaut)."""
+    
+
     file_o = form.img.data
     if not file_o:
-        o.img = "0"
+        if o.img == None:
+            o.img = "0"  
     else:
         file_path = os.path.join("src/static/img/offre", str(o.id_offre))
         file_o.save(file_path)
@@ -190,7 +193,7 @@ def populate_offer_form(o, form, form_reseaux):
     reseaux_selected = Offre_Reseau.query.filter_by(id_offre=o.id_offre).all()
     form_reseaux.reseaux.default = [r.id_reseau for r in reseaux_selected]
     form_reseaux.process()
-    form.img.data = o.img
+    
 
 @offre_bp.route('/home/creation-offre', defaults={'id_offre': None}, methods=['GET','POST'])
 @offre_bp.route('/home/creation-offre/<int:id_offre>', methods=['GET','POST'])
@@ -203,7 +206,6 @@ def creation_offre(id_offre=None):
 
     f = OffreForm()
     f.genre.choices = [(genre.id_genre, genre.nom_genre) for genre in Genre.query.all()]
-
     les_reseaux = [Reseau.query.get(res.id_reseau)
                    for res in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur)]
     f_select_reseau = SelectRechercheOffreForm()
@@ -224,7 +226,6 @@ def creation_offre(id_offre=None):
 
     if o:
         populate_offer_form(o, f, f_select_reseau)
-
     return render_template('creation-offre.html',
                            reseaux=les_reseaux,
                            form=f,
@@ -300,14 +301,14 @@ def mes_offres():
         
         offre_reseau = [Offre.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
     
-    print(les_reseaux_elu)
+   
     offres = []
     for ofr in offre_reseau:   
 
         liste = [Offre.query.filter_by(id_offre=o.id_offre, id_utilisateur=current_user.id_utilisateur).all() for o in ofr]
         for ele in liste:
             offres += ele
-        print(offres)
+        
         
     
     offres= set(offres)
@@ -377,7 +378,7 @@ def les_offres():
         
     if proximité_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         for id_r in id_reseaux_elu:
-            print(Reseau.query.get(id_r))
+            
             les_reseaux_elu.append(Reseau.query.get(id_r))
     
 
