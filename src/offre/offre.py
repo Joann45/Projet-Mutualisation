@@ -394,8 +394,12 @@ def les_offres():
         offres = [Offre.query.filter_by(id_offre=o.id_offre, etat="publiée").all() for o in offre_reseau[0]]
     else:
         offres = []
+
     les_offres = []
+    current_date = dt.date.today()
     for offre in offres:
+        if offre.date_limite>=current_date: #date de limite apres la date currant
+                les_offres.append(offre)
         les_offres+=offre
 
     if proxi_elu == "Plus Proche":
