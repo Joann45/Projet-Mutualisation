@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, HiddenField, FileField, SelectField, DateField, FloatField, IntegerField, TextAreaField, SubmitField, MultipleFileField
+from wtforms import StringField, HiddenField, FileField, SelectField, DateField, FloatField, IntegerField, TextAreaField, SubmitField, MultipleFileField, Field
+from wtforms.widgets import TextInput
 from wtforms.validators import DataRequired, ValidationError
 from datetime import date
+
 
 class OffreForm(FlaskForm):
     id = HiddenField('id')
@@ -13,13 +15,16 @@ class OffreForm(FlaskForm):
     capacite_min = IntegerField('Capacité minimal', validators=[DataRequired()])
     capacite_max = IntegerField('Capacité maximal', validators=[DataRequired()])
     img = FileField("Image de l'offre")
-    genre = SelectField('Genre', coerce=int)
+    genre = SelectField('Genre')
     etat = StringField('Etat')
     nom_loc = StringField('Localisation', validators=[DataRequired()])
     date_deb = DateField('Date de début', validators=[DataRequired()])
     date_fin = DateField('Date de fin', validators=[DataRequired()])
     liens = TextAreaField('Lien vers des ressources promotionnelles')
     documents = MultipleFileField("Ajouter les documents liés à l'offre")
+    
+    genres = StringField('Genres')
+    
 
     # def validate(self, extra_validators=None):
     #     if not FlaskForm.validate(self, extra_validators=extra_validators):
