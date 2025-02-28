@@ -206,8 +206,7 @@
                 <form action="{{ url_for('offre.details_offre', id_offre=offre.id_offre) }}" method="POST">
                     {{ commentaireForm.hidden_tag() }}
                     <div class="mb-3">
-                        {{ commentaireForm.texte_commentaire(class="form-control", placeholder="Écrivez votre
-                        commentaire ici...", rows="3") }}
+                        {{ commentaireForm.texte_commentaire(class="form-control", placeholder="Écrivez votre commentaire ici...", rows="3") }}
                     </div>
                     <button type="submit" class="btn btn-dark fw-bolder">Ajouter un commentaire</button>
                 </form>
