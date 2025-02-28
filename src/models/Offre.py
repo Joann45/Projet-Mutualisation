@@ -20,6 +20,7 @@ class Offre(db.Model):
     img = db.Column(db.Text)
     docs = db.Column(db.Boolean)
     cotisation = db.Column(db.Float,default=0)
+    favoris = db.Column(db.Boolean, default=False)
     id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'))
 
     # Relations
@@ -31,8 +32,7 @@ class Offre(db.Model):
     les_reponses_utilisateurs = db.relationship('Reponse', back_populates='offre', lazy=True)
     les_reseaux = db.relationship('Offre_Reseau', back_populates='offre', lazy=True, cascade="all, delete-orphan")
     les_commentaires = db.relationship('Commentaire', back_populates='offre', lazy=True, cascade="all, delete-orphan")
-    les_favoris = db.relationship('Favori', back_populates='offre', lazy=True, cascade="all, delete-orphan")
-    
+    les_favoris = db.relationship('Favoris', back_populates='offre', lazy=True, cascade="all, delete-orphan")
     def nb_participants(self):
         return len(self.les_reponses_utilisateurs)
     

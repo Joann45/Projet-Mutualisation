@@ -35,7 +35,7 @@ from src.config import mail
 from flask import render_template, current_app
 from flask_mail import Message
 import socket
-socket.setdefaulttimeout(3)
+socket.setdefaulttimeout(6)
 
 reseaux_bp = Blueprint('reseaux', __name__, template_folder='templates')
 

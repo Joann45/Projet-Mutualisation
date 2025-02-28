@@ -1,11 +1,12 @@
 from src.app import db
-from flask import render_template, redirect, url_for, request
+from flask import jsonify, render_template, redirect, url_for, request
 from flask_security import login_required, current_user, roles_required,  logout_user, login_user
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm, UpdateUser, UpdatePassword
 from flask import render_template, redirect, url_for, request, send_from_directory, Blueprint
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm, CommentaireForm
 from src.forms.GenreForm import GenreForm
+from src.models.Favoris import Favoris
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role
@@ -413,3 +414,42 @@ def suppression_commentaire(id_commentaire):
     db.session.delete(commentaire)
     db.session.commit()
     return redirect(url_for('offre.details_offre', id_offre=id_offre))
+
+
+@offre_bp.route('/home/offre/add-favoris/<int:id_offre>', methods=['POST'])
+@login_required
+def ajout_favoris(id_offre):
+    """Ajoute une offre aux favoris de l'utilisateur"""
+    offre = Offre.query.get(id_offre)
+    if not offre:
+        return jsonify({"status": "error", "error": "Offre introuvable"}), 404
+
+    offre.favoris = True  
+    f = Favoris()
+    f.id_offre = id_offre
+    f.id_utilisateur = current_user.id_utilisateur
+    f.nom_offre = offre.nom_offre
+    db.session.add(f)
+    
+    db.session.commit()
+    
+
+    return jsonify({"status": "success", "favoris": offre.favoris})
+
+
+@offre_bp.route('/home/offre/delete-favoris/<int:id_offre>', methods=['POST'])
+@login_required
+def suppression_favoris(id_offre):
+    """Supprime une offre des favoris de l'utilisateur"""
+    offre = Offre.query.get(id_offre)
+    fav = Favoris.query.filter_by(id_offre=id_offre, id_utilisateur=current_user.id_utilisateur).first()
+    if not offre:
+        return jsonify({"status": "error", "error": "Offre introuvable"}), 404
+    offre.favoris = False  
+    if fav:
+        db.session.delete(fav)
+    db.session.commit()
+
+    return jsonify({"status": "success", "favoris": offre.favoris})
+
+
