@@ -207,7 +207,7 @@ def boite_reception():
     """Renvoie la page de la boite de réception"""
     les_notifs_utilisateurs = Notification_Utilisateur.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
     les_notifs = Notification.query.filter(Notification.id_notif.in_([notif.id_notif for notif in les_notifs_utilisateurs])).all()
-    return render_template('boite-reception.html', les_notifs = les_notifs)
+    return render_template('boite-reception.html', les_notifs = les_notifs,aucune_notifs = len(les_notifs)==0)
 
 @views_bp.route('/home/visualiser_profil/<int:id_utilisateur>', methods=['POST','GET'])
 @login_required
@@ -223,4 +223,4 @@ def mes_favoris(page=1):
     les_offres = Offre.query.filter(Offre.id_offre.in_([offre.id_offre for offre in les_favoris]))
     les_offres = db.paginate(les_offres, page=page, per_page=5)
     
-    return render_template('mes-favoris.html', les_offres = les_offres)
+    return render_template('mes-favoris.html', les_offres = les_offres,aucune_offre = len(les_offres.items)==0)
