@@ -13,7 +13,7 @@
               </div>
               <div class="card-body text-center">
                 {% if message.type_operation == "ajout" %}
-                  <p class="card-text">Vous avez reçu une invitation pour rejoindre le réseau : <strong>{{ message.nom_reseau }}</strong></p>
+                  <p class="card-text">Vous avez été ajouté dans le réseau : <strong>{{ message.nom_reseau }}</strong></p>
                 {% elif message.type_operation == "bienvenue" %}
                   <p class="card-text">Bienvenue sur StageFlow</p>
                 {% endif %}
