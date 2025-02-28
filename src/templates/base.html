@@ -76,8 +76,7 @@
                         />
                     </a>
                 </div>
-                {% endif %} {% if not current_user.is_admin() %}
-               
+                {% endif %}          
                 <div>
                     <!-- modifier pour prendre en compte la connexion -->
                     <a class="btn btn-default" href="{{url_for('reseaux.mes_reseaux')}}">
@@ -90,8 +89,6 @@
                         />
                     </a>
                 </div>
-
-                {% endif %}
                 {% if not current_user.is_admin() %}
                 <div>
                     <!-- créer la route vers notification -->
