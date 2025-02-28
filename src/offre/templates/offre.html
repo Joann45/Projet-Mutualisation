@@ -79,15 +79,14 @@
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <p>Cotisation actuelle</p>
-                        <p>{{offre.cotisation()}} € / {{offre.budget}} €</p>
+                        <p>{{offre.cotisation}} € / {{offre.budget}} €</p>
                     </div>
                     <div class="d-flex flex-column align-items-center">
                         <p>Temps restant</p>
                         <p>{{offre.temps_restant()}} jours</p>
                     </div>
-                    
                 </div>
-                
+
                 {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
                 <div class="progress mt-2" style="height: 20px">
                     <div
@@ -102,6 +101,14 @@
                     </div>
                 </div>
                 {% endif %}
+                <div class="d-flex flex-column align-items-center">
+                    <button
+                        class="btn btn-dark popup-btn-open"
+                        type="button"
+                        data-popup="voir_reseaux"
+                        onclick="event.stopPropagation();"
+                    >
+
                 <div class="d-flex justify-content-evenly">
                     <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux_{{offre.id_offre}}">
                         Voir les réseaux
@@ -110,10 +117,6 @@
                         Voir les genres
                     </button>
                 </div>
-               
-
-                
-
             </div>
         </div>
     </div>
