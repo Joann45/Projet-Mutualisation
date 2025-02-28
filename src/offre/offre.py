@@ -323,7 +323,8 @@ def mes_offres():
     current_date = dt.date.today()
 
     for offre in offres:
-        if statue_elu == statue_offre.statue.choices[0] or len(offre)==0:
+        print(offre)
+        if statue_elu == statue_offre.statue.choices[0] or len([offre])==0:
             les_offres.append(offre)
         elif statue_elu == statue_offre.statue.choices[1]:#cas de à venir d'etre choisi
              
