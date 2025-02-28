@@ -4,12 +4,6 @@
         <h5 class="mb-0">Membres du réseau</h5>
     </div>
     <div class="card-body">
-        <div class="input-group mb-3">
-            <input class="form-control" type="search" placeholder="Rechercher" id="zone-search" name="zone-search" />
-            <button class="btn btn-outline-secondary" type="button">
-                <img src="{{ url_for('static', filename='../static/img/search.svg') }}" alt="icone de recherche" />
-            </button>
-        </div>
         {% for m in membre %}
         <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
             <div class="d-flex align-items-center">
