@@ -325,7 +325,8 @@ def mes_offres():
     current_date = dt.date.today()
 
     for offre in offres:
-        if statue_elu == statue_offre.statue.choices[0] or len(offre)==0:
+        print(offre)
+        if statue_elu == statue_offre.statue.choices[0] or len([offre])==0:
             les_offres.append(offre)
         elif statue_elu == statue_offre.statue.choices[1]:#cas de à venir d'etre choisi
              
@@ -383,17 +384,14 @@ def les_offres(page=1):
 
     if proximite_date.validate_on_submit() or f_select_reseau.validate_on_submit():
         for id_r in id_reseaux_elu:
-            print(Reseau.query.get(id_r))
             les_reseaux_elu.append(Reseau.query.get(id_r))
     if les_reseaux_elu != []:
-        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau,).all() for reseau in les_reseaux_elu]
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in les_reseaux_elu]
     else: 
         
-        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]
-             
-               
-    if len(offre_reseau) != 0: 
-        les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r.offre.id_offre for o_r in offre_reseau[0]]), Offre.date_limite > dt.date.today())
+        offre_reseau = [Offre_Reseau.query.filter_by(id_reseau=reseau.id_reseau).all() for reseau in Utilisateur_Reseau.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()]         
+    if len(offre_reseau) != 0:
+        les_offres = Offre.query.filter(Offre.etat == "publiée",Offre.id_offre.in_([o_r[0].offre.id_offre for o_r in offre_reseau if len(o_r)!=0]), Offre.date_limite > dt.date.today())
     else:
         les_offres = []
     if proxi_elu == "Plus Proche":

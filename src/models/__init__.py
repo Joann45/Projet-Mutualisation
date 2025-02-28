@@ -16,3 +16,4 @@ from src.models.Lien import Lien
 from src.models.Lien_Offre import Lien_Offre
 from src.models.Offre_Reseau import Offre_Reseau
 from src.models.Commentaire import Commentaire
+from src.models.Favori import Favori
