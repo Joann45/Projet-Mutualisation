@@ -37,18 +37,6 @@
                     </a>
                 </div>
 
-                <div>
-                    <!-- modifier pour prendre en compte la connexion -->
-                    <a class="btn btn-default" href="{{url_for('reseaux.mes_reseaux')}}">
-                        Mes réseaux
-
-                        <img
-                            src="{{url_for('static', filename='../static/img/icon_reseau.svg')}}"
-                            alt="icone réseaux"
-                            class="ms-3"
-                        />
-                    </a>
-                </div>
 
                 {% if not current_user.is_admin() %}
                 <div>
@@ -60,6 +48,8 @@
                             src="{{url_for('static', filename='../static/img/icon_dossier.svg')}}"
                             alt="icone dossier"
                             class="ms-3"
+                            style="width: 30px; height: 30px"
+                            
                         />
                     </a>
                 </div>
@@ -87,6 +77,33 @@
                     </a>
                 </div>
                 {% endif %} {% if not current_user.is_admin() %}
+               
+                <div>
+                    <!-- modifier pour prendre en compte la connexion -->
+                    <a class="btn btn-default" href="{{url_for('reseaux.mes_reseaux')}}">
+
+                        <img
+                            src="{{url_for('static', filename='../static/img/icon_reseau.svg')}}"
+                            alt="icone réseaux"
+                            class="ms-3"
+                            style="width: 40px; height: 40px"
+                        />
+                    </a>
+                </div>
+
+                {% endif %}
+                {% if not current_user.is_admin() %}
+                <div>
+                    <!-- créer la route vers notification -->
+                    <a href="{{url_for('views.mes_favoris')}}" class="btn">
+                        <img
+                            src="{{ url_for('static', filename='../static/img/etoile_vide.svg') }}"
+                            alt="Favoris"
+                            style="width: 40px; height: 40px"
+                        />
+                    </a>
+                </div>
+                {% endif %}
                 <div>
                     <!-- créer la route vers notification -->
                     <a href="{{url_for('views.boite_reception')}}" class="btn">
@@ -96,7 +113,7 @@
                         />
                     </a>
                 </div>
-                {% endif %}
+
                 <div>
                     <!-- modifier Tom Cook par l'utilisateur liée à la BD -->
                     <a class="btn" href="{{url_for('views.modifier_profil')}}">
@@ -116,7 +133,7 @@
                         />
                         {% endif %}
 
-                        {{current_user.nom_utilisateur}} {{current_user.prenom_utilisateur}} {{current_user.role.name}}
+                        {{current_user.nom_utilisateur}} {{current_user.prenom_utilisateur}} 
                     </a>
                 </div>
             </nav>

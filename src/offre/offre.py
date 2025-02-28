@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, request, send_from_directo
 from src.forms.UtilisateurForm import InscriptionForm, ConnexionForm
 from src.forms.OffreForm import OffreForm, ReponseForm, CommentaireForm
 from src.forms.GenreForm import GenreForm
-from src.models import Favoris
+from src.models.Favoris import Favoris
 from src.models.Utilisateur import Utilisateur
 from src.models.Reseau import Reseau
 from src.models.Role import Role

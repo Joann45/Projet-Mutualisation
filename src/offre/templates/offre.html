@@ -4,7 +4,7 @@
         event.preventDefault();
 
         let img = button.querySelector("img");
-        let isFavoris = img.getAttribute("src").includes("coeur.svg");
+        let isFavoris = img.getAttribute("src").includes("etoile.svg");
         let url = isFavoris 
             ? `/home/offre/delete-favoris/${idOffre}` 
             : `/home/offre/add-favoris/${idOffre}`;
@@ -14,8 +14,8 @@
             .then(data => {
                 if (data.status === "success") {
                     img.setAttribute("src", data.favoris 
-                        ? "{{ url_for('static', filename='img/coeur.svg') }}" 
-                        : "{{ url_for('static', filename='img/coeur_vide.svg') }}");
+                        ? "{{ url_for('static', filename='img/etoile.svg') }}" 
+                        : "{{ url_for('static', filename='img/etoile_vide.svg') }}");
                 } else {
                     console.error("Erreur :", data.error);
                 }
@@ -48,15 +48,17 @@
         />
         
         {% endif %}
-        <button onclick="toggleFavoris(event, this, {{ offre.id_offre }})"
-                style="position: absolute; top: 10px; right: 10px; border:none;margin:0;background: transparent;">
-                <img 
-                    src="{{ url_for('static', filename='img/' ~ ('coeur.svg' if offre.favoris else 'coeur_vide.svg')) }}"
-                    alt="favoris"
-                    style="width: 50px; height: 50px;" />
-        </button>
+        
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
-            <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+            <div style ="position: relative"class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+                <button onclick="toggleFavoris(event, this, {{ offre.id_offre }})"
+                    style="position: absolute;top:10px;right:10px; border: none; align-items: end; background: none;">
+                    <img 
+                        src="{{ url_for('static', filename='img/' ~ ('etoile.svg' if offre.favoris else 'etoile_vide.svg')) }}"
+                        alt="favoris"
+                        style="width: 50px; height: 50px;" />
+                </button>
+
                 
 
                 <div class="d-flex flex-column align-items-center justify-content-center mt-4">

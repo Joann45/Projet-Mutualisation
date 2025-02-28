@@ -10,3 +10,5 @@ class Favoris(db.Model):
 
     offre = db.relationship('Offre', back_populates='les_favoris', lazy=True)
     utilisateur = db.relationship('Utilisateur', back_populates='les_favoris', lazy=True)
+
+    

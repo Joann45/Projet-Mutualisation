@@ -20,6 +20,7 @@ class Offre(db.Model):
     img = db.Column(db.Text)
     docs = db.Column(db.Boolean)
     cotisation = db.Column(db.Float,default=0)
+    favoris = db.Column(db.Boolean, default=False)
     id_utilisateur = db.Column(db.Integer, db.ForeignKey('UTILISATEUR.id_utilisateur'))
 
     # Relations

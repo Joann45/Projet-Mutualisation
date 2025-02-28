@@ -13,6 +13,7 @@ from src.models.Role import Role
 from src.models.Offre import Offre
 from src.models.Genre import Genre
 from src.models.Reponse import Reponse
+from src.models.Favoris import Favoris
 from src.models.Document import Document
 from src.models.Genre_Offre import Genre_Offre
 from src.models.Offre_Reseau import Offre_Reseau
@@ -149,7 +150,6 @@ def definir_etat(id_offre):
     """
 
     o = Offre.query.get(id_offre)
-    print(o)
     if o :
         if o.etat == "publiée" : 
             o.etat = "brouillon"
@@ -207,3 +207,13 @@ def boite_reception():
 @login_required
 def visualiser_profil(id_utilisateur):
     return render_template('visualiser_profil.html', utilisateur=Utilisateur.query.get(id_utilisateur))
+
+@views_bp.route('/home/mes-favoris', methods=['POST','GET'])
+@login_required
+def mes_favoris():
+    
+    les_favoris = Favoris.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
+    les_offres = Offre.query.filter(Offre.id_offre.in_([offre.id_offre for offre in les_favoris])).all()
+    print(les_favoris)
+
+    return render_template('mes-favoris.html', les_offres = les_offres)

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% extends 'base.html' %} {% block content %}
+<div class="d-flex justify-content-center rounded-4" style="background-color: #f7b21e9f;" >
+    <h1 class="fw-bolder display-4 m-4" style="color:#ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Mes favoris</h1>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">  
+        {% for offre in les_offres %}
+            <div class="col-auto">
+                {%include 'offre.html'%}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
