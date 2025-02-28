@@ -175,6 +175,7 @@
         </div>
 
         {% for document in offre.les_documents %}
+        {% if document.nom_doc != "" %}
         <div class="mb-1">
             <a
                 class="fw-bolder"
@@ -186,6 +187,7 @@
                 {{ document.nom_doc }}
             </a>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     {% endif %}
