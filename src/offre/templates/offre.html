@@ -1,27 +1,26 @@
-<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px;">
+<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px">
     <div
         class="d-flex flex-nowrap text-decoration-none"
-        onclick=window.location.href="{{url_for('offre.details_offre', id_offre=offre.id_offre)}}"
-        style="cursor: pointer;"
+        onclick="window.location.href='{{url_for('offre.details_offre', id_offre=offre.id_offre)}}'"
+        style="cursor: pointer"
     >
         {% if offre.img == "0" %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/fetes.svg')}}"
-            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
             alt="fetes"
         />
         {% else %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
-            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
             alt="fetes"
         />
         {% endif %}
         <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
-
-            <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+            <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black w-100">
                 <div class="d-flex flex-column align-items-center justify-content-center mt-4">
                     <h2>{{ offre.nom_offre}}</h2>
                     <p>Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
@@ -40,31 +39,44 @@
                         <p>{{offre.temps_restant()}} jours</p>
                     </div>
                 </div>
+                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
+                <div class="progress mt-2" style="height: 20px">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ percentage }}%;"
+                        aria-valuenow="{{offre.cotisation}}"
+                        aria-valuemin="0"
+                        aria-valuemax="{{offre.budget}}"
+                    >
+                        {{ percentage }}%
+                    </div>
+                </div>
+                {% endif %}
                 <div class="d-flex flex-column align-items-center">
-                    <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux" onclick="event.stopPropagation();">
+                    <button
+                        class="btn btn-dark popup-btn-open"
+                        type="button"
+                        data-popup="voir_reseaux"
+                        onclick="event.stopPropagation();"
+                    >
                         Voir les réseaux
                     </button>
                 </div>
             </div>
-              
         </div>
     </div>
-
 </div>
 
 <div id="voir_reseaux" class="popup">
-
     <h5 class="fs-3">Réseaux</h5>
 
     <div class="card-body">
         <div class="">
             {% for reseau in offre.les_reseaux%}
-            <p> {{ reseau.reseau.nom_reseau }} </p>
+            <p>{{ reseau.reseau.nom_reseau }}</p>
             {% endfor %}
         </div>
-        <button class="btn btn-secondary popup-btn-close" type="button">
-            Fermer
-        </button>
+        <button class="btn btn-secondary popup-btn-close" type="button">Fermer</button>
     </div>
-
 </div>

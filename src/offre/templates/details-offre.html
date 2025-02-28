@@ -16,7 +16,7 @@
     }
 </style>
 <div class="d-flex flex-column align-items-center my-5">
-    <div class="d-flex flex-nowrap mb-3" style="width: 65%">
+    <div class="d-flex flex-nowrap mb-5" style="width: 65%">
         {% if offre.img == "0" %}
         <img
             class="rounded-start-4"
@@ -25,7 +25,7 @@
         />
         {% else %}
         <img
-            class="rounded-start-4"
+            class="rounded-start-4 ms-5"
             src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}"
             style="width: 400px; max-width: 100%; height: 400px"
         />
@@ -49,7 +49,10 @@
                         </div>
                     </div>
                 </div>
-                <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=offre.id_utilisateur) }}">
+                <a
+                    class="text-decoration-none text-dark"
+                    href="{{ url_for('views.visualiser_profil', id_utilisateur=offre.id_utilisateur) }}"
+                >
                     <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
                 </a>
             </div>
@@ -58,8 +61,8 @@
                 <p>{{offre.description}}</p>
                 <p class="fw-bolder">Nombre de participants: {{offre.nb_participants()}}</p>
                 <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
-                <p class="fw-bolder">Cotisation actuelle: {{offre.cotisation}} €/{{offre.budget}} €</p>
-                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation / offre.budget * 100)|round %}
+                <p class="fw-bolder">Cotisation actuelle: {{offre.cotisation()}} €/{{offre.budget}} €</p>
+                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
                 <div class="progress mt-2" style="height: 20px">
                     <div
                         class="progress-bar"
@@ -214,44 +217,51 @@
             {% for commentaire in offre.les_commentaires %}
             <div class="card mb-3">
                 <div class="card-header">
-                    <div class="d-flex align-items-center">
-                            {% if commentaire.utilisateur.img_utilisateur == commentaire.utilisateur.id_utilisateur %}
-                            <a href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}">
-                                <img
-                                    src="{{ url_for('static', filename='img/profil/' ~ commentaire.utilisateur.id_utilisateur) }}"
-                                    alt="Photo profil"
-                                    class="rounded-circle"
-                                    style="width: 40px; height: 40px; object-fit: cover"
-                                />
-                            </a>
-                            {% else %}
-                            <a href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.utilisateur.id_utilisateur) }}">
-                                <img
-                                    src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
-                                    alt="Photo profil"
-                                    class="rounded-circle"
-                                    style="width: 40px; height: 40px; object-fit: cover"
-                                />
-                            </a>
-                            {% endif %}
+                    <div class="d-flex align-items-center w-100">
+                        {% if commentaire.utilisateur.img_utilisateur == commentaire.utilisateur.id_utilisateur %}
+                        <a href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}">
+                            <img
+                                src="{{ url_for('static', filename='img/profil/' ~ commentaire.utilisateur.id_utilisateur) }}"
+                                alt="Photo profil"
+                                class="rounded-circle"
+                                style="width: 40px; height: 40px; object-fit: cover"
+                            />
+                        </a>
+                        {% else %}
+                        <a
+                            href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.utilisateur.id_utilisateur) }}"
+                        >
+                            <img
+                                src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                                alt="Photo profil"
+                                class="rounded-circle"
+                                style="width: 40px; height: 40px; object-fit: cover"
+                            />
+                        </a>
+                        {% endif %}
                         <div class="ms-3">
-                            <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}">
+                            <a
+                                class="text-decoration-none text-dark"
+                                href="{{ url_for('views.visualiser_profil', id_utilisateur=commentaire.id_utilisateur) }}"
+                            >
                                 <strong>
-                                    {{ commentaire.utilisateur.prenom_utilisateur }}
-                                    {{ commentaire.utilisateur.nom_utilisateur }}
-                                </strong> 
+                                    {{ commentaire.utilisateur.prenom_utilisateur }} {{
+                                    commentaire.utilisateur.nom_utilisateur }}
+                                </strong>
                             </a>
-                            <br/>
+                            <br />
                             <small class="text-muted">le {{ commentaire.date_commentaire.date() }}</small>
                         </div>
 
                         {% if current_user.id_utilisateur == commentaire.utilisateur.id_utilisateur %}
-                        <button
-                            class="btn btn-outline-danger btn-sm ms-auto popup-btn-open"
-                            data-popup="suppression_commentaire"
-                        >
-                            Supprimer
-                        </button>
+                        <div class="ms-auto">
+                            <button
+                                class="btn btn-outline-danger btn-sm popup-btn-open"
+                                data-popup="suppression_commentaire"
+                            >
+                                Supprimer
+                            </button>
+                        </div>
                         <div class="popup" id="suppression_commentaire">
                             <h2>Suppression du commentaire</h2>
                             <p>Êtes-vous sûr de vouloir supprimer ce commentaire ?</p>
