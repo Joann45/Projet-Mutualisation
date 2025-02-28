@@ -1,21 +1,21 @@
-<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px;">
+<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px">
     <div
         class="d-flex flex-nowrap text-decoration-none"
-        onclick=window.location.href="{{url_for('offre.details_offre', id_offre=offre.id_offre)}}"
-        style="cursor: pointer;"
+        onclick="window.location.href='{{url_for('offre.details_offre', id_offre=offre.id_offre)}}'"
+        style="cursor: pointer"
     >
         {% if offre.img == "0" %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/fetes.svg')}}"
-            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
             alt="fetes"
         />
         {% else %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
-            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover;"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
             alt="fetes"
         />
         {% endif %}
@@ -45,8 +45,32 @@
                         <p>{{offre.temps_restant()}} jours</p>
                     </div>
                 </div>
+
+                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
+                <div class="progress mt-2" style="height: 20px">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ percentage }}%;"
+                        aria-valuenow="{{offre.cotisation}}"
+                        aria-valuemin="0"
+                        aria-valuemax="{{offre.budget}}"
+                    >
+                        {{ percentage }}%
+                    </div>
+                </div>
+                {% endif %}
+                <div class="d-flex flex-column align-items-center">
+                    <button
+                        class="btn btn-dark popup-btn-open"
+                        type="button"
+                        data-popup="voir_reseaux"
+                        onclick="event.stopPropagation();"
+                    >
+
                 <div class="d-flex justify-content-evenly">
                     <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux_{{offre.id_offre}}" onclick="event.stopPropagation();">
+
                         Voir les réseaux
                     </button>
                     <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux_{{offre.id_offre}}" onclick="event.stopPropagation();">
@@ -54,10 +78,8 @@
                     </button>
                 </div>
             </div>
-              
         </div>
     </div>
-
 </div>
 
 <div id="voir_reseaux_{{offre.id_offre}}" class="popup">
@@ -67,12 +89,9 @@
     <div class="card-body">
         <div class="">
             {% for reseau in offre.les_reseaux%}
-            <p> {{ reseau.reseau.nom_reseau }} </p>
+            <p>{{ reseau.reseau.nom_reseau }}</p>
             {% endfor %}
         </div>
-        <button class="btn btn-secondary popup-btn-close" type="button">
-            Fermer
-        </button>
+        <button class="btn btn-secondary popup-btn-close" type="button">Fermer</button>
     </div>
-
 </div>

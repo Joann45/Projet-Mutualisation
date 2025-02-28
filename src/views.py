@@ -74,7 +74,7 @@ def home():
     les_reseaux = current_user.les_reseaux
     les_offres = []
     for offre in offres:
-        if set(offre.les_reseaux).intersection(set(les_reseaux)) > 0:
+        if len(set(offre.les_reseaux).intersection(les_reseaux)) > 0:
             les_offres.append(offre)
     return render_template('home.html', offres=les_offres[:3])
 
