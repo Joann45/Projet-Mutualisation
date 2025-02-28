@@ -39,3 +39,9 @@ class Offre(db.Model):
     def temps_restant(self):
         temps = self.date_limite - datetime.now().date()
         return temps.days
+    
+    def cotisation(self):
+        cotisisation = 0
+        for reponse in self.les_reponses_utilisateurs:
+            cotisisation += reponse.budget
+        return cotisisation
