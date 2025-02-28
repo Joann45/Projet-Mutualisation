@@ -215,11 +215,12 @@ def visualiser_profil(id_utilisateur):
     return render_template('visualiser_profil.html', utilisateur=Utilisateur.query.get(id_utilisateur))
 
 @views_bp.route('/home/mes-favoris', methods=['POST','GET'])
+@views_bp.route('/home/mes-favoris/<int:page>', methods=['POST','GET'])
 @login_required
-def mes_favoris():
+def mes_favoris(page=1):
     
     les_favoris = Favoris.query.filter_by(id_utilisateur=current_user.id_utilisateur).all()
-    les_offres = Offre.query.filter(Offre.id_offre.in_([offre.id_offre for offre in les_favoris])).all()
-    print(les_favoris)
-
+    les_offres = Offre.query.filter(Offre.id_offre.in_([offre.id_offre for offre in les_favoris]))
+    les_offres = db.paginate(les_offres, page=page, per_page=5)
+    
     return render_template('mes-favoris.html', les_offres = les_offres)
