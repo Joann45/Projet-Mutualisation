@@ -126,6 +126,8 @@ def process_offer_image(o, form):
     if not file_o:
         o.img = "0"
     else:
+        if not os.path.exists("src/static/img/offre"):
+            os.makedirs("src/static/img/offre")
         file_path = os.path.join("src/static/img/offre", str(o.id_offre))
         file_o.save(file_path)
         o.img = o.id_offre
@@ -143,6 +145,8 @@ def process_offer_document(o, form):
             d.id_offre = o.id_offre
             db.session.add(d)
             db.session.commit()
+            if not os.path.exists("src/static/Documents"):
+                os.makedirs("src/static/Documents")
             file_path = os.path.join("src/static/Documents", f"{d.id_doc}-{o.id_offre}")
             doc.save(file_path)
             o.docs = True

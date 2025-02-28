@@ -16,23 +16,23 @@
     }
 </style>
 <div class="d-flex flex-column align-items-center my-5">
-    <div class="d-flex flex-nowrap mb-5" style="width: 65%">
+    <div class="d-flex flex-nowrap mb-3" style="width: 65%;">
         {% if offre.img == "0" %}
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='img/fetes.svg')}}"
-            style="width: 400px; max-width: 100%; height: 400px"
+            style="width: 400px; max-width: 100%; height: 400px; object-fit: cover"
         />
         {% else %}
         <img
             class="rounded-start-4 ms-5"
             src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}"
-            style="width: 400px; max-width: 100%; height: 400px"
+            style="width: 400px; max-width: 100%; height: 400px; object-fit: cover"
         />
         {% endif %}
         <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
             <div class="d-flex flex-wrap flex-column my-2 w-100" style="width: 65%">
-                <div class="mb-4">
+                <div class="mb-0">
                     <h1 class="mb-3 text-center">{{ offre.nom_offre }}</h1>
                     <div class="row text-center">
                         <div class="col-md-4 mb-2">
@@ -63,7 +63,7 @@
                 <p class="fw-bolder">Cotisation minimale: {{offre.cotisation_min}} €</p>
                 <p class="fw-bolder">Cotisation actuelle: {{offre.cotisation()}} €/{{offre.budget}} €</p>
                 {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
-                <div class="progress mt-2" style="height: 20px">
+                <div class="progress my-0" style="height: 20px">
                     <div
                         class="progress-bar"
                         role="progressbar"
@@ -75,49 +75,51 @@
                         {{ percentage }}%
                     </div>
                 </div>
-                <p>Créer par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
                 {% else %}
                 <p>Budget non défini.</p>
-                {% endif %} {% if verif == 1 %}
-                <a href="{{url_for('reponses.repondre_offre', id_offre=offre.id_offre)}}">
-                    <input
-                        class="btn btn-base w-100 py-3 fw-bolder"
-                        style="font-size: 1.5em"
-                        type="button"
-                        name="repondre"
-                        id="repondre"
-                        value="Répondre"
-                    />
-                </a>
-                {% elif verif == 2 %}
-                <a href="{{url_for('reponses.repondre_offre', id_offre=offre.id_offre)}}">
-                    <input
-                        class="btn btn-base w-100 py-3 fw-bolder"
-                        style="font-size: 1.5em"
-                        type="button"
-                        name="repondre"
-                        id="repondre"
-                        value="Modifier réponse"
-                    />
-                </a>
-                {% elif verif == 3 %}
-                <a href="{{url_for('reponses.visualiser_reponses_offre', id_offre=offre.id_offre)}}">
-                    <input
-                        class="btn btn-base w-100 py-3 fw-bolder"
-                        style="font-size: 1.5em"
-                        type="button"
-                        name="repondre"
-                        id="repondre"
-                        value="Visualiser les réponses"
-                    />
-                </a>
-
-                {% endif %}
+                {% endif %} 
             </div>
         </div>
     </div>
+    <div class="mb-3" style="width: 400px;">
+        {% if verif == 1 %}
+        <a href="{{url_for('reponses.repondre_offre', id_offre=offre.id_offre)}}">
+            <input
+                class="btn btn-base w-100 py-3 fw-bolder"
+                style="font-size: 1.5em"
+                type="button"
+                name="repondre"
+                id="repondre"
+                value="Répondre"
+            />
+        </a>
+        {% elif verif == 2 %}
+        <a href="{{url_for('reponses.repondre_offre', id_offre=offre.id_offre)}}">
+            <input
+                class="btn btn-base w-100 py-3 fw-bolder"
+                style="font-size: 1.5em"
+                type="button"
+                name="repondre"
+                id="repondre"
+                value="Modifier réponse"
+            />
+        </a>
+        {% elif verif == 3 %}
+        <a href="{{url_for('reponses.visualiser_reponses_offre', id_offre=offre.id_offre)}}">
+            <input
+                class="btn btn-base w-100 py-3 fw-bolder"
+                style="font-size: 1.5em"
+                type="button"
+                name="repondre"
+                id="repondre"
+                value="Visualiser les réponses"
+            />
+        </a>
+
+        {% endif %}
+    </div>
     {% if verif == 3 %}
-    <div class="d-flex justify-content-around">
+    <div class="d-flex justify-content-around mb-3">
         <a href="{{url_for('views.definir_etat', id_offre=offre.id_offre)}}">
             {% if offre.etat=="publiée" %}
             <button id="btnPubli" class="btn rounded-4 mx-5 px-4 fs-5"></button>
@@ -163,15 +165,9 @@
         </div>
     </div>
     {% endif %} {% if offre.docs %}
-    <div class="d-flex justify-content-end mb-3" style="width: 65%">
-        <a class="text-dark fw-bolder" style="justify-self: end" href="#documents">
-            Voir les documents associés à l'offre
-        </a>
-    </div>
-
     <div class="mb-5 pt-2" style="width: 65%; border-top: grey solid 1px">
         <div class="d-flex justify-content-between align-items-center" id="documents">
-            <h1>Documents</h1>
+            <h2 class="fw-bold">Documents</h2>
 
             <a href="">
                 <img src="{{url_for('static', filename='img/plus.svg')}}" alt="plus" />
@@ -179,14 +175,14 @@
         </div>
 
         {% for document in offre.les_documents %}
-        <div>
+        <div class="mb-1">
             <a
                 class="fw-bolder"
                 style="color: grey"
                 href="{{ url_for('static', filename='Documents/' ~ document.id_doc ~ '-' ~ offre.id_offre) }}"
                 download="test.png"
             >
-                <img src="{{ url_for('static', filename='img/icon_download.svg') }}" alt="icon_download" />
+                <img style="width: 20px; height: 20px;" src="{{ url_for('static', filename='img/icon_download.svg') }}" alt="icon_download" />
                 {{ document.nom_doc }}
             </a>
         </div>

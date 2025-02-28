@@ -1,5 +1,57 @@
 <!DOCTYPE html>
 {% extends 'base.html' %} {% block content %}
+{% macro render_pagination(pagination, endpoint) %}
+  <nav aria-label="Pagination">
+    <div class="page-items text-center mb-2">
+      {{ pagination.first }} - {{ pagination.last }} sur {{ pagination.total }}
+    </div>
+    <ul class="pagination justify-content-center">
+      {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for(endpoint, page=pagination.prev_num) }}" aria-label="Précédent">
+          &laquo;
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Précédent">
+          &laquo;
+        </span>
+      </li>
+      {% endif %}
+      {% for page in pagination.iter_pages() %}
+        {% if page %}
+          {% if page == pagination.page %}
+            <li class="page-item active" aria-current="page">
+              <span class="page-link">{{ page }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">…</span>
+          </li>
+        {% endif %}
+      {% endfor %}
+      {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for(endpoint, page=pagination.next_num) }}" aria-label="Suivant">
+          &raquo;
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Suivant">
+          &raquo;
+        </span>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endmacro %}{% block content %}
 <div class="d-flex justify-content-center rounded-4" style="background-color: #f7b21e9f; margin: 20px; margin-left: 50px; margin-right: 50px" >
     <h1 class="fw-bolder display-4 m-4" style="color:#ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Mes favoris</h1>
 </div>
@@ -14,5 +66,6 @@
         </div>
     </div>
 </div>
+{{render_pagination(les_offres, 'views.favoris') }}
 
 {% endblock %}
