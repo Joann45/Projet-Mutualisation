@@ -21,13 +21,13 @@
         <img
             class="rounded-start-4"
             src="{{url_for('static', filename='img/fetes.svg')}}"
-            style="width: 400px; max-width: 100%; height: 400px"
+            style="width: 400px; max-width: 100%; height: 400px; object-fit: cover"
         />
         {% else %}
         <img
             class="rounded-start-4 ms-5"
             src="{{url_for('static', filename='img/offre/' ~ offre.id_offre)}}"
-            style="width: 400px; max-width: 100%; height: 400px"
+            style="width: 400px; max-width: 100%; height: 400px; object-fit: cover"
         />
         {% endif %}
         <div class="d-flex flex-wrap ms-5 flex-grow-1 w-100">
