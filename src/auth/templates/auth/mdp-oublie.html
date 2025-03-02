@@ -1,0 +1,25 @@
+{% extends 'auth/connexion-base.html' %}
+
+{% block content %}
+
+    <div class ="container d-flex justify-content-center align-items-center ">
+        
+        <form method="POST" action="{{ url_for('auth.mdp_oublie') }}">
+            {{ form.hidden_tag() }}
+    
+            <h1>Envoi du mail</h1>
+
+            <p>Veuillez entrer l'adresse e-mail associée à votre compte. Nous vous enverrons un lien pour réinitialiser votre mot de passe.</p>
+
+            <label for="email">Adresse e-mail</label>
+            {{ form.adress_mail(size=50, placeholder="Entrer votre adresse e-mail", class="rounded-2 w-75") }}
+
+            <p>Si vous n'avez pas reçu d'e-mail dans les minutes qui suivent, réesayer le procédure ou veuillez vérifier votre dossier de courriers indésirables.</p>
+
+            <button class ="btn-base" >Enregistrer</button>
+
+        </form>
+
+    </div>
+
+{% endblock %}

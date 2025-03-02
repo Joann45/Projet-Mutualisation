@@ -1,0 +1,36 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="d-flex flex-column align-items-center my-5">
+    <h2>Répondre à l'offre</h2>
+
+    <form action="{{ url_for('reponses.repondre_offre', id_offre=offre.id_offre) }}" method="post">
+        <p>{{ offre.nom_offre}}</p>
+        {{ form.hidden_tag() }}
+        <div class="d-flex flex-column justify-content-between mb-5">
+            {{ form.cotisation_apportee.label(class_ ="fw-bolder") }} {{ form.cotisation_apportee(size=50) }}
+        </div>
+
+        <div class="d-flex flex-row">
+            <div class="mx-5 d-flex flex-column justify-content-between mb-5">
+                <p>Disponible du</p>
+                {{ form.date_debut(size=50) }}
+                <p>au</p>
+                {{ form.date_fin(size=50) }}
+            </div>
+
+            <div class="mx-5 d-flex flex-column justify-content-between mb-5">
+                {{ form.cap_salle.label(class_ ="fw-bolder") }} {{ form.cap_salle(size=50) }}
+            </div>
+        </div>
+
+        <div class="d-flex flex-column justify-content-between mb-5">
+            {{ form.autre_rep.label(class_ ="fw-bolder") }} {{ form.autre_rep(size=50) }}
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <a href="{{url_for('views.home')}}"> {{ form.submit(class="btn btn-base fw-bolder") }} </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

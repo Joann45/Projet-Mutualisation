@@ -1,0 +1,35 @@
+{%extends 'base.html'%}
+{%block content%}
+<div class="d-flex justify-content-center rounded-4" style="background-color:#050B25; margin: 20px; margin-left: 50px; margin-right: 50px" >
+  <h1 class="fw-bolder display-4 m-4" style="color:#ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Boite de reception</h1>
+</div>
+<div class ="back-grey vh-100">
+    {%if aucune_notifs%}
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <h1 class="text-center">Vous n'avez pas encore de notifications</h1>
+    </div>
+    {%endif%}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            {% for message in les_notifs %}
+            <div class="card mb-4 shadow-sm">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">{{ message.expediteur }}</h5>
+                <small class="text-muted">{{ message.date_notification }} à {{ message.heure_notification }}</small>
+              </div>
+              <div class="card-body text-center">
+                {% if message.type_operation == "ajout" %}
+                  <p class="card-text">Vous avez été ajouté dans le réseau : <strong>{{ message.nom_reseau }}</strong></p>
+                {% elif message.type_operation == "bienvenue" %}
+                  <p class="card-text">Bienvenue sur StageFlow</p>
+                {% endif %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+</div>
+{%endblock%}    

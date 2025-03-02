@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <a href="{{ url_for('offre.details_offre', id_offre=offre.id_offre) }}" class="btn btn-dark">
+            Retour
+        </a>
+        <h1 class="fw-bolder text-white mt-3">Les réponses à l'offre: {{ offre.nom_offre }}</h1>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            {% if reponses %}
+                {% for reponse in reponses %}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body d-flex flex-column flex-md-row align-items-md-center">
+                        {% if reponse.utilisateur.img_utilisateur == reponse.utilisateur.id_utilisateur %}
+                        <a href="{{ url_for('views.visualiser_profil', id_utilisateur=reponse.utilisateur.id_utilisateur) }}">
+                            <img
+                                src="{{ url_for('static', filename='img/profil/' ~ reponse.utilisateur.id_utilisateur) }}"
+                                alt="image utilisateur" class="img-fluid rounded-circle me-md-4 mb-3 mb-md-0" width="80"
+                            />
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('views.visualiser_profil', id_utilisateur=reponse.utilisateur.id_utilisateur) }}"></a>
+                            <img
+                                src="{{ url_for('static', filename='img/photo_profil_tom.svg') }}"
+                                alt="image utilisateur" class="img-fluid rounded-circle me-md-4 mb-3 mb-md-0" width="80"
+                            />
+                        </a>
+                        {% endif %}
+                        <div class="flex-grow-1">
+                            <a class="text-decoration-none text-dark" href="{{ url_for('views.visualiser_profil', id_utilisateur=reponse.id_utilisateur) }}">
+                                <h3 class="fw-bold">Réponse de {{ reponse.utilisateur.prenom_utilisateur }} {{ reponse.utilisateur.nom_utilisateur }}</h3>
+                            </a>                            
+                            <p class="text-muted">Budget: <strong>{{ reponse.budget }}€</strong></p>
+                            <p><strong>Date disponible:</strong> du {{ reponse.date_debut }} au {{ reponse.date_fin }}</p>
+                            <p><strong>Détails:</strong></p>
+                            <p class="mt-2">{{ reponse.desc_rep }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-white">Aucune réponse pour cette offre.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

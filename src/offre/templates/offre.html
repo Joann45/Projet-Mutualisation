@@ -1,0 +1,142 @@
+<script>
+    function toggleFavoris(event, button, idOffre) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        let img = button.querySelector("img");
+        let isFavoris = img.getAttribute("src").includes("etoile.svg");
+        let url = isFavoris 
+            ? `/home/offre/delete-favoris/${idOffre}` 
+            : `/home/offre/add-favoris/${idOffre}`;
+
+        fetch(url, { method: "POST" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    img.setAttribute("src", data.favoris 
+                        ? "{{ url_for('static', filename='img/etoile.svg') }}" 
+                        : "{{ url_for('static', filename='img/etoile_vide.svg') }}");
+                } else {
+                    console.error("Erreur :", data.error);
+                }
+            })
+            .catch(error => console.error("Erreur requête:", error));
+    }
+</script>
+
+
+
+<div style="min-width: 55%; max-width: 1000px; margin-top: 100px; margin-bottom: 10px;">
+    <div
+        class="d-flex flex-nowrap text-decoration-none"
+        onclick="window.location.href='{{url_for('offre.details_offre', id_offre=offre.id_offre)}}'"
+        style="cursor: pointer"
+    >
+        {% if offre.img == "0" %}
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../static/img/fetes.svg')}}"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
+            alt="fetes"
+        />
+        {% else %}
+        <img
+            class="rounded-start-4"
+            src="{{url_for('static', filename='../static/img/offre/' ~ offre.id_offre)}}"
+            style="width: 500px; height: 276px; min-height: 267px; min-width: 276px; object-fit: cover"
+            alt="fetes"
+        />
+        
+        {% endif %}
+        
+        <div class="d-flex flex-wrap justify-content-center rounded-end-4 text-black bg-color-blanc w-100">
+            <div style ="position: relative"class="d-flex flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+                <button onclick="toggleFavoris(event, this, {{ offre.id_offre }})"
+                    style="position: absolute;top:10px;right:10px; border: none; align-items: end; background: none;">
+                    <img 
+                        src="{{ url_for('static', filename='img/' ~ ('etoile.svg' if offre.favoris else 'etoile_vide.svg')) }}"
+                        alt="favoris"
+                        style="width: 50px; height: 50px;" />
+                </button>
+
+                
+            <div class="d-block flex-wrap justify-content-center rounded-end-4 text-black  w-100">
+                <div class="d-flex flex-column justify-content-center mt-3 ml-5" style="position: relative; top: 17px;">
+                    <p class="m-0" style="font-size: 0.90em;">Début {{ offre.date_deb}}</p>
+                    <p class="mb-0" style="font-size: 0.90em;">Fin {{offre.date_fin}} </p>
+
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center ">
+                    <h2 style="position:relative; top: -40px;">{{ offre.nom_offre}}</h2>
+                    <p style="position:relative; top: -40px; margin-bottom: 0px;" >Créé par {{offre.utilisateur.prenom_utilisateur}} {{offre.utilisateur.nom_utilisateur}}</p>
+                    
+                </div>
+                <div class="d-flex flex-nowrap justify-content-around align-items-center w-100 position-relative" style="top: -10px;">
+                    <div class="d-flex flex-column align-items-center">
+                        <p>Nombre de participants</p>
+                        <p>{{offre.nb_participants()}}</p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <p>Cotisation actuelle</p>
+                        <p>{{offre.cotisation()}} € / {{offre.budget}} €</p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <p>Temps restant</p>
+                        <p>{{offre.temps_restant()}} jours</p>
+                    </div>
+                </div>
+
+                {% if offre.budget > 0 %} {% set percentage = (offre.cotisation() / offre.budget * 100)|round %}
+                <div class="progress my-0" style="height: 20px; position: relative; top: -10px; width: 90%; left: 20px;">
+                    <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: {{ percentage }}%;"
+                        aria-valuenow="{{offre.cotisation}}"
+                        aria-valuemin="0"
+                        aria-valuemax="{{offre.budget}}"
+                    >
+                        {{ percentage }}%
+                    </div>
+                </div>
+                {% endif %}
+                <div class="d-flex justify-content-evenly">
+                    <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_reseaux_{{offre.id_offre}}" onclick="event.stopPropagation();">
+                        Voir les réseaux
+                    </button>
+                    <button class="btn btn-dark popup-btn-open" type="button" data-popup="voir_genres_{{offre.id_offre}}" onclick="event.stopPropagation();">
+                        Voir les genres
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="voir_reseaux_{{offre.id_offre}}" class="popup">
+
+    <h5 class="fs-3">Réseaux</h5>
+
+    <div class="card-body">
+        <div class="">
+            {% for reseau in offre.les_reseaux%}
+            <p class="my-2">{{ reseau.reseau.nom_reseau }}</p>
+            {% endfor %}
+        </div>
+        <button class="btn btn-secondary popup-btn-close" type="button">Fermer</button>
+    </div>
+</div>
+
+<div id="voir_genres_{{offre.id_offre}}" class="popup">
+
+    <h5 class="fs-3">Genres</h5>
+
+    <div class="card-body">
+        <div class="">
+            {% for genre in offre.les_genres%}
+            <p class="my-2">{{ genre.genre.nom_genre }}</p>
+            {% endfor %}
+        </div>
+        <button class="btn btn-secondary popup-btn-close" type="button">Fermer</button>
+    </div>
+</div>
